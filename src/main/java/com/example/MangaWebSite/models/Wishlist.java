@@ -21,7 +21,7 @@ public class Wishlist {
 
     @ManyToOne
     @JoinColumn(name = "comic_id", nullable = false)
-    private Comic comic;
+    private Comics comics;
 
     @Column(name = "added_at", nullable = false)
     private Date addedAt;

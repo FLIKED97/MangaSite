@@ -22,7 +22,7 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "comic_id", nullable = false)
-    private Comic comic;
+    private Comics comics;
 
     @Column(name = "text", columnDefinition = "TEXT", nullable = false)
     private String text;

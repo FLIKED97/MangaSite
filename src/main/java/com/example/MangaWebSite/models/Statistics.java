@@ -22,7 +22,7 @@ public class Statistics {
 
     @ManyToOne
     @JoinColumn(name = "comic_id", nullable = false)
-    private Comic comic;
+    private Comics comics;
 
     @Column(name = "pages_read", nullable = false)
     private int pagesRead;

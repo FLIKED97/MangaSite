@@ -18,7 +18,7 @@ public class Chapter {
 
     @ManyToOne
     @JoinColumn(name = "comic_id", nullable = false)
-    private Comic comic;
+    private Comics comics;
 
     @ManyToOne
     @JoinColumn(name = "publisher_id", nullable = false)

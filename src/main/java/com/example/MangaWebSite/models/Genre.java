@@ -20,5 +20,5 @@ public class Genre {
     private String name;
 
     @OneToMany(mappedBy = "genre", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comic> comics;
+    private List<Comics> comics;
 }

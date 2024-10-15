@@ -22,7 +22,7 @@ public class ReadingProgress {
 
     @ManyToOne
     @JoinColumn(name = "comic_id", nullable = false)
-    private Comic comic;
+    private Comics comics;
 
     @ManyToOne
     @JoinColumn(name = "chapter_id", nullable = false)

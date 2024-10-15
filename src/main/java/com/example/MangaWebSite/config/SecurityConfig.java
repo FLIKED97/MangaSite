@@ -49,7 +49,7 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers("/auth/**")
                         .permitAll()
-                        .requestMatchers("*/user/**","/reservation/**")
+                        .requestMatchers("*/user/**","/reservation/**", "/main/**")
                         .permitAll() // Доступ для всіх
                         .requestMatchers("/endpoint", "*/admin/**")
                         .hasRole("ADMIN")
