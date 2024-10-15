@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login page</title>
+    <style>
+        body {
+            background-color: #FFFDE7; /* Cream background */
+            font-family: Arial, sans-serif;
+            color: #333333; /* Dark gray text */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        form {
+            background-color: #FFFFFF; /* White background for form */
+            padding: 20px;
+            border: 1px solid #000000; /* Black border */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333333; /* Dark gray text for labels */
+        }
+        input[type="email"],
+        input[type="password"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #CCC;
+            border-radius: 5px;
+            background-color: #F5F5F5; /* Light gray background for inputs */
+        }
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #E53935; /* Red background for submit button */
+            color: #FFFFFF; /* White text */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        input[type="submit"]:hover {
+            background-color: #D32F2F; /* Darker red on hover */
+        }
+        .error-message {
+            color: #E53935; /* Red for error messages */
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<form name="f" method="post" action="/process_login">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+    <label for="email">Введіть ім'я користувача: </label>
+    <input type="email" name="email" id="email"/>
+
+    <label for="password">Введіть пароль: </label>
+    <input type="password" name="password" id="password"/>
+
+    <input type="submit" value="Login"/>
+
+    <div th:if="${param.error}" class="error-message">
+        Не коректне ім'я користувача або пароль
+    </div>
+</form>
+
+</body>
+</html>
