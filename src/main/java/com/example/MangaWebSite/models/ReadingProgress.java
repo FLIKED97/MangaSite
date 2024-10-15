@@ -17,8 +17,8 @@ public class ReadingProgress {
     private int id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private Person user;
+    @JoinColumn(name = "person_id", nullable = false)
+    private Person person;
 
     @ManyToOne
     @JoinColumn(name = "comic_id", nullable = false)

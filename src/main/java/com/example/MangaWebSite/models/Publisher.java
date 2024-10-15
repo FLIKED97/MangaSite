@@ -18,7 +18,7 @@ public class Publisher {
     private int id;
 
     @OneToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "person_id", nullable = false)
     private Person person;
 
     @Column(name = "name", nullable = false)

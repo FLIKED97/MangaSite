@@ -17,7 +17,7 @@ public class SearchHistory {
     private int id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "person_id", nullable = false)
     private Person person;
 
     @Column(name = "search_term", nullable = false)
