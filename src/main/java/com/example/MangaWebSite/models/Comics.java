@@ -45,8 +45,9 @@ public class Comics {
     @OneToMany(mappedBy = "comics", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReadingProgress> readingProgress;
 
-    @OneToMany(mappedBy = "comics", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Wishlist> wishlists;
+    @ManyToMany(mappedBy = "comics")
+    private List<Tabs> tabs;  // Комікси можуть бути в багатьох закладках
+
 
     @OneToMany(mappedBy = "comics", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Statistics> statistics;

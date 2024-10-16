@@ -37,7 +37,7 @@ public class Person {
     private List<Comment> comments;
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Wishlist> wishlists;
+    private List<Tabs> tabs;  // У користувача може бути багато закладок
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReadingProgress> readingProgress;
