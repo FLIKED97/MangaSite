@@ -1,10 +1,7 @@
 package com.example.MangaWebSite.controller;
 
-import com.example.MangaWebSite.repository.TabsRepository;
 import com.example.MangaWebSite.security.PersonDetails;
-import com.example.MangaWebSite.service.PersonService;
 import com.example.MangaWebSite.service.TabsService;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,14 +13,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @AllArgsConstructor
-@RequestMapping("/main")
-public class MainController {
+@RequestMapping("/tabs")
+public class TabsController {
 
-    private final PersonService personService;
+    private final TabsService tabsService;
 
-    @GetMapping()
-    public String mainPage(Model model){
-        return "main";
+    @GetMapping("/{id}")
+    public String showTabs(@PathVariable("id") int id, Model model){
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
+
+        model.addAttribute("tabs", tabsService.findByPersonId(id));
+        return "tabs/show";
     }
 
 }
