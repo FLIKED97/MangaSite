@@ -23,6 +23,10 @@ public class MainController {
 
     @GetMapping()
     public String mainPage(Model model){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
+
+        model.addAttribute("person", personDetails.getPerson());
         return "main";
     }
 
