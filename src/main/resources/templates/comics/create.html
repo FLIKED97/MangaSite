@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Додати комікс</title>
+    <style>
+        /* Стиль для плаваючого списку з чекбоксами */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            max-height: 200px;
+            overflow-y: auto;
+            width: 300px;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-content label {
+            display: block;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Додати новий комікс</h1>
+
+<form th:action="@{/comics/create}" method="post" enctype="multipart/form-data">
+    <label for="title">Назва коміксу:</label>
+    <input type="text" id="title" name="title" required><br><br>
+
+    <label for="author">Автор:</label>
+    <input type="text" id="author" name="author" required><br><br>
+
+    <label for="description">Опис:</label>
+    <textarea id="description" name="description" required></textarea><br><br>
+
+    <label for="status">Статус:</label>
+    <select id="status" name="status" required>
+        <option value="Випускається">Випускається</option>
+        <option value="Завершено">Завершено</option>
+        <option value="Призупинено">Призупинено</option>
+    </select><br><br>
+
+    <label th:for="genres">Жанри:</label>
+    <div class="dropdown">
+        <button type="button">Обрати жанри</button>
+        <div class="dropdown-content">
+            <div th:each="genre : ${genres}">
+                <label>
+                    <input type="checkbox" th:value="${genre.id}" name="genreIds" />
+                    <span th:text="${genre.name}"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+    <br><br>
+
+    <div>
+        <label for="imageByte">Обкладинка</label>
+        <input type="file" id="imageByte" name="imageByte" required />
+    </div>
+
+    <button type="submit">Додати комікс</button>
+</form>
+
+</body>
+</html>

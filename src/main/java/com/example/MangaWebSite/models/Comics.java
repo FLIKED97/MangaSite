@@ -12,6 +12,7 @@ import java.util.List;
 @Entity
 @Table(name = "comics")
 public class Comics {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -23,12 +24,20 @@ public class Comics {
     @Column(name = "author", nullable = false)
     private String author;
 
+    @Lob // Додаємо анотацію для збереження великих об'єктів (BLOB)
+    @Column(name = "cover_image", nullable = true)
+    private byte[] coverImage; // Поле для обкладинки //TODO Переробити зберігання по іншому через lob
+
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "genre_id", nullable = false)
-    private Genre genre;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "comics_genres", // Проміжна таблиця
+            joinColumns = @JoinColumn(name = "comics_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id")
+    )
+    private List<Genre> genres;  // Зв'язок "багато до багатьох" з жанрами
 
     @Column(name = "status", nullable = false)
     private String status;
@@ -47,7 +56,6 @@ public class Comics {
 
     @ManyToMany(mappedBy = "comics")
     private List<Tabs> tabs;  // Комікси можуть бути в багатьох закладках
-
 
     @OneToMany(mappedBy = "comics", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Statistics> statistics;

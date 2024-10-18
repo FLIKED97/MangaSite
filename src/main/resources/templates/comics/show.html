@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:each="comic : ${comics}">
+    <a th:href="@{/comics/{id}(id=${comic.id})}" class="list-group-item list-group-item-action">
+        <div>
+            <h5 th:text="${comic.title}"></h5>
+            <h5 th:text="${comic.author}"></h5>
+            <h5 th:text="${comic.status}"></h5>
+        </div>
+    </a>
+</div>
+<a th:href="@{/main}" class="btn btn-primary mt-3">На головну</a>
+
+</body>
+</html>

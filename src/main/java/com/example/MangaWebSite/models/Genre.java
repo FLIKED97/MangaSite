@@ -19,6 +19,7 @@ public class Genre {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "genre", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany(mappedBy = "genres")
     private List<Comics> comics;
+
 }
