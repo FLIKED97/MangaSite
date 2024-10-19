@@ -42,4 +42,7 @@ public class ComicsService {
         }
     }
 
+    public Comics getComicById(int id) {
+        return comicsRepository.findById(id).orElse(null);  // Повертаємо комікс або null
+    }
 }

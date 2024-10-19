@@ -19,4 +19,8 @@ public class GenreService {
     public List<Genre> findByIds(List<Integer> genres) {
         return genreRepository.findByIdIn(genres);
     }
+
+    public List<Genre> findByComicsId(int id) {
+    return genreRepository.findByComicsId(id);
+    }
 }

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${comic.title} + ' - Деталі коміксу'">Комікс</title>
+</head>
+<body>
+
+<h1 th:text="${comic.title}">Назва коміксу</h1>
+<p><strong>Автор:</strong> <span th:text="${comic.author}">Автор</span></p>
+<p><strong>Жанр:</strong></p>
+<div th:each="genre : ${genres}">
+    <a th:href="@{/genre/{id}(id=${genre.id})}" class="list-group-item list-group-item-action">
+        <div>
+            <h5 th:text="${genre.name}"></h5>
+        </div>
+    </a>
+</div>
+<p><strong>Опис:</strong></p>
+<p th:text="${comic.description}">Опис коміксу</p>
+
+<!-- Відображення обкладинки -->
+<div>
+    <h3>Обкладинка:</h3>
+    <img th:src="@{/comics/image/{id}(id=${comic.id})}" alt="Обкладинка коміксу" />
+</div>
+
+</body>
+</html>

@@ -24,9 +24,12 @@ public class Comics {
     @Column(name = "author", nullable = false)
     private String author;
 
-    @Lob // Додаємо анотацію для збереження великих об'єктів (BLOB)
+    @Lob // (BLOB)
     @Column(name = "cover_image", nullable = true)
-    private byte[] coverImage; // Поле для обкладинки //TODO Переробити зберігання по іншому через lob
+    private byte[] coverImage;
+
+    @Column(name = "image_type", nullable = true)
+    private String imageType;
 
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
