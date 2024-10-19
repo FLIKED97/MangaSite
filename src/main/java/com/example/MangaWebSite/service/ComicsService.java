@@ -6,12 +6,14 @@ import com.example.MangaWebSite.repository.ComicsRepository;
 import com.example.MangaWebSite.repository.GenreRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class ComicsService {
 
     private final ComicsRepository comicsRepository;
@@ -44,5 +46,10 @@ public class ComicsService {
 
     public Comics getComicById(int id) {
         return comicsRepository.findById(id).orElse(null);  // Повертаємо комікс або null
+    }
+
+
+    public List<Comics> getComicsByTabId(int tabId) {
+        return comicsRepository.findAllByTabsId(tabId);
     }
 }

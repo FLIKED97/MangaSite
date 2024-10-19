@@ -19,11 +19,38 @@
 <p><strong>Опис:</strong></p>
 <p th:text="${comic.description}">Опис коміксу</p>
 
-<!-- Відображення обкладинки -->
 <div>
     <h3>Обкладинка:</h3>
     <img th:src="@{/comics/image/{id}(id=${comic.id})}" alt="Обкладинка коміксу" />
 </div>
+
+<!-- Вибір закладки для додавання комікса -->
+<div>
+    <h3>Додати в закладку:</h3>
+
+    <button type="button" onclick="toggleBookmarks()">Вибрати закладку</button>
+
+    <div id="bookmarkList" style="display:none;">
+        <form th:action="@{/comics/addComicToTab}" method="post">
+            <input type="hidden" name="comicId" th:value="${comic.id}"/>
+            <select name="tabId">
+                <option th:each="tab : ${tabs}" th:value="${tab.id}" th:text="${tab.name}">Закладка</option>
+            </select>
+            <button type="submit">Додати до закладки</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function toggleBookmarks() {
+        const bookmarkList = document.getElementById('bookmarkList');
+        if (bookmarkList.style.display === 'none') {
+            bookmarkList.style.display = 'block';
+        } else {
+            bookmarkList.style.display = 'none';
+        }
+    }
+</script>
 
 </body>
 </html>

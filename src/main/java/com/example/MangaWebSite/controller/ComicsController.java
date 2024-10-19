@@ -2,19 +2,26 @@ package com.example.MangaWebSite.controller;
 
 import com.example.MangaWebSite.models.Comics;
 import com.example.MangaWebSite.models.Genre;
+import com.example.MangaWebSite.models.Person;
+import com.example.MangaWebSite.models.Tabs;
+import com.example.MangaWebSite.security.PersonDetails;
 import com.example.MangaWebSite.service.ComicsService;
 import com.example.MangaWebSite.service.GenreService;
+import com.example.MangaWebSite.service.TabsService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,6 +32,8 @@ public class ComicsController {
 
     private final ComicsService comicsService;
     private final GenreService genreService;
+
+    private final TabsService tabsService;
 
     @GetMapping()
     public String showAllComics(Model model){
@@ -41,6 +50,8 @@ public class ComicsController {
 
     @GetMapping("/{id}")
     public String getComicById(@PathVariable("id") int id, Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
         Comics comic = comicsService.getComicById(id);
         if (comic == null) {
             return "error/404";
@@ -48,6 +59,7 @@ public class ComicsController {
 
         model.addAttribute("comic", comic);
         model.addAttribute("genres", genreService.findByComicsId(id));
+        model.addAttribute("tabs", tabsService.findByPersonId(personDetails.getPerson().getId()));
         return "comics/comic-details";
     }
     @GetMapping("/image/{id}")
@@ -87,6 +99,21 @@ public class ComicsController {
         return "redirect:/comics";
     }
 
+    @PostMapping("/addComicToTab")
+    public String addComicToTab(@RequestParam int comicId, @RequestParam int tabId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
+
+        Tabs tab = tabsService.findById(tabId);
+
+        if (tab.getPerson().getId() == personDetails.getPerson().getId()) {
+            Comics comic = comicsService.getComicById(comicId);
+            tab.getComics().add(comic);
+            tabsService.save(tab); // Зберігаємо зміни в базі
+        }
+
+        return "redirect:/comics/" + comicId;
+    }
 
 
 }

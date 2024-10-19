@@ -62,4 +62,6 @@ public class Comics {
 
     @OneToMany(mappedBy = "comics", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Statistics> statistics;
+
+
 }
