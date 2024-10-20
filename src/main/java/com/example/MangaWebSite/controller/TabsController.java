@@ -1,14 +1,15 @@
 package com.example.MangaWebSite.controller;
 
+import com.example.MangaWebSite.models.Comics;
+import com.example.MangaWebSite.models.Tabs;
 import com.example.MangaWebSite.service.ComicsService;
 import com.example.MangaWebSite.service.TabsService;
 import lombok.AllArgsConstructor;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @Controller
@@ -30,6 +31,17 @@ public class TabsController {
         model.addAttribute("comics", comicsService.getComicsByTabId(tabId));
         return "tabs/comicsList :: comics-fragment";  // Повертаємо фрагмент для оновлення через AJAX
     }
+    @GetMapping("/create")
+    public String formTab(Model model){
+        model.addAttribute("tab", new Tabs());
+        return "tabs/create";
+    }
+    @PostMapping("/create")
+    public String createTab(@ModelAttribute("tab") Tabs tab) {
+        int personId = tabsService.saveWithRedirect(tab);  //TODO Можливо переробити, не дуже подобається варіант
+        return "redirect:/tabs/person/" + personId;
+    }
+
 
 }
 

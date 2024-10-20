@@ -3,11 +3,15 @@ package com.example.MangaWebSite.service;
 import com.example.MangaWebSite.models.Comics;
 import com.example.MangaWebSite.models.Tabs;
 import com.example.MangaWebSite.repository.TabsRepository;
+import com.example.MangaWebSite.security.PersonDetails;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -24,11 +28,19 @@ public class TabsService {
         return tabsRepository.findById(tabId).orElse(null);
     }
 
+    public int saveWithRedirect(Tabs tab) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
+        tab.setAddedAt(new Date());
+        tab.setPerson(personDetails.getPerson());
+        tabsRepository.save(tab);
+
+        return tab.getPerson().getId();
+    }
+
     public void save(Tabs tab) {
         tabsRepository.save(tab);
     }
-
-
     public List<Comics> findComicsByTabId(int tabId) {
         return tabsRepository.findById(tabId)
                 .map(Tabs::getComics)

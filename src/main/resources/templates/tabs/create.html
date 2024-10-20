@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Додати нову закладку</h1>
+
+<form th:action="@{/tabs/create}" method="post">
+    <input type="hidden" th:value="${personId}" name="personId" />
+    <label for="name">Назва закладки:</label>
+    <input type="text" id="name" name="name" required />
+    <button type="submit">Створити</button>
+</form>
+
+
+</body>
+</html>
