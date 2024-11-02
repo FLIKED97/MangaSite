@@ -9,11 +9,10 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "chapters")
+@Table(name = "chapters", uniqueConstraints = @UniqueConstraint(columnNames = {"comic_id", "chapter_number"}))
 public class Chapter {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private int id;
 
     @ManyToOne

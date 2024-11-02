@@ -49,16 +49,16 @@ public class ComicsController {
     }
 
     @GetMapping("/{id}")
-    public String getComicById(@PathVariable("id") int id, Model model) {
+    public String getComicById(@PathVariable("id") int comicId, Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
-        Comics comic = comicsService.getComicById(id);
+        Comics comic = comicsService.getComicById(comicId);
         if (comic == null) {
             return "error/404";
         }
 
         model.addAttribute("comic", comic);
-        model.addAttribute("genres", genreService.findByComicsId(id));
+        model.addAttribute("genres", genreService.findByComicsId(comicId));
         model.addAttribute("tabs", tabsService.findByPersonId(personDetails.getPerson().getId()));
         return "comics/comic-details";
     }
