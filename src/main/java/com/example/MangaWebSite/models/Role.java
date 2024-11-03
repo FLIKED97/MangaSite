@@ -3,6 +3,6 @@ package com.example.MangaWebSite.models;
 public enum Role {
     ROLE_USER,
     READER,
-    PUBLISHER,
+    ROLE_PUBLISHER,
     ADMIN
 }

@@ -3,6 +3,7 @@ package com.example.MangaWebSite.models;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -32,6 +33,7 @@ public class Chapter {
     @Column(name = "pages_count", nullable = false)
     private int pagesCount;
 
-    @Column(name = "release_date", nullable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "release_date")
     private Date releaseDate;
 }
