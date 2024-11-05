@@ -54,4 +54,14 @@ public class PublisherService {
     public Publisher findByPersonId(int personId) {
         return publisherRepository.findPublisherByPersonId(personId);
     }
+
+    public Publisher findById(int id) {
+        return publisherRepository.findById(id).orElse(null);
+    }
+
+    public void updateGroupName(int id, String name) {
+        Publisher publisher = findById(id);
+        publisher.setName(name);
+        publisherRepository.save(publisher);
+    }
 }

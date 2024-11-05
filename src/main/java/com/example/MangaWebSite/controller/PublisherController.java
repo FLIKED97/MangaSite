@@ -27,13 +27,26 @@ public class PublisherController {
         publisherService.register(publisher);
         return "redirect:/main";
     }
-    @GetMapping("/group")
-    public String infoGroup(Model model){
+    @GetMapping("/group/{id}")
+    public String infoGroup(@PathVariable int id, Model model){
+        Publisher publisher = publisherService.findById(id);
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
+        //  Publisher publisher = publisherService.findByPersonId(personDetails.getPerson().getId()); //TODO ВИКОРИСТАТИ ДЛЯ ГОЛОВНОЇ СТОРІНКИ
 
-        model.addAttribute("publisher", publisherService.findByPersonId(personDetails.getPerson().getId()));
+        model.addAttribute("publisher", publisher);
+        if(publisher.getAdminId() == personDetails.getPerson().getId()) {
+            boolean isLeader = true;
+            model.addAttribute("isLeader", isLeader);
+        }
         return "publisher/group";
+    }
+    @PostMapping("/group/{id}/update")
+    public String updateNameGroup(@PathVariable int id, @RequestParam("name") String name){
+        publisherService.updateGroupName(id, name);
+        return "redirect:/publisher/group/" + id;
+
     }
 
 }
