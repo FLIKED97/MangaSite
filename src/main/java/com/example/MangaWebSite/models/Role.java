@@ -4,5 +4,5 @@ public enum Role {
     ROLE_USER,
     READER,
     ROLE_PUBLISHER,
-    ADMIN
+    ROLE_ADMIN
 }

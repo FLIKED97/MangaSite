@@ -45,7 +45,38 @@ public class Person {
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SearchHistory> searchHistory;
 
-    @OneToOne(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToOne
+    @JoinColumn(name = "publisher_id")
     private Publisher publisher;
+
+    public void setPublisher(Publisher publisher) {
+        // Запобігання нескінченному циклу
+        if (this.publisher == publisher) return;
+
+        // Зберігаємо старого видавця
+        Publisher oldPublisher = this.publisher;
+
+        // Встановлюємо нового видавця
+        this.publisher = publisher;
+
+        // Видаляємо з попереднього видавця
+        if (oldPublisher != null) {
+            oldPublisher.removePerson(this);
+        }
+
+        // Додаємо себе до нового видавця
+        if (publisher != null) {
+            publisher.addPerson(this);
+        }
+    }
+
+//    public void setPublisher(Publisher publisher) {
+//        this.publisher = publisher;
+//        if (!publisher.getPersons().contains(this)) {
+//            publisher.getPersons().add(this);
+//        }
+//    }
+
+
 }
 

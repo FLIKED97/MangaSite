@@ -29,7 +29,7 @@ public class ComicsService {
 
     public Comics saveComic(Comics comic) {
         comic.setCreatedAt(new Date());  // Встановлюємо поточну дату
-        return comicsRepository.save(comic);  // Зберігаємо комікс і повертаємо його зі збереженим ID
+        return comicsRepository.save(comic);  // Зберігаємо комікс і повертаємо його зі збереженим ID //TODO Переробити щоб створювати комікси могли тільки ROLE_PUBLISHER
     }
     public void addGenresToComic(Comics comic, List<Integer> genreIds) {
         // Знаходимо жанри за їхніми ідентифікаторами

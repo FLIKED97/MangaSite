@@ -25,7 +25,7 @@ public class ChapterService {
         Integer lastChapterNumber = chapterRepository.findMaxChapterNumberByComicId(comicId);
         newChapter.setChapterNumber(lastChapterNumber != null ? lastChapterNumber + 1 : 1);
         newChapter.setComics(comicsRepository.findById(comicId).orElse(null));
-        newChapter.setPublisher(personDetails.getPerson().getPublisher()); //TODO ДОРОБИТИ ФУНКЦІОНАЛ РЕЄСТРАЦІЯ КОРИСТУВАЧА У ПУБЛІКАТОРА КОМІКСІВ
+        newChapter.setPublisher(personDetails.getPerson().getPublisher());
         chapterRepository.save(newChapter);
     }
 }

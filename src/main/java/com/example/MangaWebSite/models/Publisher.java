@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -17,17 +18,46 @@ public class Publisher {
     @Column(name = "id")
     private int id;
 
-    @OneToOne
-    @JoinColumn(name = "person_id", nullable = false)
-    private Person person;
-
     @Column(name = "name", nullable = false)
     private String name;
+
+    @Column(name = "admin_id", nullable = false)
+    private int adminId;
 
     @Column(name = "created_at", nullable = false)
     private Date createdAt;
 
     @OneToMany(mappedBy = "publisher", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Chapter> chapters;
+    private List<Person> persons = new ArrayList<>();
+
+    @OneToMany(mappedBy = "publisher", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Chapter> chapters = new ArrayList<>();
+
+    public void addPerson(Person person) {
+        // Запобігання нескінченному циклу
+        if (persons.contains(person)) return;
+
+        // Додаємо нову особу до списку
+        persons.add(person);
+
+        // Встановлюємо посилання на видавця у Person
+        person.setPublisher(this);
+    }
+
+    public void removePerson(Person person) {
+        // Запобігання нескінченному циклу
+        if (!persons.contains(person)) return;
+
+        // Видаляємо Person з колекції
+        persons.remove(person);
+
+        // Знімаємо посилання на видавця у Person
+        person.setPublisher(null);
+    }
+
+//    public void addPerson(Person person) {
+//        persons.add(person);
+//        person.setPublisher(this);  // Встановлення з обох сторін
+//    }
 }
 

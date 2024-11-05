@@ -54,7 +54,9 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers("/auth/**")
                         .permitAll()
-                        .requestMatchers("/publisher/**")
+                        .requestMatchers("/publisher/register")
+                        .permitAll()
+                        .requestMatchers("/publisher/**", "/chapters/**")
                         .hasRole("PUBLISHER") // Publisher-specific routes
                         .requestMatchers("/user/**", "/reservation/**", "/main/**")
                         .hasAnyRole("USER", "PUBLISHER") // User routes for all
@@ -99,7 +101,7 @@ public class SecurityConfig {
         return RoleHierarchyImpl.fromHierarchy("ROLE_PUBLISHER > ROLE_USER \n ROLE_ADMIN > ROLE_PUBLISHER");
     }
     @Bean
-    public SecurityExpressionHandler<FilterInvocation> webSecurityExpressionHandler() {
+    public SecurityExpressionHandler<FilterInvocation> customWebSecurityExpressionHandler() {
         DefaultWebSecurityExpressionHandler handler = new DefaultWebSecurityExpressionHandler();
         handler.setRoleHierarchy(roleHierarchy());
         return handler;

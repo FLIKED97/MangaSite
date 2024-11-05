@@ -21,10 +21,9 @@ public class ChapterController {
     }
 
     @PostMapping("/add")
-    public String addNewChapter(@RequestParam("comicId") int comicId, @ModelAttribute("chapter") Chapter chapter){
-
+    public String addNewChapter(@RequestParam("comicId") int comicId, @ModelAttribute("chapter") Chapter chapter) {
         chapterService.addChapter(comicId, chapter);
-
-        return null;
+        return "redirect:/main";
     }
+
 }
