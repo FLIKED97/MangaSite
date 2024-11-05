@@ -51,4 +51,7 @@ public class PublisherService {
 
     }
 
+    public Publisher findByPersonId(int personId) {
+        return publisherRepository.findPublisherByPersonId(personId);
+    }
 }

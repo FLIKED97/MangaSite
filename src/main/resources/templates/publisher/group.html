@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Group Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Group: <span th:text="${publisher.name}"></span></h1>
+
+    <h2>Members</h2>
+    <ul class="list-group mb-3">
+        <li class="list-group-item d-flex justify-content-between align-items-center" th:each="person : ${publisher.persons}">
+            <span th:text="${person.username}"></span>
+            <span th:if="${person.id == publisher.adminId}" class="badge badge-primary">Лідер групи</span>
+        </li>
+    </ul>
+
+    <div th:if="${isLeader}">
+        <h3>Edit Group</h3>
+        <form th:action="@{/publisher/groups/{id}/update(id=${publisher.id})}" method="post" class="mb-3">
+            <div class="form-group">
+                <label for="name">Group Name:</label>
+                <input type="text" id="name" name="name" class="form-control" th:value="${publisher.name}" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+
+        <form th:action="@{/publisher/groups/{id}/delete(id=${publisher.id})}" method="post" class="mb-3">
+            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this group?')">Delete Group</button>
+        </form>
+
+        <h3>Add New Member</h3>
+        <form th:action="@{/publisher/groups/{id}/addMember(id=${publisher.id})}" method="post">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-success">Add Member</button>
+        </form>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

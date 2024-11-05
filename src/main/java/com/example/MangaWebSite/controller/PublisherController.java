@@ -27,5 +27,13 @@ public class PublisherController {
         publisherService.register(publisher);
         return "redirect:/main";
     }
+    @GetMapping("/group")
+    public String infoGroup(Model model){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
+
+        model.addAttribute("publisher", publisherService.findByPersonId(personDetails.getPerson().getId()));
+        return "publisher/group";
+    }
 
 }
