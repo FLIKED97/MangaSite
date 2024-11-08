@@ -2,12 +2,15 @@ package com.example.MangaWebSite.service;
 
 import com.example.MangaWebSite.models.Comics;
 import com.example.MangaWebSite.models.Genre;
+import com.example.MangaWebSite.models.Rating;
 import com.example.MangaWebSite.repository.ComicsRepository;
 import com.example.MangaWebSite.repository.GenreRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -51,5 +54,20 @@ public class ComicsService {
 
     public List<Comics> getComicsByTabId(int tabId) {
         return comicsRepository.findAllByTabsId(tabId);
+    }
+
+    public List<Comics> getComicsSortedBy(String sortBy) {
+        List<Comics> comicsList = comicsRepository.findAll();
+
+        if ("rating".equals(sortBy)) {
+            comicsList.sort((c1, c2) -> Double.compare(c2.getAverageRating(), c1.getAverageRating()));
+        } else if ("views".equals(sortBy)) {
+            comicsList.sort(Comparator.comparingInt(Comics::getViewCount).reversed());
+        }
+        return comicsList;
+    }
+    private double calculateAverageRating(Comics comics) {
+        List<Rating> ratings = comics.getRatings();
+        return ratings.isEmpty() ? 0 : ratings.stream().mapToInt(Rating::getRating).average().orElse(0);
     }
 }

@@ -63,5 +63,23 @@ public class Comics {
     @OneToMany(mappedBy = "comics", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Statistics> statistics;
 
+    @OneToMany(mappedBy = "comics", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Rating> ratings; //TODO Реалізувати присвоєння рейтинга коміксу
+
+    // Метод для обчислення середньої оцінки
+    public double getAverageRating() {
+        return ratings.stream()
+                .mapToInt(Rating::getRating)
+                .average()
+                .orElse(0.0);
+    }
+
+    // Метод для зберігання кількості переглядів
+    @Column(name = "view_count", nullable = false)
+    private int viewCount = 0;
+
+    public void incrementViewCount() {
+        this.viewCount++;
+    }
 
 }

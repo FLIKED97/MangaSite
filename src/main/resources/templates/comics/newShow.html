@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Comics List</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container my-4">
+  <h1 class="mb-4">Comics Collection</h1>
+
+  <!-- Sorting Options -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <form action="#" method="get">
+        <label for="sortBy" class="mr-2 font-weight-bold">Sort by:</label>
+        <select id="sortBy" name="sortBy" class="form-control d-inline w-auto" th:onchange="submit()">
+          <option value="rating" th:selected="${sortBy == 'rating'}">Average Rating</option>
+          <option value="views" th:selected="${sortBy == 'views'}">View Count</option>
+        </select>
+      </form>
+    </div>
+  </div>
+
+  <!-- Comics List -->
+  <div class="row">
+    <div class="col-lg-4 mb-4" th:each="comic : ${comics}">
+      <div class="card h-100">
+        <!-- Comic Cover Image -->
+        <img th:src="@{/comics/image/{id}(id=${comic.id})}"
+             class="card-img-top" alt="Comic Cover"/>
+
+        <div class="card-body">
+          <h5 class="card-title" th:text="${comic.title}">Comic Title</h5>
+          <p class="card-text">
+            <strong>Author:</strong> <span th:text="${comic.author}">Author</span><br>
+            <strong>Description:</strong>
+            <span th:text="${comic.description}">Description</span>
+          </p>
+        </div>
+        <div class="card-footer text-muted d-flex justify-content-between align-items-center">
+          <div>
+            <span th:text="'Rating: ' + ${comic.getAverageRating()} + ' / 5'">Rating: 0 / 5</span><br>
+            <span th:text="'Views: ' + ${comic.viewCount}">Views: 0</span>
+          </div>
+          <a th:href="@{/comics/{id}(id=${comic.id})}" class="btn btn-primary">View Details</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

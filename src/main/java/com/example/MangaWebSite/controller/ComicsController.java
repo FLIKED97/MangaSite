@@ -115,5 +115,13 @@ public class ComicsController {
         return "redirect:/comics/" + comicId;
     }
 
+    @GetMapping("/newShow")
+    public String listComics(@RequestParam(name = "sortBy", required = false, defaultValue = "rating") String sortBy, Model model) {
+        List<Comics> comics = comicsService.getComicsSortedBy(sortBy);
+        model.addAttribute("comics", comics);
+        model.addAttribute("sortBy", sortBy);
+        return "comics/newShow";
+    }
+
 
 }
