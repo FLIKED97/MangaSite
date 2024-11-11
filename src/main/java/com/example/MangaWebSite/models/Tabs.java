@@ -3,6 +3,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class Tabs {
     private List<Comics> comics;  // Багато коміксів можуть бути в одній закладці
 
     @Column(name = "added_at", nullable = false)
-    private Date addedAt;
+    private LocalDate addedAt;
 }
 
 

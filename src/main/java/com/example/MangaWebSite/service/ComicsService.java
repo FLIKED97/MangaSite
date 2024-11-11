@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -31,7 +32,7 @@ public class ComicsService {
     }
 
     public Comics saveComic(Comics comic) {
-        comic.setCreatedAt(new Date());  // Встановлюємо поточну дату
+        comic.setCreatedAt(LocalDate.now());  // Встановлюємо поточну дату
         return comicsRepository.save(comic);  // Зберігаємо комікс і повертаємо його зі збереженим ID //TODO Переробити щоб створювати комікси могли тільки ROLE_PUBLISHER
     }
     public void addGenresToComic(Comics comic, List<Integer> genreIds) {
@@ -69,5 +70,14 @@ public class ComicsService {
     private double calculateAverageRating(Comics comics) {
         List<Rating> ratings = comics.getRatings();
         return ratings.isEmpty() ? 0 : ratings.stream().mapToInt(Rating::getRating).average().orElse(0);
+    }
+
+    public List<Comics> getPopularComics() {
+        return comicsRepository.findAllByOrderByViewCountDesc();
+    }
+
+    public List<Comics> getPopularComicsWithNewChapters(double threshold) {
+        LocalDate oneMonthAgo = LocalDate.now().minusMonths(1);
+        return comicsRepository.findPopularComicsWithNewChapters(threshold, oneMonthAgo);
     }
 }

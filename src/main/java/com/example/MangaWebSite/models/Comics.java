@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class Comics {
     private String status;
 
     @Column(name = "created_at", nullable = false)
-    private Date createdAt;
+    private LocalDate createdAt;
 
     @OneToMany(mappedBy = "comics", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Chapter> chapters;
@@ -81,5 +82,17 @@ public class Comics {
     public void incrementViewCount() {
         this.viewCount++;
     }
+
+    @Column(name = "popularity_rating")
+    private double popularityRating = 1.0;
+
+    public void calculatePopularityRating() {
+        double viewScore = this.viewCount * 0.5;  // 0.5 балів за кожен перегляд
+        double ratingScore = getAverageRating() * 2;  // середня оцінка * 2
+        double commentScore = this.comments.size() * 1.0;  // 1 бал за кожен коментар
+
+        this.popularityRating = viewScore + ratingScore + commentScore;
+    }
+
 
 }

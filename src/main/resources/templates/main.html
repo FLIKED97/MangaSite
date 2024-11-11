@@ -1,12 +1,103 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manga Club</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom styles for padding */
+        .main-content {
+            margin: 20px;
+        }
+        .comic-card {
+            margin-right: 15px;
+        }
+        .comic-cover {
+            height: 200px;
+            object-fit: cover;
+        }
+    </style>
 </head>
-<body>
-<a th:href="@{/tabs/person/{id}(id=${person.id})}" class="btn btn-primary mt-3">Закладки</a>
-<a th:href="@{/comics}" class="btn btn-primary mt-3">Комікси</a>
+<body class="bg-dark text-light">
+<!-- Top Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">ComicsHub</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/tabs/person/{id}(id=${person.id})}">Закладки</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/comics/newShow}">Комікси</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Button 1</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Button 2</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav">
+            <li class="nav-item" th:if="${#authentication.name == 'anonymousUser'}">
+                <a class="nav-link btn btn-warning text-dark" href="#">Вхід | Реєстрація</a>
+            </li>
+            <li class="nav-item" th:if="${#authentication.name != 'anonymousUser'}">
+                <a class="nav-link text-light" href="#">[USERNAME]</a>
+            </li>
+        </ul>
+    </div>
+</nav>
 
+<!-- Main Content -->
+<div class="container main-content">
+    <!-- Recommended Comics Section -->
+    <section class="my-5">
+        <h3>Популярні нові глави</h3>
+        <div class="d-flex overflow-auto">
+            <div th:each="comic : ${popularComicsWithNewChapters}" class="comic-card">
+                <div class="card bg-secondary text-light" style="width: 150px;">
+                    <img th:src="@{/images/comic-cover.png}" alt="Comic Cover" class="card-img-top comic-cover">
+                    <div class="card-body p-2">
+                        <h6 th:text="${comic.title}" class="card-title text-truncate"></h6>
+<!--                        <p class="card-text"><small th:text="'Глава ' + ${comic.latestChapter}"></small></p>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Continue Reading Section -->
+    <section class="my-5">
+        <h3>Продовжити читати</h3>
+        <div class="card bg-secondary text-light p-3">
+<!--            <div th:each="comic : ${recentlyRead}" class="d-flex align-items-center mb-3">-->
+<!--                <img th:src="@{/images/comic-thumbnail.png}" alt="Comic Thumbnail" class="mr-3" style="width: 60px; height: 60px; object-fit: cover;">-->
+<!--                <div>-->
+<!--                    <h6 th:text="${comic.title}"></h6>-->
+<!--                    <small th:text="'Глава ' + ${comic.currentChapter} + ' — ' + ${comic.pagesRead} + ' из ' + ${comic.totalPages}"></small>-->
+<!--                    <div class="progress" style="height: 5px;">-->
+<!--                        <div class="progress-bar bg-warning" role="progressbar" th:style="'width: ' + (${comic.pagesRead} / ${comic.totalPages} * 100) + '%;'"></div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+        </div>
+    </section>
+
+    <!-- Placeholder for Future Content -->
+    <section class="my-5">
+        <h3>Нові комікси (заглушка)</h3>
+        <div class="alert alert-secondary">Тут з'являться нові комікси...</div>
+    </section>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

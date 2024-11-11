@@ -12,6 +12,7 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import static com.example.MangaWebSite.models.Role.ROLE_PUBLISHER;
@@ -32,7 +33,7 @@ public class PublisherService {
         assert person != null;
         person.setRole(ROLE_PUBLISHER);
 
-        publisher.setCreatedAt(new Date());
+        publisher.setCreatedAt(LocalDate.now());
         publisher.setAdminId(person.getId()); //TODO Доробити так якщо вже є група, то її видаляють і створюють нову
         publisherRepository.save(publisher);
 

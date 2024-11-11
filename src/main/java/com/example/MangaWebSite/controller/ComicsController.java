@@ -117,8 +117,7 @@ public class ComicsController {
 
     @GetMapping("/newShow")
     public String listComics(@RequestParam(name = "sortBy", required = false, defaultValue = "rating") String sortBy, Model model) {
-        List<Comics> comics = comicsService.getComicsSortedBy(sortBy);
-        model.addAttribute("comics", comics);
+        model.addAttribute("comics", comicsService.getComicsSortedBy(sortBy));
         model.addAttribute("sortBy", sortBy);
         return "comics/newShow";
     }

@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -31,7 +32,7 @@ public class TabsService {
     public int saveWithRedirect(Tabs tab) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
-        tab.setAddedAt(new Date());
+        tab.setAddedAt(LocalDate.now());
         tab.setPerson(personDetails.getPerson());
         tabsRepository.save(tab);
 
