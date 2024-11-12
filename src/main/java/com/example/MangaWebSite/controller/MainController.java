@@ -33,18 +33,19 @@ public class MainController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
 
-//        // Set a default threshold value or pass it as a parameter
-//        double threshold = 1.0; // Adjust the threshold as needed
-//
-//        try {
-//            List<Comics> popularComics = comicsService.getPopularComicsWithNewChapters(threshold);
-//            model.addAttribute("popularComicsWithNewChapters", popularComics);
-//        } catch (Exception e) {
-//            // Handle the exception appropriately, e.g., log the error and display an error message to the user
-//            logger.error("Error fetching popular comics:", e);
-//            model.addAttribute("errorMessage", "An error occurred while fetching popular comics.");
-//        }
-        model.addAttribute("popularComicsWithNewChapters", comicsService.getPopularComics()); //TODO ПЕРЕРОБИТИ ЩОБ ВИВОДИЛИСЬ КОМІКСИ З ПОПУЛЯРНИХ І ЩОБ НА ПОЧАТКУ БУЛИ З САМИМИ НОВИМИ ГЛАВАМИ
+        double threshold = 1.0;
+
+        try {
+            List<Comics> popularComics = comicsService.getPopularComicsWithNewChapters(threshold);
+            logger.info("Fetched popular comics: " + popularComics.size() + " items");
+            for (Comics comic : popularComics) {
+                logger.info("Comic: " + comic.getTitle() + ", Popularity Rating: " + comic.getPopularityRating());
+            }
+            model.addAttribute("popularComicsWithNewChapters", popularComics);
+        } catch (Exception e) {
+            logger.error("Error fetching popular comics:", e);
+            model.addAttribute("errorMessage", "An error occurred while fetching popular comics.");
+        }
 
         model.addAttribute("person", personDetails.getPerson());
         return "main";
