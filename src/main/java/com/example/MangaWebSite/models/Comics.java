@@ -60,10 +60,14 @@ public class Comics {
 
     @ManyToMany(mappedBy = "comics")
     private List<Tabs> tabs;  // Комікси можуть бути в багатьох закладках
+    @Column(name = "view_count", nullable = false)
+    private int viewCount = 0;
 
     @OneToMany(mappedBy = "comics", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Statistics> statistics;
 
+    @Column(name = "popularity_rating")
+    private double popularityRating = 1.0;
     @OneToMany(mappedBy = "comics", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Rating> ratings; //TODO Реалізувати присвоєння рейтинга коміксу
 
@@ -75,16 +79,9 @@ public class Comics {
                 .orElse(0.0);
     }
 
-    // Метод для зберігання кількості переглядів
-    @Column(name = "view_count", nullable = false)
-    private int viewCount = 0;
-
     public void incrementViewCount() {
         this.viewCount++;
     }
-
-    @Column(name = "popularity_rating")
-    private double popularityRating = 1.0;
 
     public void calculatePopularityRating() {
         double viewScore = this.viewCount * 0.5;  // 0.5 балів за кожен перегляд
@@ -93,6 +90,5 @@ public class Comics {
 
         this.popularityRating = viewScore + ratingScore + commentScore;
     }
-
 
 }

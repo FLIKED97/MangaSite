@@ -61,11 +61,13 @@
         <div class="d-flex overflow-auto">
             <div th:each="comic : ${popularComicsWithNewChapters}" class="comic-card">
                 <div class="card bg-secondary text-light" style="width: 150px;">
-                    <img th:src="@{/images/comic-cover.png}" alt="Comic Cover" class="card-img-top comic-cover">
+                    <img th:src="@{/comics/image/{id}(id=${comic.id})}" alt="Comic Cover" class="card-img-top comic-cover">
                     <div class="card-body p-2">
                         <h6 th:text="${comic.title}" class="card-title text-truncate"></h6>
-<!--                        <p class="card-text"><small th:text="'Глава ' + ${comic.latestChapter}"></small></p>-->
-                    </div>
+                        <p class="card-text">
+                            <small th:text="'Глава ' + ${latestChapters[comic.id]}"></small>
+                        </p>
+                     </div>
                 </div>
             </div>
         </div>

@@ -1,5 +1,6 @@
 package com.example.MangaWebSite.service;
 
+import com.example.MangaWebSite.models.Chapter;
 import com.example.MangaWebSite.models.Comics;
 import com.example.MangaWebSite.models.Genre;
 import com.example.MangaWebSite.models.Rating;
@@ -7,6 +8,7 @@ import com.example.MangaWebSite.repository.ComicsRepository;
 import com.example.MangaWebSite.repository.GenreRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +16,7 @@ import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -32,7 +35,7 @@ public class ComicsService {
     }
 
     public Comics saveComic(Comics comic) {
-        comic.setCreatedAt(LocalDate.now());  // Встановлюємо поточну дату
+        comic.setCreatedAt(LocalDate.now());
         return comicsRepository.save(comic);  // Зберігаємо комікс і повертаємо його зі збереженим ID //TODO Переробити щоб створювати комікси могли тільки ROLE_PUBLISHER
     }
     public void addGenresToComic(Comics comic, List<Integer> genreIds) {
@@ -80,4 +83,20 @@ public class ComicsService {
         LocalDate oneMonthAgo = LocalDate.now().minusMonths(1);
         return comicsRepository.findPopularComicsWithNewChapters(threshold, oneMonthAgo);
     }
+
+    @Transactional
+    @Scheduled(cron = "0 0 0 * * *")  // Оновлюється щодня опівночі
+    public void updateComicsPopularityRatings() {
+        List<Comics> allComics = comicsRepository.findAll();
+
+        for (Comics comic : allComics) {
+            comic.calculatePopularityRating();
+            comicsRepository.save(comic);
+        }
+
+        System.out.println("Updated popularity ratings for all comics.");
+    }
+
+
+
 }

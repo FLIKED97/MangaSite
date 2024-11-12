@@ -10,6 +10,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @AllArgsConstructor
 public class ChapterService {
@@ -22,10 +24,15 @@ public class ChapterService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
 
-        Integer lastChapterNumber = chapterRepository.findMaxChapterNumberByComicId(comicId);
-        newChapter.setChapterNumber(lastChapterNumber != null ? lastChapterNumber + 1 : 1);
+        Chapter lastChapter = chapterRepository.findLatestChapterByComicId(comicId).orElse(null);
+        newChapter.setChapterNumber(lastChapter != null ? lastChapter.getChapterNumber() + 1 : 1);
         newChapter.setComics(comicsRepository.findById(comicId).orElse(null));
         newChapter.setPublisher(personDetails.getPerson().getPublisher());
         chapterRepository.save(newChapter);
+    }
+
+    public String getLatestChapterTitle(int comicId) {
+        Optional<Chapter> latestChapter = chapterRepository.findLatestChapterByComicId(comicId);
+        return latestChapter.map(Chapter::getTitle).orElse("Немає глав");
     }
 }
