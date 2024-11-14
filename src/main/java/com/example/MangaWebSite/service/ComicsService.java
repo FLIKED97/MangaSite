@@ -1,9 +1,6 @@
 package com.example.MangaWebSite.service;
 
-import com.example.MangaWebSite.models.Chapter;
-import com.example.MangaWebSite.models.Comics;
-import com.example.MangaWebSite.models.Genre;
-import com.example.MangaWebSite.models.Rating;
+import com.example.MangaWebSite.models.*;
 import com.example.MangaWebSite.repository.ComicsRepository;
 import com.example.MangaWebSite.repository.GenreRepository;
 import lombok.AllArgsConstructor;
@@ -98,5 +95,7 @@ public class ComicsService {
     }
 
 
-
+    public List<Comics> getRecentlyRead(Person person) {
+        return null;
+    }
 }

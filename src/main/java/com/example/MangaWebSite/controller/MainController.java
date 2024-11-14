@@ -50,6 +50,7 @@ public class MainController {
 //            }
             model.addAttribute("popularComicsWithNewChapters", popularComics);
             model.addAttribute("latestChapters", latestChapters);
+            model.addAttribute("recentlyRead", comicsService.getRecentlyRead(personDetails.getPerson()));
 
 //        } catch (Exception e) {
 //            logger.error("Error fetching popular comics:", e);

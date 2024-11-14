@@ -6,7 +6,9 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -17,7 +19,7 @@ public class Chapter {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comic_id", nullable = false)
     private Comics comics;
 
@@ -37,4 +39,22 @@ public class Chapter {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "release_date")
     private LocalDate releaseDate;
+    @OneToMany(mappedBy = "chapter", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Page> pages = new ArrayList<>();
+
+    // Метод для додавання сторінки
+    public void addPage(Page page) {
+        pages.add(page);
+        page.setChapter(this); // Встановлюємо зв'язок сторінки з главою
+    }
+//    @OneToMany(mappedBy = "chapter", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Page> pages = new ArrayList<>();
+
+//    public void addPage(Page page) {
+//        if (pages == null) {
+//            pages = new ArrayList<>();
+//        }
+//        pages.add(page);
+//        page.setChapter(this); // Встановлюємо зворотне посилання на главу
+//    }
 }
