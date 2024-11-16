@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -16,4 +17,5 @@ public interface ChapterRepository extends JpaRepository<Chapter, Integer> {
     @Query("SELECT c FROM Chapter c WHERE c.comics.id = :comicId AND c.chapterNumber = (SELECT MAX(ch.chapterNumber) FROM Chapter ch WHERE ch.comics.id = :comicId)")
     Optional<Chapter> findLatestChapterByComicId(@Param("comicId") int comicId);
 
+    List<Chapter> findAllByComicsId(int comicId);
 }

@@ -80,4 +80,7 @@ public class ChapterService {
         chapterRepository.save(newChapter);  // Зберігає главу разом зі сторінками
     }
 
+    public List<Chapter> findAllChapterByComicsId(int comicId) {
+        return chapterRepository.findAllByComicsId(comicId);
+    }
 }

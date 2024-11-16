@@ -5,6 +5,7 @@ import com.example.MangaWebSite.models.Genre;
 import com.example.MangaWebSite.models.Person;
 import com.example.MangaWebSite.models.Tabs;
 import com.example.MangaWebSite.security.PersonDetails;
+import com.example.MangaWebSite.service.ChapterService;
 import com.example.MangaWebSite.service.ComicsService;
 import com.example.MangaWebSite.service.GenreService;
 import com.example.MangaWebSite.service.TabsService;
@@ -34,6 +35,7 @@ public class ComicsController {
     private final GenreService genreService;
 
     private final TabsService tabsService;
+    private final ChapterService chapterService;
 
     @GetMapping()
     public String showAllComics(Model model){
@@ -60,6 +62,7 @@ public class ComicsController {
         model.addAttribute("comic", comic);
         model.addAttribute("genres", genreService.findByComicsId(comicId));
         model.addAttribute("tabs", tabsService.findByPersonId(personDetails.getPerson().getId()));
+        model.addAttribute("chapters", chapterService.findAllChapterByComicsId(comicId));
         return "comics/comic-details";
     }
     @GetMapping("/image/{id}")
