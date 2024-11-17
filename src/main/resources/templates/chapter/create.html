@@ -23,8 +23,8 @@
 
     <!-- Поле для завантаження файлів -->
     <div class="mb-3">
-      <label for="pages" class="form-label">Сторінки глави</label>
-      <input type="file" id="pages" name="pages" class="form-control" multiple accept="image/*" required>
+      <label for="comicPages" class="form-label">Сторінки глави</label>
+      <input type="file" id="comicPages" name="comicPages" class="form-control" multiple accept="image/*" required>
     </div>
 
     <!-- Попередній перегляд завантажених фотографій -->
@@ -44,7 +44,7 @@
 <!-- Скрипт для попереднього перегляду та сортування файлів -->
 <script>
   // Попередній перегляд завантажених фотографій
-  document.getElementById('pages').addEventListener('change', function(event) {
+  document.getElementById('comicPages').addEventListener('change', function(event) {
     const container = document.getElementById('preview-container');
     container.innerHTML = ''; // Очищаємо попередній вміст
 

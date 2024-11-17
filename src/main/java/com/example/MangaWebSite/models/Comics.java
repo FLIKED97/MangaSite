@@ -1,11 +1,15 @@
 package com.example.MangaWebSite.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
@@ -27,6 +31,7 @@ public class Comics {
     private String author;
 
     @Lob // (BLOB)
+    @JsonIgnore // Додаємо цю анотацію
     @Column(name = "cover_image", nullable = true)
     private byte[] coverImage;
 
@@ -50,25 +55,29 @@ public class Comics {
     @Column(name = "created_at", nullable = false)
     private LocalDate createdAt;
 
+    @JsonIgnoreProperties({"comics", "comicPages"})
     @OneToMany(mappedBy = "comics", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Chapter> chapters;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "comics", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "comics", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReadingProgress> readingProgress;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "comics")
     private List<Tabs> tabs;  // Комікси можуть бути в багатьох закладках
     @Column(name = "view_count", nullable = false)
     private int viewCount = 0;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "comics", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Statistics> statistics;
 
     @Column(name = "popularity_rating")
     private double popularityRating = 1.0;
+    @JsonIgnore
     @OneToMany(mappedBy = "comics", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Rating> ratings; //TODO Реалізувати присвоєння рейтинга коміксу
 
@@ -91,5 +100,9 @@ public class Comics {
 
         this.popularityRating = viewScore + ratingScore + commentScore;
     }
-
+    @JsonProperty("coverImageBase64")
+    public String getCoverImageBase64() {
+        if (coverImage == null) return null;
+        return Base64.getEncoder().encodeToString(coverImage);
+    }
 }

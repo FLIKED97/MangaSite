@@ -1,6 +1,7 @@
 package com.example.MangaWebSite.repository;
 
 import com.example.MangaWebSite.models.Chapter;
+import com.example.MangaWebSite.models.Comics;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,4 +19,6 @@ public interface ChapterRepository extends JpaRepository<Chapter, Integer> {
     Optional<Chapter> findLatestChapterByComicId(@Param("comicId") int comicId);
 
     List<Chapter> findAllByComicsId(int comicId);
+
+    Chapter findFirstByComicsAndChapterNumberGreaterThanOrderByChapterNumberAsc(Comics comics, int chapterNumber);
 }

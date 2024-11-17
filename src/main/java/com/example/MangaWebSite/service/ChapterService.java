@@ -1,8 +1,8 @@
 package com.example.MangaWebSite.service;
 
 import com.example.MangaWebSite.models.Chapter;
+import com.example.MangaWebSite.models.ComicPage;
 import com.example.MangaWebSite.models.Comics;
-import com.example.MangaWebSite.models.Page;
 import com.example.MangaWebSite.repository.ChapterRepository;
 import com.example.MangaWebSite.repository.ComicsRepository;
 import com.example.MangaWebSite.security.PersonDetails;
@@ -68,12 +68,12 @@ public class ChapterService {
                 Path filePath = Paths.get(chapterDir, fileName);
                 Files.copy(pageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-                Page page = new Page();
-                page.setChapter(newChapter);
-                page.setImagePath(filePath.toString());
-                page.setPageNumber(pageNumber++);
-//                pages.add(page);
-                newChapter.addPage(page);  // Додаємо сторінку до глави
+                ComicPage comicPage = new ComicPage();
+                comicPage.setChapter(newChapter);
+                comicPage.setImagePath(filePath.toString());
+                comicPage.setPageNumber(pageNumber++);
+//                pages.add(comicPage);
+                newChapter.addPage(comicPage);  // Додаємо сторінку до глави
             }
         }
 
@@ -83,4 +83,16 @@ public class ChapterService {
     public List<Chapter> findAllChapterByComicsId(int comicId) {
         return chapterRepository.findAllByComicsId(comicId);
     }
+
+    public Chapter findById(int id) {
+    return chapterRepository.findById(id).orElse(null);
+    }
+
+    public Chapter findNextChapter(Chapter currentChapter) {
+        return chapterRepository.findFirstByComicsAndChapterNumberGreaterThanOrderByChapterNumberAsc(
+                currentChapter.getComics(),
+                currentChapter.getChapterNumber()
+        );
+    }
+
 }

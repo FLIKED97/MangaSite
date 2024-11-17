@@ -1,5 +1,6 @@
 package com.example.MangaWebSite.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,7 +8,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -19,11 +19,13 @@ public class Chapter {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @JsonIgnoreProperties("chapters")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comic_id", nullable = false)
     private Comics comics;
 
-    @ManyToOne
+    @JsonIgnoreProperties("chapters")
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "publisher_id", nullable = false)
     private Publisher publisher;
 
@@ -39,22 +41,25 @@ public class Chapter {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "release_date")
     private LocalDate releaseDate;
+
+    @JsonIgnoreProperties("chapter")
     @OneToMany(mappedBy = "chapter", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Page> pages = new ArrayList<>();
+    @OrderBy("pageNumber ASC")
+    private List<ComicPage> comicPages = new ArrayList<>();
 
     // Метод для додавання сторінки
-    public void addPage(Page page) {
-        pages.add(page);
-        page.setChapter(this); // Встановлюємо зв'язок сторінки з главою
+    public void addPage(ComicPage comicPage) {
+        comicPages.add(comicPage);
+        comicPage.setChapter(this); // Встановлюємо зв'язок сторінки з главою
     }
 //    @OneToMany(mappedBy = "chapter", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Page> pages = new ArrayList<>();
+//    private List<ComicPage> comicPages = new ArrayList<>();
 
-//    public void addPage(Page page) {
-//        if (pages == null) {
-//            pages = new ArrayList<>();
+//    public void addPage(ComicPage page) {
+//        if (comicPages == null) {
+//            comicPages = new ArrayList<>();
 //        }
-//        pages.add(page);
+//        comicPages.add(page);
 //        page.setChapter(this); // Встановлюємо зворотне посилання на главу
 //    }
 }

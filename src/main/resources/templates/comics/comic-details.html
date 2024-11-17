@@ -9,7 +9,9 @@
 
 <div class="container mt-5">
     <h1 th:text="${comic.title}">Назва коміксу</h1>
-
+    <div>
+        <img th:src="@{/comics/image/{id}(id=${comic.id})}" alt="Обкладинка коміксу" class="img-fluid"/>
+    </div>
     <!-- Вкладки -->
     <ul class="nav nav-tabs" id="comicTabs" role="tablist">
         <li class="nav-item" role="presentation">
@@ -28,17 +30,13 @@
         <!-- Інформація -->
         <div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
             <p><strong>Автор:</strong> <span th:text="${comic.author}">Автор</span></p>
+            <p><strong>Опис:</strong></p>
+            <p th:text="${comic.description}">Опис коміксу</p>
             <p><strong>Жанр:</strong></p>
             <div th:each="genre : ${genres}">
                 <a th:href="@{/genre/{id}(id=${genre.id})}" class="list-group-item list-group-item-action">
                     <h5 th:text="${genre.name}"></h5>
                 </a>
-            </div>
-            <p><strong>Опис:</strong></p>
-            <p th:text="${comic.description}">Опис коміксу</p>
-            <div>
-                <h3>Обкладинка:</h3>
-                <img th:src="@{/comics/image/{id}(id=${comic.id})}" alt="Обкладинка коміксу" class="img-fluid"/>
             </div>
             <h3 class="mt-3">Похожі комікси:</h3>
             <div th:each="similarComic : ${similarComics}" class="mb-2">

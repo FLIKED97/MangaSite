@@ -8,12 +8,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "pages")
-public class Page {
+public class ComicPage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chapter_id", nullable = false)
     private Chapter chapter;
 
@@ -22,5 +22,14 @@ public class Page {
 
     @Column(name = "page_number", nullable = false)
     private int pageNumber;
+
+    @Override
+    public String toString() {
+        return "ComicPage{" +
+                "id=" + id +
+                ", pageNumber=" + pageNumber +
+                ", imagePath='" + imagePath + '\'' +
+                '}';
+    }
 }
 
