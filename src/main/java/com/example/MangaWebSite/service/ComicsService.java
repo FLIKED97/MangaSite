@@ -98,4 +98,17 @@ public class ComicsService {
     public List<Comics> getRecentlyRead(Person person) {
         return null;
     }
+
+    public List<Comics> getComicsByGenresAndSort(List<Integer> genres, String sortBy) {
+
+        List<Genre> genresName = genreRepository.findByIdIn(genres);
+        List<Comics> comicsList = comicsRepository.findAllComicsByGenres(genresName);
+
+        if ("rating".equals(sortBy)) {
+            comicsList.sort((c1, c2) -> Double.compare(c2.getAverageRating(), c1.getAverageRating()));
+        } else if ("views".equals(sortBy)) {
+            comicsList.sort(Comparator.comparingInt(Comics::getViewCount).reversed());
+        }
+        return comicsList;
+    }
 }

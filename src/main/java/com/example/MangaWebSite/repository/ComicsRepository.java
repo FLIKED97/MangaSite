@@ -1,6 +1,7 @@
 package com.example.MangaWebSite.repository;
 
 import com.example.MangaWebSite.models.Comics;
+import com.example.MangaWebSite.models.Genre;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,4 +21,7 @@ public interface ComicsRepository extends JpaRepository<Comics, Integer> {
     @Query("SELECT c FROM Comics c JOIN c.chapters ch WHERE c.popularityRating > :threshold AND ch.releaseDate > :oneMonthAgo")
     List<Comics> findPopularComicsWithNewChapters(@Param("threshold")double threshold, @Param("oneMonthAgo") LocalDate oneMonthAgo);
 
+
+
+    List<Comics> findAllComicsByGenres(List<Genre> genres);
 }

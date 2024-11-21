@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,11 +38,11 @@ public class ComicsController {
     private final TabsService tabsService;
     private final ChapterService chapterService;
 
-    @GetMapping()
-    public String showAllComics(Model model){
-        model.addAttribute("comics", comicsService.showAll());
-        return "comics/show";
-    }
+//    @GetMapping()
+//    public String showAllComics(Model model){
+//        model.addAttribute("comics", comicsService.showAll());
+//        return "comics/show";
+//    }
 
     @GetMapping("/create")
     public String createComics(Model model){
@@ -119,9 +120,20 @@ public class ComicsController {
     }
 
     @GetMapping("/newShow")
-    public String listComics(@RequestParam(name = "sortBy", required = false, defaultValue = "rating") String sortBy, Model model) {
-        model.addAttribute("comics", comicsService.getComicsSortedBy(sortBy));
+    public String listComics(@RequestParam(name = "sortBy", required = false, defaultValue = "rating") String sortBy,
+                             Model model,
+                             @RequestParam(name = "genres", required = false) List<Integer> genres) {
+        List<Comics> comics;
+        if (genres != null && !genres.isEmpty()) {
+            comics = comicsService.getComicsByGenresAndSort(genres, sortBy); // Фільтрація за жанрами
+        } else {
+            comics = comicsService.getComicsSortedBy(sortBy); // Без фільтрації
+        }
+
+        model.addAttribute("comics", comics);
         model.addAttribute("sortBy", sortBy);
+        model.addAttribute("allGenres", genreService.findAll());
+        model.addAttribute("selectedGenres", genres != null ? genres : new ArrayList<>()); // Для відображення вибраних
         return "comics/newShow";
     }
 
