@@ -20,8 +20,5 @@ public interface ComicsRepository extends JpaRepository<Comics, Integer> {
     // Метод для вибору популярних коміксів із новими главами
     @Query("SELECT c FROM Comics c JOIN c.chapters ch WHERE c.popularityRating > :threshold AND ch.releaseDate > :oneMonthAgo")
     List<Comics> findPopularComicsWithNewChapters(@Param("threshold")double threshold, @Param("oneMonthAgo") LocalDate oneMonthAgo);
-
-
-
     List<Comics> findAllComicsByGenres(List<Genre> genres);
 }
