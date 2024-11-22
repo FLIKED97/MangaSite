@@ -5,10 +5,7 @@ import com.example.MangaWebSite.models.Genre;
 import com.example.MangaWebSite.models.Person;
 import com.example.MangaWebSite.models.Tabs;
 import com.example.MangaWebSite.security.PersonDetails;
-import com.example.MangaWebSite.service.ChapterService;
-import com.example.MangaWebSite.service.ComicsService;
-import com.example.MangaWebSite.service.GenreService;
-import com.example.MangaWebSite.service.TabsService;
+import com.example.MangaWebSite.service.*;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -38,6 +35,8 @@ public class ComicsController {
     private final TabsService tabsService;
     private final ChapterService chapterService;
 
+    private final RatingService ratingService;
+
 //    @GetMapping()
 //    public String showAllComics(Model model){
 //        model.addAttribute("comics", comicsService.showAll());
@@ -64,6 +63,7 @@ public class ComicsController {
         model.addAttribute("genres", genreService.findByComicsId(comicId));
         model.addAttribute("tabs", tabsService.findByPersonId(personDetails.getPerson().getId()));
         model.addAttribute("chapters", chapterService.findAllChapterByComicsId(comicId));
+        model.addAttribute("userRating", ratingService.getUserRating(comicId, personDetails.getPerson().getId()));
         return "comics/comic-details";
     }
     @GetMapping("/image/{id}")

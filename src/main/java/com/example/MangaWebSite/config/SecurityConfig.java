@@ -58,7 +58,7 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers("/publisher/**", "/chapters/**")
                         .hasRole("PUBLISHER") // Publisher-specific routes
-                        .requestMatchers("/user/**", "/reservation/**", "/main/**")
+                        .requestMatchers("/user/**", "/reservation/**", "/main/**", "/ratings/**")
                         .hasAnyRole("USER", "PUBLISHER") // User routes for all
                         .requestMatchers("/endpoint", "*/admin/**")
                         .hasRole("ADMIN")
