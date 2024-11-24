@@ -10,8 +10,9 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "reading_progress")
-public class ReadingProgress {
+@Table(name = "reading_progress", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"person_id", "comic_id"})
+})public class ReadingProgress {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -34,5 +35,12 @@ public class ReadingProgress {
 
     @Column(name = "updated_at", nullable = false)
     private LocalDate updatedAt;
+
+    @PrePersist
+    @PreUpdate
+    public void updateTimestamp() {
+        this.updatedAt = LocalDate.now();
+    }
+
 }
 

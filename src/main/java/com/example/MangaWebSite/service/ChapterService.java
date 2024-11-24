@@ -55,6 +55,7 @@ public class ChapterService {
         newChapter.setPublisher(personDetails.getPerson().getPublisher());
         newChapter.setChapterNumber(lastChapter != null ? lastChapter.getChapterNumber() + 1 : 1);
         newChapter.setComics(comic);
+        newChapter.setPagesCount(pageFiles.size());
 
         chapterRepository.save(newChapter);
 

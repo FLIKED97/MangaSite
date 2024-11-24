@@ -2,9 +2,12 @@ package com.example.MangaWebSite.controller;
 
 import com.example.MangaWebSite.models.Chapter;
 import com.example.MangaWebSite.models.ComicPage;
+import com.example.MangaWebSite.models.ReadingProgress;
+import com.example.MangaWebSite.security.PersonDetails;
 import com.example.MangaWebSite.service.ChapterService;
 import com.example.MangaWebSite.service.FileSorterService;
 import com.example.MangaWebSite.service.PageService;
+import com.example.MangaWebSite.service.ReadingProgressService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +38,8 @@ public class ChapterController {
     private final ChapterService chapterService;
 
     private final PageService pageService;
+
+    private final ReadingProgressService readingProgressService;
 
 
     @GetMapping("/add")
@@ -60,6 +67,15 @@ public class ChapterController {
 
         model.addAttribute("chapter", chapter);
         model.addAttribute("nextChapter", nextChapter);
+
+        ReadingProgress progress = readingProgressService.findByPersonAndComic(chapter.getComics());
+        if (progress == null) {
+            System.out.println("Прогрес не знайдено для коміксу: " + chapter.getComics().getId());
+        } else {
+            System.out.println("Прогрес знайдено: " + progress.getLastPage());
+        }
+
+        model.addAttribute("lastPage", progress != null ? progress.getLastPage() : 0);
 
         return "chapter/show";
     }
@@ -95,8 +111,23 @@ public class ChapterController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+    @PostMapping("/{id}/progress")
+    @ResponseBody
+    public ResponseEntity<?> updateProgress(
+            @PathVariable int id,
+            @RequestParam int lastPage) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
+        System.out.println(lastPage);
 
-
-
+        try {
+            Chapter chapter = chapterService.findById(id);
+            readingProgressService.saveOrUpdateProgress(personDetails.getPerson(), chapter, lastPage);
+            return ResponseEntity.ok("Progress updated");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating progress");
+        }
+    }
 
 }

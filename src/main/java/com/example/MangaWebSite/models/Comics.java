@@ -8,9 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -32,6 +30,7 @@ public class Comics {
 
     @Lob // (BLOB)
     @JsonIgnore // Додаємо цю анотацію
+    @Basic(fetch = FetchType.LAZY)
     @Column(name = "cover_image", nullable = true)
     private byte[] coverImage;
 
@@ -79,7 +78,7 @@ public class Comics {
     private double popularityRating = 1.0;
     @JsonIgnore
     @OneToMany(mappedBy = "comics", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Rating> ratings; //TODO Реалізувати присвоєння рейтинга коміксу
+    private List<Rating> ratings;
 
     // Метод для обчислення середньої оцінки
     public double getAverageRating() {
