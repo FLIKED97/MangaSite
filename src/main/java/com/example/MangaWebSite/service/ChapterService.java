@@ -96,4 +96,9 @@ public class ChapterService {
         );
     }
 
+
+    // Отримати загальну кількість сторінок для глави
+    public int getTotalPagesForChapter() {
+        return chapterRepository.findAll().size();
+    }
 }

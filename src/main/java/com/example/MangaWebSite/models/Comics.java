@@ -104,4 +104,8 @@ public class Comics {
         if (coverImage == null) return null;
         return Base64.getEncoder().encodeToString(coverImage);
     }
+
+    public int getTotalPagesForChapter(Chapter chapter) {
+        return chapter.getComicPages().size();
+    }
 }

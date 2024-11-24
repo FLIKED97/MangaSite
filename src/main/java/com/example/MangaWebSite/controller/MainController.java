@@ -1,11 +1,12 @@
 package com.example.MangaWebSite.controller;
 
 import com.example.MangaWebSite.models.Comics;
-import com.example.MangaWebSite.repository.ChapterRepository;
+import com.example.MangaWebSite.models.ReadingProgress;
 import com.example.MangaWebSite.security.PersonDetails;
 import com.example.MangaWebSite.service.ChapterService;
 import com.example.MangaWebSite.service.ComicsService;
 import com.example.MangaWebSite.service.PersonService;
+import com.example.MangaWebSite.service.ReadingProgressService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,8 @@ public class MainController {
     private final ComicsService comicsService;
 
     private final ChapterService chapterService;
+
+    private final ReadingProgressService readingProgressService;
 
     private static final Logger logger = LoggerFactory.getLogger(MainController.class); // For SLF4J
 
@@ -56,6 +59,10 @@ public class MainController {
 //            logger.error("Error fetching popular comics:", e);
 //            model.addAttribute("errorMessage", "An error occurred while fetching popular comics.");
 //        }
+
+        List<ReadingProgress> readingProgresses = readingProgressService.getRecentlyReadComicsWithProgress(personDetails.getPerson().getId());
+        model.addAttribute("recentlyRead", readingProgresses);
+
 
         model.addAttribute("person", personDetails.getPerson());
         return "main";

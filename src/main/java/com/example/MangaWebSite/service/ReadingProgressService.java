@@ -4,10 +4,14 @@ import com.example.MangaWebSite.models.*;
 import com.example.MangaWebSite.repository.ReadingProgressRepository;
 import com.example.MangaWebSite.security.PersonDetails;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 
 @Service
@@ -37,5 +41,11 @@ public class ReadingProgressService {
         PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
 
         return readingProgressRepository.findByPersonIdAndComicsId(personDetails.getPerson().getId(), comics.getId()).orElse(null);
+    }
+
+    public List<ReadingProgress> getRecentlyReadComicsWithProgress(int id) {
+        Pageable topFive = PageRequest.of(0, 5); // Сторінка 0, розмір 5
+
+        return readingProgressRepository.findRecentlyReadByPersonId(id, topFive);
     }
 }

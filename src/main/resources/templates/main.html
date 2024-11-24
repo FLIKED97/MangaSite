@@ -77,18 +77,35 @@
     <section class="my-5">
         <h3>Продовжити читати</h3>
         <div class="card bg-secondary text-light p-3">
-<!--            <div th:each="comic : ${recentlyRead}" class="d-flex align-items-center mb-3">-->
-<!--                <img th:src="@{/images/comic-thumbnail.png}" alt="Comic Thumbnail" class="mr-3" style="width: 60px; height: 60px; object-fit: cover;">-->
-<!--                <div>-->
-<!--                    <h6 th:text="${comic.title}"></h6>-->
-<!--                    <small th:text="'Глава ' + ${comic.currentChapter} + ' — ' + ${comic.pagesRead} + ' из ' + ${comic.totalPages}"></small>-->
-<!--                    <div class="progress" style="height: 5px;">-->
-<!--                        <div class="progress-bar bg-warning" role="progressbar" th:style="'width: ' + (${comic.pagesRead} / ${comic.totalPages} * 100) + '%;'"></div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
+            <div th:each="progress : ${recentlyRead}" class="d-flex align-items-center mb-3">
+                <!-- Зображення -->
+                <img th:src="@{/comics/image/{id}(id=${progress.comics.id})}"
+                     alt="Comic Thumbnail"
+                     class="mr-3"
+                     style="width: 60px; height: 60px; object-fit: cover;">
+
+                <!-- Інформація про комікс -->
+                <div>
+                    <h6 th:text="${progress.comics.title}">Назва коміксу</h6>
+
+                    <!-- Дані про главу і сторінки -->
+                    <small>
+                        <span th:text="'Глава ' + ${progress.chapter.chapterNumber} + ': ' + ${progress.chapter.title}"></span>
+                        <span th:text="'— Сторінка ' + ${progress.lastPage}"></span>
+                    </small>
+                    <div th:with="totalPages=${@chapterService.getTotalPagesForChapter()}">
+                    <!-- Прогрес читання -->
+                    <div class="progress" style="height: 5px;">
+                        <div class="progress-bar bg-warning" role="progressbar"
+                             th:style="'width: ' + (${progress.lastPage} / ${totalPages} * 100) + '%;'">
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
+
 
     <!-- Placeholder for Future Content -->
     <section class="my-5">
