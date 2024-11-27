@@ -2,6 +2,8 @@ package com.example.MangaWebSite.repository;
 
 import com.example.MangaWebSite.models.Chapter;
 import com.example.MangaWebSite.models.Comics;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,4 +23,11 @@ public interface ChapterRepository extends JpaRepository<Chapter, Integer> {
     List<Chapter> findAllByComicsId(int comicId);
 
     Chapter findFirstByComicsAndChapterNumberGreaterThanOrderByChapterNumberAsc(Comics comics, int chapterNumber);
+
+    @Query("SELECT ch FROM Chapter ch " +
+            "JOIN ch.comics c " +
+            "JOIN c.tabs t " +
+            "WHERE t.person.id = :personId ")
+    Page<Chapter> findNewChaptersInTabs(@Param("personId") int personId, Pageable pageable);
+
 }

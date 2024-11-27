@@ -18,6 +18,10 @@
             height: 200px;
             object-fit: cover;
         }
+        /* Приховуємо секцію */
+        .d-none {
+            display: none;
+        }
     </style>
 </head>
 <body class="bg-dark text-light">
@@ -110,26 +114,52 @@
         <h3>Нові комікси (заглушка)</h3>
         <div class="alert alert-secondary">Тут з'являться нові комікси...</div>
     </section>
+
     <!-- Placeholder for Future Content -->
-    <section class="my-5" id="new-comics-section">
-        <h3>Нові комікси</h3>
-        <div id="new-comics-container">
-            <div th:each="newCom : ${newComics}" class="d-flex align-items-center mb-3">
-                <img loading="lazy" th:src="@{/comics/image/{id}(id=${newCom.id})}"
-                     alt="Comic Thumbnail"
-                     class="mr-3"
-                     style="width: 60px; height: 60px; object-fit: cover;">
-                <div>
-                    <h6 th:text="${newCom.title}">Назва коміксу</h6>
+    <div class="my-5">
+        <div class="d-flex justify-content-center mb-3">
+            <button id="newComicsButton" class="btn btn-primary mx-2">Нові комікси</button>
+            <button id="bookmarkedComicsButton" class="btn btn-secondary mx-2">Закладки</button>
+        </div>
+
+        <!-- Секція "Нові комікси" -->
+        <section class="my-5" id="new-comics-section">
+            <h3>Нові комікси</h3>
+            <div id="new-comics-container">
+                <div th:each="newCom : ${newComics}" class="d-flex align-items-center mb-3">
+                    <img loading="lazy" th:src="@{/comics/image/{id}(id=${newCom.id})}"
+                         alt="Comic Thumbnail"
+                         class="mr-3"
+                         style="width: 60px; height: 60px; object-fit: cover;">
+                    <div>
+                        <h6 th:text="${newCom.title}">Назва коміксу</h6>
+                    </div>
                 </div>
             </div>
-        </div>
+            <div id="loading" class="text-center my-3" style="display: none;">
+                <span>Завантаження...</span>
+            </div>
+        </section>
 
-        <div id="loading" class="text-center my-3" style="display: none;">
-            <span>Завантаження...</span>
-        </div>
-    </section>
+        <!-- Секція "Закладки з новими главами" -->
+        <section class="my-5 d-none" id="bookmarked-comics-section">
+            <h3>Нові глави у закладках</h3>
+            <div id="bookmarked-comics-container">
+                <div th:each="chapter : ${bookmarkedComics}" class="d-flex align-items-center mb-3">
+                    <img loading="lazy" th:src="@{/comics/image/{id}(id=${chapter.comics.id})}"
+                         alt="Comic Thumbnail"
+                         class="mr-3"
+                         style="width: 60px; height: 60px; object-fit: cover;">
+                    <div>
+                        <h6 th:text="${chapter.comics.title}">Назва коміксу</h6>
+                        <small th:text="'Глава ' + ${chapter.chapterNumber}"></small>
+                        <p th:text="'Додано: ' + ${chapter.releaseDate}"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
+    </div>
 
 </div>
 
@@ -188,6 +218,31 @@
                 document.getElementById('loading').style.display = 'none';
             });
     }
+    document.addEventListener('DOMContentLoaded', () => {
+        const newComicsButton = document.getElementById('newComicsButton');
+        const bookmarkedComicsButton = document.getElementById('bookmarkedComicsButton');
+
+        const newComicsSection = document.getElementById('new-comics-section');
+        const bookmarkedComicsSection = document.getElementById('bookmarked-comics-section');
+
+        newComicsButton.addEventListener('click', () => {
+            newComicsSection.classList.remove('d-none');
+            bookmarkedComicsSection.classList.add('d-none');
+            newComicsButton.classList.add('btn-primary');
+            newComicsButton.classList.remove('btn-secondary');
+            bookmarkedComicsButton.classList.add('btn-secondary');
+            bookmarkedComicsButton.classList.remove('btn-primary');
+        });
+
+        bookmarkedComicsButton.addEventListener('click', () => {
+            bookmarkedComicsSection.classList.remove('d-none');
+            newComicsSection.classList.add('d-none');
+            bookmarkedComicsButton.classList.add('btn-primary');
+            bookmarkedComicsButton.classList.remove('btn-secondary');
+            newComicsButton.classList.add('btn-secondary');
+            newComicsButton.classList.remove('btn-primary');
+        });
+    });
 </script>
 </body>
 </html>

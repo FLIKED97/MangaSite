@@ -3,12 +3,15 @@ package com.example.MangaWebSite.service;
 import com.example.MangaWebSite.models.*;
 import com.example.MangaWebSite.repository.ComicsRepository;
 import com.example.MangaWebSite.repository.GenreRepository;
+import com.example.MangaWebSite.security.PersonDetails;
 import lombok.AllArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -105,5 +108,6 @@ public class ComicsService {
         Pageable pageable = PageRequest.of(page, 10, Sort.by("createdAt").descending());
         return comicsRepository.findAll(pageable);
     }
+
 
 }

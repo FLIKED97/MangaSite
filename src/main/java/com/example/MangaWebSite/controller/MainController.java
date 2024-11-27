@@ -1,12 +1,10 @@
 package com.example.MangaWebSite.controller;
 
+import com.example.MangaWebSite.models.Chapter;
 import com.example.MangaWebSite.models.Comics;
 import com.example.MangaWebSite.models.ReadingProgress;
 import com.example.MangaWebSite.security.PersonDetails;
-import com.example.MangaWebSite.service.ChapterService;
-import com.example.MangaWebSite.service.ComicsService;
-import com.example.MangaWebSite.service.PersonService;
-import com.example.MangaWebSite.service.ReadingProgressService;
+import com.example.MangaWebSite.service.*;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +36,8 @@ public class MainController {
     private final ChapterService chapterService;
 
     private final ReadingProgressService readingProgressService;
+
+    private final TabsService tabsService;
 
     private static final Logger logger = LoggerFactory.getLogger(MainController.class); // For SLF4J
 
@@ -73,6 +73,7 @@ public class MainController {
 
         //Нові комікси
         model.addAttribute("newComics", comicsService.getNewCreatedComics(0).getContent());
+        model.addAttribute("bookmarkedComics", chapterService.getNewChaptersInTabs(0));
         return "main";
     }
     @GetMapping("/comics/new")
@@ -86,4 +87,14 @@ public class MainController {
         }
     }
 
+    @GetMapping("/chapter/new")
+    @ResponseBody
+    public ResponseEntity<List<Chapter>> getNewChapterComics(@RequestParam("page") int page) {
+        try {
+            Page<Chapter> comicsPage = chapterService.getNewChaptersInTabs(page);
+            return ResponseEntity.ok(comicsPage.getContent());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

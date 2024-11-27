@@ -8,6 +8,10 @@ import com.example.MangaWebSite.repository.ComicsRepository;
 import com.example.MangaWebSite.security.PersonDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -96,9 +100,20 @@ public class ChapterService {
         );
     }
 
-
     // Отримати загальну кількість сторінок для глави
     public int getTotalPagesForChapter() {
         return chapterRepository.findAll().size();
+    }
+
+    public Page<Chapter> getNewChaptersInTabs(int page) {
+        // Отримуємо поточного користувача
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
+        int personId = personDetails.getPerson().getId();
+        Pageable pageable = PageRequest.of(page, 10, Sort.by("releaseDate").descending());
+
+
+        // Отримуємо нові глави з репозиторію
+        return chapterRepository.findNewChaptersInTabs(personId, pageable);
     }
 }
