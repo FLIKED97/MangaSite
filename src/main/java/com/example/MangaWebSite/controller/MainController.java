@@ -10,12 +10,17 @@ import com.example.MangaWebSite.service.ReadingProgressService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
 import java.util.List;
@@ -65,7 +70,20 @@ public class MainController {
 
 
         model.addAttribute("person", personDetails.getPerson());
+
+        //Нові комікси
+        model.addAttribute("newComics", comicsService.getNewCreatedComics(0).getContent());
         return "main";
+    }
+    @GetMapping("/comics/new")
+    @ResponseBody
+    public ResponseEntity<List<Comics>> getNewComics(@RequestParam("page") int page) {
+        try {
+            Page<Comics> comicsPage = comicsService.getNewCreatedComics(page);
+            return ResponseEntity.ok(comicsPage.getContent());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
 }

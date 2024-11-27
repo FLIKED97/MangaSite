@@ -105,18 +105,89 @@
             </div>
         </div>
     </section>
-
-
     <!-- Placeholder for Future Content -->
     <section class="my-5">
         <h3>Нові комікси (заглушка)</h3>
         <div class="alert alert-secondary">Тут з'являться нові комікси...</div>
     </section>
+    <!-- Placeholder for Future Content -->
+    <section class="my-5" id="new-comics-section">
+        <h3>Нові комікси</h3>
+        <div id="new-comics-container">
+            <div th:each="newCom : ${newComics}" class="d-flex align-items-center mb-3">
+                <img loading="lazy" th:src="@{/comics/image/{id}(id=${newCom.id})}"
+                     alt="Comic Thumbnail"
+                     class="mr-3"
+                     style="width: 60px; height: 60px; object-fit: cover;">
+                <div>
+                    <h6 th:text="${newCom.title}">Назва коміксу</h6>
+                </div>
+            </div>
+        </div>
+
+        <div id="loading" class="text-center my-3" style="display: none;">
+            <span>Завантаження...</span>
+        </div>
+    </section>
+
+
 </div>
 
 <!-- Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    let page = 1; // Поточна сторінка
+    let isLoading = false;
+
+    window.addEventListener('scroll', () => {
+        const scrollHeight = document.documentElement.scrollHeight;
+        const scrollTop = document.documentElement.scrollTop;
+        const clientHeight = document.documentElement.clientHeight;
+
+        // Завантажуємо нові комікси, коли досягнуто кінця сторінки
+        if (!isLoading && scrollHeight - scrollTop <= clientHeight + 50) {
+            loadMoreComics();
+        }
+    });
+
+    function loadMoreComics() {
+        isLoading = true;
+        document.getElementById('loading').style.display = 'block';
+
+        fetch(`/main/comics/new?page=${page}`)
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById('new-comics-container');
+                data.forEach(comic => {
+                    const div = document.createElement('div');
+                    div.className = 'd-flex align-items-center mb-3';
+                    div.innerHTML = `
+                        <img src="/comics/image/${comic.id}"
+                             alt="Comic Thumbnail"
+                             class="mr-3"
+                             style="width: 60px; height: 60px; object-fit: cover;">
+                        <div>
+                            <h6>${comic.title}</h6>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+
+                if (data.length > 0) {
+                    page++; // Збільшуємо номер сторінки
+                }
+
+                isLoading = false;
+                document.getElementById('loading').style.display = 'none';
+            })
+            .catch(error => {
+                console.error('Помилка при завантаженні:', error);
+                isLoading = false;
+                document.getElementById('loading').style.display = 'none';
+            });
+    }
+</script>
 </body>
 </html>

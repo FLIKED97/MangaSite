@@ -44,7 +44,7 @@ public class ReadingProgressService {
     }
 
     public List<ReadingProgress> getRecentlyReadComicsWithProgress(int id) {
-        Pageable topFive = PageRequest.of(0, 5); // Сторінка 0, розмір 5
+        Pageable topFive = PageRequest.of(0, 10); // Сторінка 0, розмір 10
 
         return readingProgressRepository.findRecentlyReadByPersonId(id, topFive);
     }
