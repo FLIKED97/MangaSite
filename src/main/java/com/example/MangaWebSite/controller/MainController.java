@@ -74,6 +74,7 @@ public class MainController {
         //Нові комікси
         model.addAttribute("newComics", comicsService.getNewCreatedComics(0).getContent());
         model.addAttribute("bookmarkedComics", chapterService.getNewChaptersInTabs(0));
+        //TODO Зробити щоб вони також грузились як нові коміксі
         return "main";
     }
     @GetMapping("/comics/new")
