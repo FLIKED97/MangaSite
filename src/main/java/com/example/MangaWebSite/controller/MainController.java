@@ -15,10 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -88,12 +85,12 @@ public class MainController {
         }
     }
 
-    @GetMapping("/chapter/new")
+    @GetMapping("/comics/bookmarked")
     @ResponseBody
-    public ResponseEntity<List<Chapter>> getNewChapterComics(@RequestParam("page") int page) {
+    public ResponseEntity<List<Chapter>> getBookmarkedComics(@RequestParam("page") int page) {
         try {
-            Page<Chapter> comicsPage = chapterService.getNewChaptersInTabs(page);
-            return ResponseEntity.ok(comicsPage.getContent());
+            Page<Chapter> chaptersPage = chapterService.getNewChaptersInTabs(page);
+            return ResponseEntity.ok(chaptersPage.getContent());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

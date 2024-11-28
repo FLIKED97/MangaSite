@@ -163,86 +163,10 @@
 
 </div>
 
+<script src="/js/main-script.js"></script>
 <!-- Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script>
-    let page = 1; // Поточна сторінка
-    let isLoading = false;
-
-    window.addEventListener('scroll', () => {
-        const scrollHeight = document.documentElement.scrollHeight;
-        const scrollTop = document.documentElement.scrollTop;
-        const clientHeight = document.documentElement.clientHeight;
-
-        // Завантажуємо нові комікси, коли досягнуто кінця сторінки
-        if (!isLoading && scrollHeight - scrollTop <= clientHeight + 50) {
-            loadMoreComics();
-        }
-    });
-
-    function loadMoreComics() {
-        isLoading = true;
-        document.getElementById('loading').style.display = 'block';
-
-        fetch(`/main/comics/new?page=${page}`)
-            .then(response => response.json())
-            .then(data => {
-                const container = document.getElementById('new-comics-container');
-                data.forEach(comic => {
-                    const div = document.createElement('div');
-                    div.className = 'd-flex align-items-center mb-3';
-                    div.innerHTML = `
-                        <img src="/comics/image/${comic.id}"
-                             alt="Comic Thumbnail"
-                             class="mr-3"
-                             style="width: 60px; height: 60px; object-fit: cover;">
-                        <div>
-                            <h6>${comic.title}</h6>
-                        </div>
-                    `;
-                    container.appendChild(div);
-                });
-
-                if (data.length > 0) {
-                    page++; // Збільшуємо номер сторінки
-                }
-
-                isLoading = false;
-                document.getElementById('loading').style.display = 'none';
-            })
-            .catch(error => {
-                console.error('Помилка при завантаженні:', error);
-                isLoading = false;
-                document.getElementById('loading').style.display = 'none';
-            });
-    }
-    document.addEventListener('DOMContentLoaded', () => {
-        const newComicsButton = document.getElementById('newComicsButton');
-        const bookmarkedComicsButton = document.getElementById('bookmarkedComicsButton');
-
-        const newComicsSection = document.getElementById('new-comics-section');
-        const bookmarkedComicsSection = document.getElementById('bookmarked-comics-section');
-
-        newComicsButton.addEventListener('click', () => {
-            newComicsSection.classList.remove('d-none');
-            bookmarkedComicsSection.classList.add('d-none');
-            newComicsButton.classList.add('btn-primary');
-            newComicsButton.classList.remove('btn-secondary');
-            bookmarkedComicsButton.classList.add('btn-secondary');
-            bookmarkedComicsButton.classList.remove('btn-primary');
-        });
-
-        bookmarkedComicsButton.addEventListener('click', () => {
-            bookmarkedComicsSection.classList.remove('d-none');
-            newComicsSection.classList.add('d-none');
-            bookmarkedComicsButton.classList.add('btn-primary');
-            bookmarkedComicsButton.classList.remove('btn-secondary');
-            newComicsButton.classList.add('btn-secondary');
-            newComicsButton.classList.remove('btn-primary');
-        });
-    });
-</script>
 </body>
 </html>
