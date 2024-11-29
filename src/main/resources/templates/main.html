@@ -109,6 +109,28 @@
             </div>
         </div>
     </section>
+
+    <!-- Currently Reading Section -->
+    <section class="my-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3>Зараз читають</h3>
+            <a class="btn btn-sm btn-primary" th:href="@{/currently-reading}">Дивитися всі</a>
+        </div>
+        <div class="d-flex overflow-auto">
+            <div th:each="comic : ${currentlyReading}" class="comic-card">
+                <div class="card bg-secondary text-light" style="width: 150px;">
+                    <img th:src="@{/comics/image/{id}(id=${comic.id})}" alt="Comic Cover" class="card-img-top comic-cover">
+                    <div class="card-body p-2">
+                        <h6 th:text="${comic.title}" class="card-title text-truncate"></h6>
+                        <p class="card-text">
+<!--                            <small th:text="'Глава ' + ${comic.chapterNumber} + ' — ' + ${comic.readerCount} + ' читачів'"></small>-->
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Placeholder for Future Content -->
     <section class="my-5">
         <h3>Нові комікси (заглушка)</h3>

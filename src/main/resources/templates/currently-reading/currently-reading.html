@@ -1,23 +1,36 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Зараз читають</title>
+  <style>
+    .comic-card {
+      margin-right: 15px;
+      flex-shrink: 0;
+    }
+    .comic-card .comic-cover {
+      height: 200px;
+      object-fit: cover;
+    }
+  </style>
 </head>
 <body>
-<section>
-  <h2>Зараз читають</h2>
-  <div th:each="reading : ${currentlyReading}">
-    <div class="card">
-      <img th:src="@{/comics/image/{id}(id=${reading.comicId})}" alt="Comic Cover">
-      <div>
-        <h5 th:text="${reading.comicId}">Назва коміксу</h5>
-        <p>Читачів зараз: <span th:text="${reading.readerCount}"></span></p>
+<div class="container my-5">
+  <h1 class="mb-4">Зараз читають</h1>
+  <div class="row">
+    <div th:each="comic : ${currentlyReading}" class="col-md-3 mb-4">
+      <div class="card bg-secondary text-light">
+        <img th:src="@{/comics/image/{id}(id=${comic.id})}" alt="Comic Cover" class="card-img-top">
+        <div class="card-body">
+          <h5 th:text="${comic.title}" class="card-title"></h5>
+          <p class="card-text">
+<!--            <small th:text="'Глава ' + ${comic.chapterNumber} + ' — ' + ${comic.readerCount} + ' читачів'"></small>-->
+          </p>
+        </div>
       </div>
     </div>
   </div>
-</section>
-
+</div>
 </body>
 </html>

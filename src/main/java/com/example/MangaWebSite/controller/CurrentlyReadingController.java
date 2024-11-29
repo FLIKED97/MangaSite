@@ -1,5 +1,7 @@
 package com.example.MangaWebSite.controller;
 
+import com.example.MangaWebSite.models.Comics;
+import com.example.MangaWebSite.service.ComicsService;
 import com.example.MangaWebSite.service.ReadingProgressService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,15 +10,18 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/currently-reading")
 @AllArgsConstructor
 public class CurrentlyReadingController {
     private final ReadingProgressService readingProgressService;
-
+    private final ComicsService comicsService;
     @GetMapping()
-    public String  getCurrentlyReading(Model model){
-        model.addAttribute("currentlyReading", readingProgressService.getCurrentlyReading());
-        return"currently-reading/currently-reading";
+    public String showCurrentlyReadingPage(Model model) {
+        List<Comics> currentlyReading = readingProgressService.getCurrentlyReading();
+        model.addAttribute("currentlyReading", currentlyReading);
+        return "currently-reading/currently-reading";
     }
 }

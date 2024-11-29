@@ -1,6 +1,7 @@
 package com.example.MangaWebSite.repository;
 
 import com.example.MangaWebSite.models.Chapter;
+import com.example.MangaWebSite.models.Comics;
 import com.example.MangaWebSite.models.CurrentlyReadingDTO;
 import com.example.MangaWebSite.models.ReadingProgress;
 import org.springframework.data.domain.Pageable;
@@ -26,10 +27,14 @@ public interface ReadingProgressRepository extends JpaRepository<ReadingProgress
 
     Optional<ReadingProgress> findByPersonIdAndComicsId(int personId, int comicsId);
 
-    @Query("SELECT rp.comics.id AS comicId, COUNT(rp.person.id) AS readerCount " +
-            "FROM ReadingProgress rp " +
-            "WHERE rp.updatedAt > :cutoffTime " +
-            "GROUP BY rp.comics.id " +
-            "ORDER BY readerCount DESC")
-    List<CurrentlyReadingDTO> findCurrentlyReading(@Param("cutoffTime") LocalDateTime cutoffTime);
+    @Query("""
+    SELECT c 
+    FROM ReadingProgress rp 
+    JOIN rp.comics c 
+    WHERE rp.updatedAt > :cutoffTime 
+    GROUP BY c 
+    ORDER BY COUNT(rp.person.id) DESC
+    """)
+    List<Comics> findCurrentlyReading(@Param("cutoffTime") LocalDateTime cutoffTime);
+
 }

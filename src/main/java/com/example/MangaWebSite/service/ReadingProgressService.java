@@ -50,7 +50,7 @@ public class ReadingProgressService {
         return readingProgressRepository.findRecentlyReadByPersonId(id, topFive);
     }
 
-    public List<CurrentlyReadingDTO> getCurrentlyReading() {
+    public List<Comics> getCurrentlyReading() {
         LocalDateTime cutoffTime = LocalDateTime.now().minusMinutes(30); // Активність за останні 30 хв
         return readingProgressRepository.findCurrentlyReading(cutoffTime);
     }
