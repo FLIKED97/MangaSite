@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
 
@@ -52,7 +53,7 @@ public class Comics {
     private String status;
 
     @Column(name = "created_at", nullable = false)
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @JsonIgnoreProperties({"comics", "comicPages"})
     @OneToMany(mappedBy = "comics", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<section>
+  <h2>Зараз читають</h2>
+  <div th:each="reading : ${currentlyReading}">
+    <div class="card">
+      <img th:src="@{/comics/image/{id}(id=${reading.comicId})}" alt="Comic Cover">
+      <div>
+        <h5 th:text="${reading.comicId}">Назва коміксу</h5>
+        <p>Читачів зараз: <span th:text="${reading.readerCount}"></span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

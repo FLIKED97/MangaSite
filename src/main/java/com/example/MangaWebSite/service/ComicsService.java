@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class ComicsService {
     }
 
     public Comics saveComic(Comics comic) {
-        comic.setCreatedAt(LocalDate.now());
+        comic.setCreatedAt(LocalDateTime.now());
         return comicsRepository.save(comic);  // Зберігаємо комікс і повертаємо його зі збереженим ID //TODO Переробити щоб створювати комікси могли тільки ROLE_PUBLISHER
     }
     public void addGenresToComic(Comics comic, List<Integer> genreIds) {

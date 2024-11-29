@@ -75,6 +75,7 @@ function loadMoreContent() {
 }
 
 // Обробка подій на кнопках для перемикання табів
+//TODO Доробити нижні функції більш оптимізовано
 document.addEventListener('DOMContentLoaded', () => {
     const newComicsButton = document.getElementById('newComicsButton');
     const bookmarkedComicsButton = document.getElementById('bookmarkedComicsButton');
@@ -123,14 +124,21 @@ document.addEventListener('DOMContentLoaded', () => {
 //
 // // Зміна табу
 // function switchTab(tab, showSection, hideSection, activeButton, inactiveButton) {
+//     console.log(`Перемикаємось на таб: ${tab}`);
 //     currentTab = tab;
-//     page = 1; // Скидаємо сторінку при зміні табу
+//     page = 1;
 //
-//     // Очищення контейнерів
+//     // Очищення контейнера
 //     const containerId = tab === 'bookmarked' ? 'bookmarked-comics-container' : 'new-comics-container';
-//     document.getElementById(containerId).innerHTML = '';
+//     const container = document.getElementById(containerId);
 //
-//     // Завантаження контенту для обраного табу
+//     if (!container) {
+//         console.error(`Контейнер ${containerId} не знайдено`);
+//         return;
+//     }
+//     container.innerHTML = '';
+//
+//     // Завантаження контенту
 //     loadMoreContent();
 //
 //     // Перемикання видимості секцій
@@ -143,3 +151,4 @@ document.addEventListener('DOMContentLoaded', () => {
 //     inactiveButton.classList.add('btn-secondary');
 //     inactiveButton.classList.remove('btn-primary');
 // }
+

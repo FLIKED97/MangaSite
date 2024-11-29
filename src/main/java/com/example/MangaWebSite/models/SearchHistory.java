@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -25,5 +26,5 @@ public class SearchHistory {
     private String searchTerm;
 
     @Column(name = "searched_at", nullable = false)
-    private LocalDate searchedAt;
+    private LocalDateTime searchedAt;
 }

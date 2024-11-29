@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -47,5 +48,10 @@ public class ReadingProgressService {
         Pageable topFive = PageRequest.of(0, 10); // Сторінка 0, розмір 10
 
         return readingProgressRepository.findRecentlyReadByPersonId(id, topFive);
+    }
+
+    public List<CurrentlyReadingDTO> getCurrentlyReading() {
+        LocalDateTime cutoffTime = LocalDateTime.now().minusMinutes(30); // Активність за останні 30 хв
+        return readingProgressRepository.findCurrentlyReading(cutoffTime);
     }
 }

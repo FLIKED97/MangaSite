@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -33,7 +34,7 @@ public class RatingService {
                     Rating newRating = new Rating();
                     newRating.setComics(comics);
                     newRating.setPerson(person);
-                    newRating.setCreatedAt(LocalDate.now());
+                    newRating.setCreatedAt(LocalDateTime.now());
                     return newRating;
                 });
 
