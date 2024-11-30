@@ -57,20 +57,20 @@ public class MainController {
         List<ReadingProgress> readingProgresses = readingProgressService.getRecentlyReadComicsWithProgress(personDetails.getPerson().getId());
         model.addAttribute("recentlyRead", readingProgresses);
 
-
         model.addAttribute("person", personDetails.getPerson());
-
-
-        //комікси з новими главами, за останній час.
-        model.addAttribute("newComics", comicsService.getAllComicsWithNewChapter(0));
-        //Оновлені комікси з закадок.
-        model.addAttribute("bookmarkedComics", chapterService.getNewChaptersInTabs(0));
 
         //Зараз читають
         List<Comics> currentlyReading = readingProgressService.getCurrentlyReading();
         model.addAttribute("currentlyReading", currentlyReading.subList(0, Math.min(3, currentlyReading.size()))); // Лише перші 3 коміксів
         //Взагалі новостворені комікси
-        model.addAttribute("newCreatedComics", comicsService.getNewCreatedComics(0).getContent());
+        model.addAttribute("newCreatedComics", comicsService.getNewCreatedComics(0, 3));
+        //Популярні читають зараз комікси
+        model.addAttribute("currentlyPopularReading", readingProgressService.getCurrentlyPopularReading(0, 3));
+
+        //комікси з новими главами, за останній час.
+        model.addAttribute("newComics", comicsService.getAllComicsWithNewChapter(0));
+        //Оновлені комікси з закадок.
+        model.addAttribute("bookmarkedComics", chapterService.getNewChaptersInTabs(0));
 
         return "main";
     }

@@ -56,7 +56,8 @@ public class Comics {
     private LocalDateTime createdAt;
 
     @JsonIgnoreProperties({"comics", "comicPages"})
-    @OneToMany(mappedBy = "comics", cascade = CascadeType.ALL, orphanRemoval = true)
+
+    @OneToMany(mappedBy = "comics", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Chapter> chapters;
     @JsonIgnore
     @OneToMany(mappedBy = "comics", cascade = CascadeType.ALL, orphanRemoval = true)

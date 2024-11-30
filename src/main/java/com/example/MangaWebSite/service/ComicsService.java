@@ -24,7 +24,6 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 @Transactional
-
 public class ComicsService {
 
     private final ComicsRepository comicsRepository;
@@ -105,15 +104,16 @@ public class ComicsService {
         return comicsList;
     }
 
-    public Page<Comics> getNewCreatedComics(int page) {
-        Pageable pageable = PageRequest.of(page, 3, Sort.by("createdAt").descending());
-        return comicsRepository.findAll(pageable);
+    public Page<Comics> getNewCreatedComics(int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("createdAt").descending());
+        LocalDateTime oneMonthAgo = LocalDateTime.now().minusDays(31);
+        return comicsRepository.findAllByCreatedAt(pageable, oneMonthAgo);
     }
 
-
+    @Transactional(readOnly = true)
     public Page<Comics> getAllComicsWithNewChapter(int i) {
         Pageable pageable = PageRequest.of(i, 10, Sort.by("createdAt").descending());
-        LocalDateTime oneMonthAgo = LocalDateTime.now().minusMonths(1);
+        LocalDateTime oneMonthAgo = LocalDateTime.now().minusDays(70);
         return comicsRepository.findAllComicsWithNewChapters(oneMonthAgo, pageable);
     }
 

@@ -25,7 +25,7 @@ public interface ChapterRepository extends JpaRepository<Chapter, Integer> {
     Chapter findFirstByComicsAndChapterNumberGreaterThanOrderByChapterNumberAsc(Comics comics, int chapterNumber);
 
     @Query("SELECT ch FROM Chapter ch " +
-            "JOIN ch.comics c " +
+            "LEFT JOIN ch.comics c " +
             "JOIN c.tabs t " +
             "WHERE t.person.id = :personId ")
     Page<Chapter> findNewChaptersInTabs(@Param("personId") int personId, Pageable pageable);

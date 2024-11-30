@@ -9,22 +9,20 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
 public interface ComicsRepository extends JpaRepository<Comics, Integer> {
-
     List<Comics> findAllByTabsId(int tabId);
-
     List<Comics> findAllByOrderByViewCountDesc();
-
     // Метод для вибору популярних коміксів із новими главами
     @Query("SELECT c FROM Comics c JOIN c.chapters ch WHERE c.popularityRating > :threshold AND ch.releaseDate > :oneMonthAgo")
     List<Comics> findPopularComicsWithNewChapters(@Param("threshold")double threshold, @Param("oneMonthAgo") LocalDateTime oneMonthAgo);
-
     @Query("SELECT c FROM Comics c JOIN c.chapters ch WHERE ch.releaseDate > :oneMonthAgo")
     Page<Comics> findAllComicsWithNewChapters(@Param("oneMonthAgo") LocalDateTime oneMonthAgo, Pageable pageable);
     List<Comics> findAllComicsByGenres(List<Genre> genres);
+
+    @Query("SELECT c FROM Comics c WHERE c.createdAt > :oneMonthAgo")
+    Page<Comics> findAllByCreatedAt(Pageable pageable, LocalDateTime oneMonthAgo);
 }

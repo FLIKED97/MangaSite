@@ -4,6 +4,7 @@ import com.example.MangaWebSite.models.*;
 import com.example.MangaWebSite.repository.ReadingProgressRepository;
 import com.example.MangaWebSite.security.PersonDetails;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -53,5 +54,11 @@ public class ReadingProgressService {
     public List<Comics> getCurrentlyReading() {
         LocalDateTime cutoffTime = LocalDateTime.now().minusDays(1); // Активність за останні 30 хв
         return readingProgressRepository.findCurrentlyReading(cutoffTime);
+    }
+
+    public Page<Comics> getCurrentlyPopularReading(int page, int pageSize) {
+        Pageable topFive = PageRequest.of(page, pageSize);
+        LocalDateTime cutoffTime = LocalDateTime.now().minusDays(1);
+        return readingProgressRepository.findCurrentlyPopularReading(cutoffTime, topFive);
     }
 }
