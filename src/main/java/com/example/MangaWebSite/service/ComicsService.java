@@ -84,7 +84,7 @@ public class ComicsService {
     }
 
     public List<Comics> getPopularComicsWithNewChapters(double threshold) {
-        LocalDate oneMonthAgo = LocalDate.now().minusMonths(1);
+        LocalDateTime oneMonthAgo = LocalDateTime.now().minusMonths(1);
         return comicsRepository.findPopularComicsWithNewChapters(threshold, oneMonthAgo);
     }
 
@@ -106,9 +106,19 @@ public class ComicsService {
     }
 
     public Page<Comics> getNewCreatedComics(int page) {
-        Pageable pageable = PageRequest.of(page, 10, Sort.by("createdAt").descending());
+        Pageable pageable = PageRequest.of(page, 3, Sort.by("createdAt").descending());
         return comicsRepository.findAll(pageable);
     }
 
 
+    public Page<Comics> getAllComicsWithNewChapter(int i) {
+        Pageable pageable = PageRequest.of(i, 10, Sort.by("createdAt").descending());
+        LocalDateTime oneMonthAgo = LocalDateTime.now().minusMonths(1);
+        return comicsRepository.findAllComicsWithNewChapters(oneMonthAgo, pageable);
+    }
+
+    public void incrementViewCount(Comics comic) {
+        comic.incrementViewCount();
+        comicsRepository.save(comic);
+    }
 }

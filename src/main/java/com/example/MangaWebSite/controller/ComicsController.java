@@ -6,6 +6,7 @@ import com.example.MangaWebSite.models.Person;
 import com.example.MangaWebSite.models.Tabs;
 import com.example.MangaWebSite.security.PersonDetails;
 import com.example.MangaWebSite.service.*;
+import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -51,12 +52,21 @@ public class ComicsController {
     }
 
     @GetMapping("/{id}")
-    public String getComicById(@PathVariable("id") int comicId, Model model) {
+    public String getComicById(@PathVariable("id") int comicId,
+                               Model model,
+                               HttpSession session) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
         Comics comic = comicsService.getComicById(comicId);
         if (comic == null) {
             return "error/404";
+        }
+
+        // Перевірити, чи комікс вже переглядався у цій сесії
+        String sessionKey = "viewed_comic_" + comicId;
+        if (session.getAttribute(sessionKey) == null) {
+            comicsService.incrementViewCount(comic);
+            session.setAttribute(sessionKey, true); // Позначити як переглянутий
         }
 
         model.addAttribute("comic", comic);

@@ -51,7 +51,7 @@ public class ReadingProgressService {
     }
 
     public List<Comics> getCurrentlyReading() {
-        LocalDateTime cutoffTime = LocalDateTime.now().minusMinutes(30); // Активність за останні 30 хв
+        LocalDateTime cutoffTime = LocalDateTime.now().minusDays(1); // Активність за останні 30 хв
         return readingProgressRepository.findCurrentlyReading(cutoffTime);
     }
 }

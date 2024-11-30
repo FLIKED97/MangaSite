@@ -60,25 +60,26 @@ public class MainController {
 
         model.addAttribute("person", personDetails.getPerson());
 
-        //Нові комікси
-        model.addAttribute("newComics", comicsService.getNewCreatedComics(0).getContent());
+
+        //комікси з новими главами, за останній час.
+        model.addAttribute("newComics", comicsService.getAllComicsWithNewChapter(0));
+        //Оновлені комікси з закадок.
         model.addAttribute("bookmarkedComics", chapterService.getNewChaptersInTabs(0));
 
+        //Зараз читають
         List<Comics> currentlyReading = readingProgressService.getCurrentlyReading();
-        model.addAttribute("currentlyReading", currentlyReading.subList(0, Math.min(6, currentlyReading.size()))); // Лише перші 6 коміксів
+        model.addAttribute("currentlyReading", currentlyReading.subList(0, Math.min(3, currentlyReading.size()))); // Лише перші 3 коміксів
+        //Взагалі новостворені комікси
+        model.addAttribute("newCreatedComics", comicsService.getNewCreatedComics(0).getContent());
 
         return "main";
     }
-//    @GetMapping()
-//    public String showMainPage(Model model) {
-//        return "main";
-//    }
 
     @GetMapping("/comics/new")
     @ResponseBody
     public ResponseEntity<List<Comics>> getNewComics(@RequestParam("page") int page) {
         try {
-            Page<Comics> comicsPage = comicsService.getNewCreatedComics(page);
+            Page<Comics> comicsPage = comicsService.getAllComicsWithNewChapter(page);
             return ResponseEntity.ok(comicsPage.getContent());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

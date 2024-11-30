@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -21,6 +22,9 @@ public interface ComicsRepository extends JpaRepository<Comics, Integer> {
 
     // Метод для вибору популярних коміксів із новими главами
     @Query("SELECT c FROM Comics c JOIN c.chapters ch WHERE c.popularityRating > :threshold AND ch.releaseDate > :oneMonthAgo")
-    List<Comics> findPopularComicsWithNewChapters(@Param("threshold")double threshold, @Param("oneMonthAgo") LocalDate oneMonthAgo);
+    List<Comics> findPopularComicsWithNewChapters(@Param("threshold")double threshold, @Param("oneMonthAgo") LocalDateTime oneMonthAgo);
+
+    @Query("SELECT c FROM Comics c JOIN c.chapters ch WHERE ch.releaseDate > :oneMonthAgo")
+    Page<Comics> findAllComicsWithNewChapters(@Param("oneMonthAgo") LocalDateTime oneMonthAgo, Pageable pageable);
     List<Comics> findAllComicsByGenres(List<Genre> genres);
 }
