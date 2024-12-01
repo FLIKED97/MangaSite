@@ -2,7 +2,6 @@ package com.example.MangaWebSite.controller;
 
 import com.example.MangaWebSite.models.Chapter;
 import com.example.MangaWebSite.models.Comics;
-import com.example.MangaWebSite.models.CurrentlyReadingDTO;
 import com.example.MangaWebSite.models.ReadingProgress;
 import com.example.MangaWebSite.security.PersonDetails;
 import com.example.MangaWebSite.service.*;
@@ -52,10 +51,9 @@ public class MainController {
 
             model.addAttribute("popularComicsWithNewChapters", popularComics);
             model.addAttribute("latestChapters", latestChapters);
-            model.addAttribute("recentlyRead", comicsService.getRecentlyRead(personDetails.getPerson()));
 
         List<ReadingProgress> readingProgresses = readingProgressService.getRecentlyReadComicsWithProgress(personDetails.getPerson().getId());
-        model.addAttribute("recentlyRead", readingProgresses);
+        model.addAttribute("recentlyReadProgress", readingProgresses);
 
         model.addAttribute("person", personDetails.getPerson());
 
@@ -68,7 +66,7 @@ public class MainController {
         model.addAttribute("currentlyPopularReading", readingProgressService.getCurrentlyPopularReading(0, 3));
 
         //комікси з новими главами, за останній час.
-        model.addAttribute("newComics", comicsService.getAllComicsWithNewChapter(0));
+        model.addAttribute("newComics", comicsService.getAllComicsWithNewChapter(0)); //TODO Серйозний баг.
         //Оновлені комікси з закадок.
         model.addAttribute("bookmarkedComics", chapterService.getNewChaptersInTabs(0));
 

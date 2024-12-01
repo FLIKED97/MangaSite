@@ -11,10 +11,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 import static com.example.MangaWebSite.models.Role.ROLE_PUBLISHER;
 
@@ -66,4 +68,10 @@ public class PublisherService {
         publisher.setName(name);
         publisherRepository.save(publisher);
     }
+
+    @Transactional
+    public List<Publisher> searchByName(String term) {
+        return publisherRepository.findByNameContaining(term);
+    }
+
 }

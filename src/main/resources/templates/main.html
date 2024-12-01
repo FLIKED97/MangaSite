@@ -22,6 +22,29 @@
         .d-none {
             display: none;
         }
+        #comicsResults .list-group-item {
+            display: flex;
+            align-items: center;
+            border: 1px solid #444;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+
+        #comicsResults .img-thumbnail {
+            flex-shrink: 0;
+        }
+
+        #comicsResults h5 {
+            margin: 0;
+            font-size: 16px;
+            color: #fff;
+        }
+
+        #comicsResults small {
+            font-size: 12px;
+            color: #ccc;
+        }
+
     </style>
 </head>
 <body class="bg-dark text-light">
@@ -40,7 +63,8 @@
                 <a class="nav-link" th:href="@{/comics/newShow}">Комікси</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Button 1</a>
+                <!-- Кнопка для виклику модального вікна -->
+                <button class="btn btn-primary" data-toggle="modal" data-target="#searchModal">Пошук</button>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Button 2</a>
@@ -56,6 +80,61 @@
         </ul>
     </div>
 </nav>
+
+<!-- Модальне вікно -->
+<div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content bg-dark text-light">
+            <div class="modal-header">
+                <h5 class="modal-title" id="searchModalLabel">Пошук</h5>
+                <button type="button" class="close text-light" data-dismiss="modal" aria-label="Закрити">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Навігація вкладок -->
+                <ul class="nav nav-tabs" id="searchTabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="comics-tab" data-toggle="tab" href="#comics" role="tab" aria-controls="comics" aria-selected="true">Комікси</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="authors-tab" data-toggle="tab" href="#authors" role="tab" aria-controls="authors" aria-selected="false">Автори</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="users-tab" data-toggle="tab" href="#users" role="tab" aria-controls="users" aria-selected="false">Користувачі</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="groups-tab" data-toggle="tab" href="#groups" role="tab" aria-controls="groups" aria-selected="false">Групи</a>
+                    </li>
+                </ul>
+                <!-- Контент вкладок -->
+                <div class="tab-content mt-3" id="searchTabsContent">
+                    <!-- Вкладка "Комікси" -->
+                    <div class="tab-pane fade show active" id="comics" role="tabpanel" aria-labelledby="comics-tab">
+                        <input type="text" class="form-control mb-3" id="comicsSearchInput" placeholder="Шукати комікси">
+                        <ul id="comicsResults" class="list-group"></ul>
+                    </div>
+                    <!-- Вкладка "Автори" -->
+                    <div class="tab-pane fade" id="authors" role="tabpanel" aria-labelledby="authors-tab">
+                        <input type="text" class="form-control mb-3" id="authorsSearchInput" placeholder="Шукати авторів">
+                        <ul id="authorsResults" class="list-group"></ul>
+                    </div>
+                    <!-- Вкладка "Користувачі" -->
+                    <div class="tab-pane fade" id="users" role="tabpanel" aria-labelledby="users-tab">
+                        <input type="text" class="form-control mb-3" id="usersSearchInput" placeholder="Шукати користувачів">
+                        <ul id="usersResults" class="list-group"></ul>
+                    </div>
+                    <!-- Вкладка "Групи" -->
+                    <div class="tab-pane fade" id="groups" role="tabpanel" aria-labelledby="groups-tab">
+                        <input type="text" class="form-control mb-3" id="groupsSearchInput" placeholder="Шукати групи">
+                        <ul id="groupsResults" class="list-group"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <!-- Main Content -->
 <div class="container main-content">
@@ -81,7 +160,7 @@
     <section class="my-5">
         <h3>Продовжити читати</h3>
         <div class="card bg-secondary text-light p-3">
-            <div th:each="progress : ${recentlyRead}" class="d-flex align-items-center mb-3">
+            <div th:each="progress : ${recentlyReadProgress}" class="d-flex align-items-center mb-3">
                 <!-- Зображення -->
                 <img th:src="@{/comics/image/{id}(id=${progress.comics.id})}"
                      alt="Comic Thumbnail"
@@ -247,8 +326,122 @@
 </div>
 
 </body>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Функція для очищення та виведення результатів
+        function displayResults(resultsElement, data, type) {
+            resultsElement.innerHTML = ''; // Очистити попередні результати
+
+            if (data.length === 0) {
+                resultsElement.innerHTML = '<li class="list-group-item text-muted">Нічого не знайдено</li>';
+                return;
+            }
+
+            data.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'list-group-item bg-secondary text-light d-flex align-items-center';
+
+                switch(type) {
+                    case 'comics':
+                        const imageUrl = item.coverImageBase64
+                            ? `data:${item.imageType};base64,${item.coverImageBase64}`
+                            : '/default-comic-image.png';
+
+                        li.innerHTML = `
+                        <img src="${imageUrl}"
+                             alt="${item.title}"
+                             class="mr-3 img-thumbnail"
+                             style="width: 60px; height: 60px; object-fit: cover;">
+                        <div>
+                            <h5>${item.title}</h5>
+                            <small>${new Date(item.createdAt).toLocaleDateString()}</small>
+                        </div>
+                    `;
+                        break;
+
+                    case 'authors':
+                        li.innerHTML = `
+                        <div>
+                            <h5>${item.name}</h5>
+                        </div>
+                    `;
+                        break;
+
+                    case 'users':
+                        li.innerHTML = `
+                        <div>
+                            <h5>${item.username}</h5>
+                            <small>${item.email}</small>
+                        </div>
+                    `;
+                        break;
+
+                    case 'groups':
+                        li.innerHTML = `
+                        <div>
+                            <h5>${item.name}</h5>
+                            <small>Учасників: ${item.membersCount || 0}</small>
+                        </div>
+                    `;
+                        break;
+                }
+
+                resultsElement.appendChild(li);
+            });
+        }
+
+        // Функція debounce для зменшення кількості запитів
+        function debounce(func, delay) {
+            let timeoutId;
+            return function() {
+                const context = this;
+                const args = arguments;
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => func.apply(context, args), delay);
+            };
+        }
+
+        // Додавання пошуку для кожної вкладки
+        const searchTypes = ['comics', 'authors', 'users', 'groups'];
+
+        searchTypes.forEach(type => {
+            const searchInput = document.getElementById(`${type}SearchInput`);
+            const resultsElement = document.getElementById(`${type}Results`);
+
+            if (searchInput && resultsElement) {
+                searchInput.addEventListener('input', debounce(function() {
+                    const term = this.value;
+
+                    // Перевірка мінімальної довжини терміну пошуку
+                    if (term.length < 2) {
+                        resultsElement.innerHTML = '';
+                        return;
+                    }
+
+                    fetch(`/search/${type}?term=${encodeURIComponent(term)}`)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            displayResults(resultsElement, data, type);
+                        })
+                        .catch(error => {
+                            console.error(`Помилка завантаження результатів ${type}:`, error);
+                            resultsElement.innerHTML = '<li class="list-group-item text-danger">Помилка пошуку</li>';
+                        });
+                }, 300)); // затримка 300 мс
+            }
+        });
+    });
+</script>
 <script src="/js/main-script.js"></script>
 <!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

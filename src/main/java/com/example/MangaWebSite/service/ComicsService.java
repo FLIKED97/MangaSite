@@ -87,10 +87,6 @@ public class ComicsService {
         return comicsRepository.findPopularComicsWithNewChapters(threshold, oneMonthAgo);
     }
 
-    public List<Comics> getRecentlyRead(Person person) {
-        return null;
-    }
-
     public List<Comics> getComicsByGenresAndSort(List<Integer> genres, String sortBy) {
 
         List<Genre> genresName = genreRepository.findByIdIn(genres);
@@ -121,4 +117,15 @@ public class ComicsService {
         comic.incrementViewCount();
         comicsRepository.save(comic);
     }
+
+    @Transactional
+    public List<Comics> searchByTitle(String term) {
+        return comicsRepository.findByTitleContaining(term);
+    }
+
+    @Transactional
+    public List<Comics> searchByAuthor(String term) {
+        return comicsRepository.findByAuthorContaining(term);
+    }
+
 }

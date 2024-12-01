@@ -1,5 +1,8 @@
 package com.example.MangaWebSite.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,15 +36,19 @@ public class Person {
     private Role role;
 
     @Column(name = "created_at", nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore // Уникаємо серіалізації
     private List<Comment> comments;
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Tabs> tabs;  // У користувача може бути багато закладок
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<ReadingProgress> readingProgress;
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -49,6 +56,7 @@ public class Person {
 
     @ManyToOne
     @JoinColumn(name = "publisher_id")
+    @JsonBackReference
     private Publisher publisher;
 
     public void setPublisher(Publisher publisher) {

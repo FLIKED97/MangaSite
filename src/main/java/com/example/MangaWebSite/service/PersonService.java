@@ -10,6 +10,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -21,5 +24,11 @@ public class PersonService {
     public void save(Person person){
         personRepository.save(person);
     }
+
+    @Transactional
+    public List<Person> searchByUsername(String term) {
+        return personRepository.findByUsernameContaining(term);
+    }
+
 
 }

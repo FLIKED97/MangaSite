@@ -25,4 +25,9 @@ public interface ComicsRepository extends JpaRepository<Comics, Integer> {
 
     @Query("SELECT c FROM Comics c WHERE c.createdAt > :oneMonthAgo")
     Page<Comics> findAllByCreatedAt(Pageable pageable, LocalDateTime oneMonthAgo);
+    @Query("SELECT c FROM Comics c WHERE LOWER(c.title) LIKE LOWER(CONCAT('%', :term, '%'))")
+    List<Comics> findByTitleContaining(@Param("term") String term);
+
+    @Query("SELECT c FROM Comics c WHERE LOWER(c.author) LIKE LOWER(CONCAT('%', :term, '%'))")
+    List<Comics> findByAuthorContaining(@Param("term") String term);
 }

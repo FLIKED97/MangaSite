@@ -1,13 +1,14 @@
 package com.example.MangaWebSite.models;
 
+import com.example.MangaWebSite.serializer.ComicsSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "comics")
+@JsonSerialize(using = ComicsSerializer.class)
 public class Comics {
 
     @Id
@@ -56,9 +58,9 @@ public class Comics {
     private LocalDateTime createdAt;
 
     @JsonIgnoreProperties({"comics", "comicPages"})
-
     @OneToMany(mappedBy = "comics", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Chapter> chapters;
+
     @JsonIgnore
     @OneToMany(mappedBy = "comics", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
@@ -72,6 +74,7 @@ public class Comics {
     private List<Tabs> tabs;  // Комікси можуть бути в багатьох закладках
     @Column(name = "view_count", nullable = false)
     private int viewCount = 0;
+
     @JsonIgnore
     @OneToMany(mappedBy = "comics", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Statistics> statistics;

@@ -1,5 +1,6 @@
 package com.example.MangaWebSite.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,6 +31,7 @@ public class Publisher {
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "publisher", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Person> persons = new ArrayList<>();
 
     @OneToMany(mappedBy = "publisher", cascade = CascadeType.ALL, orphanRemoval = true)

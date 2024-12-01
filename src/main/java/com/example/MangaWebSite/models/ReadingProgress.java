@@ -1,5 +1,6 @@
 package com.example.MangaWebSite.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,9 @@ import java.util.Date;
 @Entity
 @Table(name = "reading_progress", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"person_id", "comic_id"})
-})public class ReadingProgress {
+})
+@JsonIgnoreProperties({"comics", "person"})
+public class ReadingProgress {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
