@@ -75,7 +75,7 @@
                 <a class="nav-link btn btn-warning text-dark" href="#">Вхід | Реєстрація</a>
             </li>
             <li class="nav-item" th:if="${#authentication.name != 'anonymousUser'}">
-                <a class="nav-link text-light" href="#">[USERNAME]</a>
+                <a class="nav-link text-light" th:href="@{/profile/{id}(id=${person.id})}" th:text="${person.username}">[${person.username}]</a>
             </li>
         </ul>
     </div>
@@ -190,67 +190,60 @@
     </section>
 
     <div class="container my-5">
-        <div class="row">
-            <!-- Зараз читають -->
-            <div class="col-lg-4 col-md-6">
-                <h4 class="text-center mb-3">Зараз читають</h4>
-                <div th:each="comic : ${currentlyReading}" class="mb-3">
-                    <div class="card bg-secondary text-light">
-                        <div class="row g-0">
-                            <div class="col-4">
-                                <img th:src="@{/comics/image/{id}(id=${comic.id})}" alt="Comic Cover" class="img-fluid rounded-start">
-                            </div>
-                            <div class="col-8">
-                                <div class="card-body">
-                                    <h6 th:text="${comic.title}" class="card-title"></h6>
-                                    <p class="card-text">
-                                        <!-- Додаткова інформація -->
-                                    </p>
-                                </div>
+        <div class="card bg-dark text-light p-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="card-title">
+                    <a th:href="@{/comics/sections(section='current')}">
+                        Зараз читають →
+                    </a>
+                </h3>
+                <div>
+                    <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        За день
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-dark">
+                        <li><a class="dropdown-item" href="#">За день</a></li>
+                        <li><a class="dropdown-item" href="#">За неділю</a></li>
+                        <li><a class="dropdown-item" href="#">За місяць</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <!-- Новинки -->
+                <div class="col-md-4">
+                    <h5 class="mb-3">Новинки</h5>
+                    <div class="mb-3" th:each="comic : ${newCreatedComics}">
+                        <div class="d-flex align-items-center">
+                            <img th:src="@{/comics/image/{id}(id=${comic.id})}" alt="Comic Cover" class="img-fluid rounded me-3" style="width: 60px; height: 90px;">
+                            <div>
+                                <h6 class="mb-1" th:text="${comic.title}"></h6>
+                                <p class="mb-0 small">Манга</p>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Популярні зараз -->
-            <div class="col-lg-4 col-md-6">
-                <h4 class="text-center mb-3">Популярні зараз</h4>
-                <div th:each="comic : ${currentlyPopularReading}" class="mb-3">
-                    <div class="card bg-secondary text-light">
-                        <div class="row g-0">
-                            <div class="col-4">
-                                <img th:src="@{/comics/image/{id}(id=${comic.id})}" alt="Comic Cover" class="img-fluid rounded-start">
-                            </div>
-                            <div class="col-8">
-                                <div class="card-body">
-                                    <h6 th:text="${comic.title}" class="card-title"></h6>
-                                    <p class="card-text">
-                                        <!-- Додаткова інформація -->
-                                    </p>
-                                </div>
+                <!-- Набирає популярності -->
+                <div class="col-md-4">
+                    <h5 class="mb-3">Набирає популярності</h5>
+                    <div class="mb-3" th:each="comic : ${currentlyPopularReading}">
+                        <div class="d-flex align-items-center">
+                            <img th:src="@{/comics/image/{id}(id=${comic.id})}" alt="Comic Cover" class="img-fluid rounded me-3" style="width: 60px; height: 90px;">
+                            <div>
+                                <h6 class="mb-1" th:text="${comic.title}"></h6>
+                                <p class="mb-0 small">Манга</p>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Новостворені -->
-            <div class="col-lg-4 col-md-6">
-                <h4 class="text-center mb-3">Новостворені</h4>
-                <div th:each="comic : ${newCreatedComics}" class="mb-3">
-                    <div class="card bg-secondary text-light">
-                        <div class="row g-0">
-                            <div class="col-4">
-                                <img th:src="@{/comics/image/{id}(id=${comic.id})}" alt="Comic Cover" class="img-fluid rounded-start">
-                            </div>
-                            <div class="col-8">
-                                <div class="card-body">
-                                    <h6 th:text="${comic.title}" class="card-title"></h6>
-                                    <p class="card-text">
-                                        <!-- Додаткова інформація -->
-                                    </p>
-                                </div>
+                <!-- Популярное -->
+                <div class="col-md-4">
+                    <h5 class="mb-3">Популярное</h5>
+                    <div class="mb-3" th:each="comic : ${popularComics}">
+                        <div class="d-flex align-items-center">
+                            <img th:src="@{/comics/image/{id}(id=${comic.id})}" alt="Comic Cover" class="img-fluid rounded me-3" style="width: 60px; height: 90px;">
+                            <div>
+                                <h6 class="mb-1" th:text="${comic.title}"></h6>
+                                <p class="mb-0 small">Манга</p>
                             </div>
                         </div>
                     </div>
@@ -258,6 +251,9 @@
             </div>
         </div>
     </div>
+
+
+
 
 
 

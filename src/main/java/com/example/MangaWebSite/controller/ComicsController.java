@@ -24,6 +24,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/comics")
@@ -35,6 +36,8 @@ public class ComicsController {
 
     private final TabsService tabsService;
     private final ChapterService chapterService;
+
+    private final ReadingProgressService readingProgressService;
 
     private final RatingService ratingService;
 
@@ -146,6 +149,46 @@ public class ComicsController {
         model.addAttribute("selectedGenres", genres != null ? genres : new ArrayList<>()); // Для відображення вибраних
         return "comics/newShow";
     }
+
+    @GetMapping("/sections")
+    public String getComicsBySection(
+            @RequestParam(value = "section", defaultValue = "current") String section,
+            @RequestParam(value = "page", required = false) String pageParam,
+            @RequestParam(value = "pageSize", required = false) String pageSizeParam,
+            Model model) {
+
+        // Перетворюємо рядкові параметри у числові значення, якщо можливо
+        int page = parseIntOrDefault(pageParam, 0);         // Значення за замовчуванням: 0
+        int pageSize = parseIntOrDefault(pageSizeParam, 10); // Значення за замовчуванням: 10
+
+        section = validateSection(section); // Перевірка секції
+
+        List<Comics> comics = switch (section) {
+            case "popular" -> comicsService.getPopularComics(0, 10);
+            case "new" -> comicsService.getNewCreatedComics(0, 10);
+            default -> comicsService.getCurrentlyPopularReading(0, 10);
+        };
+
+        model.addAttribute("comics", comics);
+        model.addAttribute("section", section);
+        return "currently-reading/currently-reading";
+    }
+
+    // Метод для перевірки та парсингу числа
+    private int parseIntOrDefault(String value, int defaultValue) {
+        try {
+            return Integer.parseInt(value); // Спроба конвертації
+        } catch (NumberFormatException ex) {
+            return defaultValue; // Якщо не число — повертаємо значення за замовчуванням
+        }
+    }
+
+    // Перевірка секції
+    private String validateSection(String section) {
+        Set<String> validSections = Set.of("current", "popular", "new");
+        return validSections.contains(section) ? section : "current";
+    }
+
 
 
 }

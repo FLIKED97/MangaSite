@@ -17,20 +17,41 @@
 </head>
 <body>
 <div class="container my-5">
-  <h1 class="mb-4">Зараз читають</h1>
-  <div class="row">
-    <div th:each="comic : ${currentlyReading}" class="col-md-3 mb-4">
-      <div class="card bg-secondary text-light">
-        <img th:src="@{/comics/image/{id}(id=${comic.id})}" alt="Comic Cover" class="card-img-top">
-        <div class="card-body">
-          <h5 th:text="${comic.title}" class="card-title"></h5>
-          <p class="card-text">
-<!--            <small th:text="'Глава ' + ${comic.chapterNumber} + ' — ' + ${comic.readerCount} + ' читачів'"></small>-->
-          </p>
-        </div>
-      </div>
+    <h3 class="text-center">Секції коміксів</h3>
+    <div class="my-3">
+        <label for="sectionSelect" class="form-label">Виберіть секцію:</label>
+        <select id="sectionSelect" class="form-select" onchange="navigateToSection(this.value)">
+            <option th:selected="${section == 'current'}" value="current">Читають</option>
+            <option th:selected="${section == 'popular'}" value="popular">Зараз</option>
+            <option th:selected="${section == 'new'}" value="new">Новостворені</option>
+        </select>
     </div>
-  </div>
+
+    <div class="row">
+        <div th:each="comic : ${comics}" class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card bg-secondary text-light">
+                <img th:src="@{/comics/image/{id}(id=${comic.id})}" alt="Comic Cover" class="card-img-top">
+                <div class="card-body">
+                    <h6 th:text="${comic.title}" class="card-title"></h6>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+    function navigateToSection(section) {
+        const validSections = ['current', 'popular', 'new'];
+        section = validSections.includes(section) ? section : 'current';
+
+        // Переконайся, що параметри page і pageSize не передають некоректних значень
+        const page = 0;      // Значення за замовчуванням
+        const pageSize = 10; // Значення за замовчуванням
+
+        window.location.href = `/comics/sections?section=${section}&page=${page}&pageSize=${pageSize}`;
+    }
+
+</script>
+
 </body>
 </html>

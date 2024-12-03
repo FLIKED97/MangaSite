@@ -31,4 +31,17 @@ public class PersonService {
     }
 
 
+    public Person findById(int id) {
+        return personRepository.findById(id).orElse(null);
+    }
+
+    public void updatePerson(int id, Person updatedPerson) {
+        Person existingPerson = personRepository.findById(id).orElse(null);
+        if (existingPerson != null) {
+            existingPerson.setUsername(updatedPerson.getUsername());
+            existingPerson.setEmail(updatedPerson.getEmail());
+            personRepository.save(existingPerson);
+        }
+
+    }
 }

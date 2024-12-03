@@ -3,6 +3,7 @@ package com.example.MangaWebSite.service;
 import com.example.MangaWebSite.models.*;
 import com.example.MangaWebSite.repository.ComicsRepository;
 import com.example.MangaWebSite.repository.GenreRepository;
+import com.example.MangaWebSite.repository.ReadingProgressRepository;
 import com.example.MangaWebSite.security.PersonDetails;
 import lombok.AllArgsConstructor;
 
@@ -28,6 +29,9 @@ public class ComicsService {
 
     private final ComicsRepository comicsRepository;
     private final GenreRepository genreRepository;
+
+    private final ReadingProgressRepository readingProgressRepository;
+
 
     public List<Comics> showAll() {
         return comicsRepository.findAll();
@@ -78,8 +82,9 @@ public class ComicsService {
         return ratings.isEmpty() ? 0 : ratings.stream().mapToInt(Rating::getRating).average().orElse(0);
     }
 
-    public List<Comics> getPopularComics() {
-        return comicsRepository.findAllByOrderByViewCountDesc();
+    public List<Comics> getPopularComics(int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("viewCount").descending());
+        return comicsRepository.findAll(pageable).getContent();
     }
 
     public List<Comics> getPopularComicsWithNewChapters(double threshold) {
@@ -100,18 +105,7 @@ public class ComicsService {
         return comicsList;
     }
 
-    public Page<Comics> getNewCreatedComics(int page, int pageSize) {
-        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("createdAt").descending());
-        LocalDateTime oneMonthAgo = LocalDateTime.now().minusDays(31);
-        return comicsRepository.findAllByCreatedAt(pageable, oneMonthAgo);
-    }
 
-    @Transactional(readOnly = true)
-    public Page<Comics> getAllComicsWithNewChapter(int i) {
-        Pageable pageable = PageRequest.of(i, 10, Sort.by("createdAt").descending());
-        LocalDateTime oneMonthAgo = LocalDateTime.now().minusDays(70);
-        return comicsRepository.findAllComicsWithNewChapters(oneMonthAgo, pageable);
-    }
 
     public void incrementViewCount(Comics comic) {
         comic.incrementViewCount();
@@ -128,4 +122,21 @@ public class ComicsService {
         return comicsRepository.findByAuthorContaining(term);
     }
 
+    public List<Comics> getNewCreatedComics(int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("createdAt").descending());
+        LocalDateTime oneMonthAgo = LocalDateTime.now().minusDays(31);
+        return comicsRepository.findAllByCreatedAt(pageable, oneMonthAgo).getContent();
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Comics> getAllComicsWithNewChapter(int i) {
+        Pageable pageable = PageRequest.of(i, 10, Sort.by("createdAt").descending());
+        LocalDateTime oneMonthAgo = LocalDateTime.now().minusDays(70);
+        return comicsRepository.findAllComicsWithNewChapters(oneMonthAgo, pageable);
+    }
+    public List<Comics> getCurrentlyPopularReading(int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page, pageSize);
+        LocalDateTime cutoffTime = LocalDateTime.now().minusDays(1);
+        return readingProgressRepository.findCurrentlyPopularReading(cutoffTime, pageable).getContent();
+    }
 }
