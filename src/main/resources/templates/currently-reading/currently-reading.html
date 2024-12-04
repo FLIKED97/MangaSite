@@ -22,7 +22,7 @@
         <label for="sectionSelect" class="form-label">Виберіть секцію:</label>
         <select id="sectionSelect" class="form-select" onchange="navigateToSection(this.value)">
             <option th:selected="${section == 'current'}" value="current">Читають</option>
-            <option th:selected="${section == 'popular'}" value="popular">Зараз</option>
+            <option th:selected="${section == 'popular'}" value="popular">Популярні</option>
             <option th:selected="${section == 'new'}" value="new">Новостворені</option>
         </select>
     </div>

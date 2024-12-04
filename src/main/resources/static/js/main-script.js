@@ -151,4 +151,112 @@ document.addEventListener('DOMContentLoaded', () => {
 //     inactiveButton.classList.add('btn-secondary');
 //     inactiveButton.classList.remove('btn-primary');
 // }
+document.addEventListener('DOMContentLoaded', function() {
+    // Функція для очищення та виведення результатів
+    function displayResults(resultsElement, data, type) {
+        resultsElement.innerHTML = ''; // Очистити попередні результати
 
+        if (data.length === 0) {
+            resultsElement.innerHTML = '<li class="list-group-item text-muted">Нічого не знайдено</li>';
+            return;
+        }
+
+        data.forEach(item => {
+            const li = document.createElement('li');
+            li.className = 'list-group-item bg-secondary text-light d-flex align-items-center';
+
+            switch(type) {
+                case 'comics':
+                    const imageUrl = item.coverImageBase64
+                        ? `data:${item.imageType};base64,${item.coverImageBase64}`
+                        : '/default-comic-image.png';
+
+                    li.innerHTML = `
+                        <img src="${imageUrl}"
+                             alt="${item.title}"
+                             class="mr-3 img-thumbnail"
+                             style="width: 60px; height: 60px; object-fit: cover;">
+                        <div>
+                            <h5>${item.title}</h5>
+                            <small>${new Date(item.createdAt).toLocaleDateString()}</small>
+                        </div>
+                    `;
+                    break;
+
+                case 'authors':
+                    li.innerHTML = `
+                        <div>
+                            <h5>${item.name}</h5>
+                        </div>
+                    `;
+                    break;
+
+                case 'users':
+                    li.innerHTML = `
+                        <div>
+                            <h5>${item.username}</h5>
+                            <small>${item.email}</small>
+                        </div>
+                    `;
+                    break;
+
+                case 'groups':
+                    li.innerHTML = `
+                        <div>
+                            <h5>${item.name}</h5>
+                            <small>Учасників: ${item.membersCount || 0}</small>
+                        </div>
+                    `;
+                    break;
+            }
+
+            resultsElement.appendChild(li);
+        });
+    }
+
+    // Функція debounce для зменшення кількості запитів
+    function debounce(func, delay) {
+        let timeoutId;
+        return function() {
+            const context = this;
+            const args = arguments;
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => func.apply(context, args), delay);
+        };
+    }
+
+    // Додавання пошуку для кожної вкладки
+    const searchTypes = ['comics', 'authors', 'users', 'groups'];
+
+    searchTypes.forEach(type => {
+        const searchInput = document.getElementById(`${type}SearchInput`);
+        const resultsElement = document.getElementById(`${type}Results`);
+
+        if (searchInput && resultsElement) {
+            searchInput.addEventListener('input', debounce(function() {
+                const term = this.value;
+
+                // Перевірка мінімальної довжини терміну пошуку
+                if (term.length < 2) {
+                    resultsElement.innerHTML = '';
+                    return;
+                }
+
+                fetch(`/search/${type}?term=${encodeURIComponent(term)}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        displayResults(resultsElement, data, type);
+                    })
+                    .catch(error => {
+                        console.error(`Помилка завантаження результатів ${type}:`, error);
+                        resultsElement.innerHTML = '<li class="list-group-item text-danger">Помилка пошуку</li>';
+                    });
+            }, 300)); // затримка 300 мс
+        }
+    });
+});

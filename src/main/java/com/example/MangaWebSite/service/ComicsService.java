@@ -4,19 +4,15 @@ import com.example.MangaWebSite.models.*;
 import com.example.MangaWebSite.repository.ComicsRepository;
 import com.example.MangaWebSite.repository.GenreRepository;
 import com.example.MangaWebSite.repository.ReadingProgressRepository;
-import com.example.MangaWebSite.security.PersonDetails;
 import lombok.AllArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -105,8 +101,6 @@ public class ComicsService {
         return comicsList;
     }
 
-
-
     public void incrementViewCount(Comics comic) {
         comic.incrementViewCount();
         comicsRepository.save(comic);
@@ -122,9 +116,9 @@ public class ComicsService {
         return comicsRepository.findByAuthorContaining(term);
     }
 
-    public List<Comics> getNewCreatedComics(int page, int pageSize) {
+    public List<Comics> getNewCreatedComics(int page, int pageSize, int day) {
         Pageable pageable = PageRequest.of(page, pageSize, Sort.by("createdAt").descending());
-        LocalDateTime oneMonthAgo = LocalDateTime.now().minusDays(31);
+        LocalDateTime oneMonthAgo = LocalDateTime.now().minusDays(day);
         return comicsRepository.findAllByCreatedAt(pageable, oneMonthAgo).getContent();
     }
 
@@ -134,9 +128,15 @@ public class ComicsService {
         LocalDateTime oneMonthAgo = LocalDateTime.now().minusDays(70);
         return comicsRepository.findAllComicsWithNewChapters(oneMonthAgo, pageable);
     }
-    public List<Comics> getCurrentlyPopularReading(int page, int pageSize) {
+    public List<Comics> getCurrentlyPopularReading(int page, int pageSize, int day) {
         Pageable pageable = PageRequest.of(page, pageSize);
-        LocalDateTime cutoffTime = LocalDateTime.now().minusDays(1);
+        LocalDateTime cutoffTime = LocalDateTime.now().minusDays(day);
         return readingProgressRepository.findCurrentlyPopularReading(cutoffTime, pageable).getContent();
+    }
+
+    public List<Comics> getCurrentlyReading(int page, int pageSize, int day) {
+        Pageable pageable = PageRequest.of(page, pageSize);
+        LocalDateTime cutoffTime = LocalDateTime.now().minusDays(day); // Активність за останні 30 хв
+        return readingProgressRepository.findCurrentlyReading(cutoffTime, pageable);
     }
 }

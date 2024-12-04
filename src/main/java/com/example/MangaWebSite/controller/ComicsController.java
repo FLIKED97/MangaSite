@@ -155,18 +155,20 @@ public class ComicsController {
             @RequestParam(value = "section", defaultValue = "current") String section,
             @RequestParam(value = "page", required = false) String pageParam,
             @RequestParam(value = "pageSize", required = false) String pageSizeParam,
+            @RequestParam(value = "days", required = false) String dayParam,
             Model model) {
 
         // Перетворюємо рядкові параметри у числові значення, якщо можливо
         int page = parseIntOrDefault(pageParam, 0);         // Значення за замовчуванням: 0
         int pageSize = parseIntOrDefault(pageSizeParam, 10); // Значення за замовчуванням: 10
+        int day = parseIntOrDefault(dayParam, 31);
 
         section = validateSection(section); // Перевірка секції
 
         List<Comics> comics = switch (section) {
-            case "popular" -> comicsService.getPopularComics(0, 10);
-            case "new" -> comicsService.getNewCreatedComics(0, 10);
-            default -> comicsService.getCurrentlyPopularReading(0, 10);
+            case "popular" -> comicsService.getCurrentlyReading(page, pageSize, day);
+            case "new" -> comicsService.getNewCreatedComics(page, pageSize, day);
+            default -> comicsService.getCurrentlyPopularReading(page, pageSize, day);
         };
 
         model.addAttribute("comics", comics);

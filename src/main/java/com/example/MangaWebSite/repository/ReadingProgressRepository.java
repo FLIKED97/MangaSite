@@ -36,7 +36,7 @@ public interface ReadingProgressRepository extends JpaRepository<ReadingProgress
     GROUP BY c 
     ORDER BY COUNT(rp.person.id) DESC
     """)
-    List<Comics> findCurrentlyReading(@Param("cutoffTime") LocalDateTime cutoffTime);
+    List<Comics> findCurrentlyReading(@Param("cutoffTime") LocalDateTime cutoffTime, Pageable pageable);
     @Query("""
     SELECT c 
     FROM ReadingProgress rp 

@@ -57,14 +57,6 @@ public class MainController {
 
         model.addAttribute("person", personDetails.getPerson());
 
-        //Зараз читають
-        List<Comics> currentlyReading = readingProgressService.getCurrentlyReading();
-        model.addAttribute("currentlyReading", currentlyReading.subList(0, Math.min(3, currentlyReading.size()))); // Лише перші 3 коміксів
-        //Взагалі новостворені комікси
-        model.addAttribute("newCreatedComics", comicsService.getNewCreatedComics(0, 3));
-        //Популярні читають зараз комікси
-        model.addAttribute("currentlyPopularReading", readingProgressService.getCurrentlyPopularReading(0, 3));
-
         //комікси з новими главами, за останній час.
         model.addAttribute("newComics", comicsService.getAllComicsWithNewChapter(0)); //TODO Серйозний баг.
         //Оновлені комікси з закадок.

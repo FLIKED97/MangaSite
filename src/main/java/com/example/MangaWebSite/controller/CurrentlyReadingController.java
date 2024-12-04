@@ -19,13 +19,5 @@ import java.util.List;
 public class CurrentlyReadingController {
     private final ReadingProgressService readingProgressService;
     private final ComicsService comicsService;
-    @GetMapping()
-    public String showCurrentlyReadingPage(Model model) {
-        List<Comics> currentlyReading = readingProgressService.getCurrentlyReading();
-        model.addAttribute("currentlyReading", currentlyReading);
-        return "currently-reading/currently-reading";
-    }
-
-
 
 }

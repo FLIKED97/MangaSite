@@ -51,9 +51,10 @@ public class ReadingProgressService {
         return readingProgressRepository.findRecentlyReadByPersonId(id, topFive);
     }
 
-    public List<Comics> getCurrentlyReading() {
+    public List<Comics> getCurrentlyReading(int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page, pageSize);
         LocalDateTime cutoffTime = LocalDateTime.now().minusDays(1); // Активність за останні 30 хв
-        return readingProgressRepository.findCurrentlyReading(cutoffTime);
+        return readingProgressRepository.findCurrentlyReading(cutoffTime, pageable);
     }
 
     public Page<Comics> getCurrentlyPopularReading(int page, int pageSize) {

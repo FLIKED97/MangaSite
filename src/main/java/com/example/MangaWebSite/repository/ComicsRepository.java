@@ -30,4 +30,15 @@ public interface ComicsRepository extends JpaRepository<Comics, Integer> {
 
     @Query("SELECT c FROM Comics c WHERE LOWER(c.author) LIKE LOWER(CONCAT('%', :term, '%'))")
     List<Comics> findByAuthorContaining(@Param("term") String term);
+
+    @Query("""
+    SELECT c 
+    FROM ReadingProgress rp 
+    JOIN rp.comics c 
+    WHERE rp.updatedAt > :cutoffTime 
+    GROUP BY c 
+    ORDER BY COUNT(rp.person.id) DESC
+    """)
+    List<Comics> findCurrentlyReading(@Param("cutoffTime") LocalDateTime cutoffTime);
+
 }
