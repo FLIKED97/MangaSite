@@ -20,12 +20,21 @@
     <h3 class="text-center">Секції коміксів</h3>
     <div class="my-3">
         <label for="sectionSelect" class="form-label">Виберіть секцію:</label>
-        <select id="sectionSelect" class="form-select" onchange="navigateToSection(this.value)">
+        <select id="sectionSelect" class="form-select" onchange="navigateToSection()">
             <option th:selected="${section == 'current'}" value="current">Читають</option>
             <option th:selected="${section == 'popular'}" value="popular">Популярні</option>
             <option th:selected="${section == 'new'}" value="new">Новостворені</option>
         </select>
+
+        <label for="daysSelect" class="form-label mt-2">Виберіть період:</label>
+        <select id="daysSelect" class="form-select" onchange="navigateToSection()">
+            <option value="1" th:selected="${selectedDays == 1}">За добу</option>
+            <option value="7" th:selected="${selectedDays == 7}">За тиждень</option>
+            <option value="31" th:selected="${selectedDays == 31}">За місяць</option>
+            <option value="365" th:selected="${selectedDays == 365}">За рік</option>
+        </select>
     </div>
+
 
     <div class="row">
         <div th:each="comic : ${comics}" class="col-lg-3 col-md-4 col-sm-6 mb-4">
@@ -40,18 +49,17 @@
 </div>
 
 <script>
-    function navigateToSection(section) {
+    function navigateToSection() {
+        const section = document.getElementById('sectionSelect').value;
+        const days = document.getElementById('daysSelect').value;
+
         const validSections = ['current', 'popular', 'new'];
-        section = validSections.includes(section) ? section : 'current';
+        const validSection = validSections.includes(section) ? section : 'current';
 
-        // Переконайся, що параметри page і pageSize не передають некоректних значень
-        const page = 0;      // Значення за замовчуванням
-        const pageSize = 10; // Значення за замовчуванням
-
-        window.location.href = `/comics/sections?section=${section}&page=${page}&pageSize=${pageSize}`;
+        // Перенаправлення з врахуванням вибраних параметрів
+        window.location.href = `/comics/sections?section=${validSection}&days=${days}`;
     }
 
 </script>
-
 </body>
 </html>

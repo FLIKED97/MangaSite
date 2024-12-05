@@ -153,28 +153,27 @@ public class ComicsController {
     @GetMapping("/sections")
     public String getComicsBySection(
             @RequestParam(value = "section", defaultValue = "current") String section,
-            @RequestParam(value = "page", required = false) String pageParam,
-            @RequestParam(value = "pageSize", required = false) String pageSizeParam,
-            @RequestParam(value = "days", required = false) String dayParam,
+            @RequestParam(value = "days", defaultValue = "31") int days,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
             Model model) {
-
-        // Перетворюємо рядкові параметри у числові значення, якщо можливо
-        int page = parseIntOrDefault(pageParam, 0);         // Значення за замовчуванням: 0
-        int pageSize = parseIntOrDefault(pageSizeParam, 10); // Значення за замовчуванням: 10
-        int day = parseIntOrDefault(dayParam, 31);
 
         section = validateSection(section); // Перевірка секції
 
+        // Вибір коміксів залежно від секції
         List<Comics> comics = switch (section) {
-            case "popular" -> comicsService.getCurrentlyReading(page, pageSize, day);
-            case "new" -> comicsService.getNewCreatedComics(page, pageSize, day);
-            default -> comicsService.getCurrentlyPopularReading(page, pageSize, day);
+            case "popular" -> comicsService.getCurrentlyPopularReading(page, pageSize, days);
+            case "new" -> comicsService.getNewCreatedComics(page, pageSize, days);
+            default -> comicsService.getCurrentlyReading(page, pageSize, days);
         };
 
+        // Передача атрибутів у модель
         model.addAttribute("comics", comics);
         model.addAttribute("section", section);
+        model.addAttribute("selectedDays", days);
         return "currently-reading/currently-reading";
     }
+
 
     // Метод для перевірки та парсингу числа
     private int parseIntOrDefault(String value, int defaultValue) {
