@@ -41,4 +41,6 @@ public interface ComicsRepository extends JpaRepository<Comics, Integer> {
     """)
     List<Comics> findCurrentlyReading(@Param("cutoffTime") LocalDateTime cutoffTime);
 
+    @Query("SELECT c.id FROM Comics c")
+    List<Integer> findAllComicIds();
 }

@@ -21,10 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 @RequestMapping("/comics")
@@ -190,6 +187,25 @@ public class ComicsController {
         return validSections.contains(section) ? section : "current";
     }
 
+
+    @GetMapping("/random")
+    public String getRandomComic(HttpSession session) {
+        // Отримати список усіх коміксів
+        List<Integer> comicIds = comicsService.getAllComicIds(); // Метод повинен повертати список ID коміксів
+
+        if (comicIds.isEmpty()) {
+            // Якщо немає жодного комікса, перенаправити на сторінку з повідомленням
+            return "redirect:/comics/no-comics";
+        }
+
+        // Вибрати випадковий ID
+        Random random = new Random();
+        int randomIndex = random.nextInt(comicIds.size());
+        int randomComicId = comicIds.get(randomIndex);
+
+        // Перенаправити на сторінку вибраного комікса
+        return "redirect:/comics/" + randomComicId;
+    }
 
 
 }

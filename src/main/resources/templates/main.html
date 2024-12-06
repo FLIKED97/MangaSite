@@ -45,8 +45,91 @@
             font-size: 12px;
             color: #ccc;
         }
+        .btn-primary {
+            background-color: #28a745; /* Зелений */
+            border-color: #218838;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Додати тінь */
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        .btn-primary:hover {
+            background-color: #218838;
+            transform: scale(1.05); /* Легка зміна розміру при наведенні */
+        }
+
 
     </style>
+    <style>
+        .dropdown-menu {
+            background-color: #343a40; /* Темний фон */
+            border: 1px solid #495057; /* Тонка обводка */
+        }
+        .dropdown-header {
+            color: #f8f9fa; /* Світлий текст */
+            font-weight: bold;
+        }
+        .dropdown-item {
+            color: #adb5bd; /* Текст меншого контрасту */
+            transition: background-color 0.3s ease-in-out;
+        }
+        .dropdown-item:hover {
+            background-color: #495057; /* Фон при наведенні */
+            color: #fff; /* Білий текст при наведенні */
+        }
+        .btn-warning.text-dark {
+            color: #212529; /* Темний текст на кнопках */
+        }
+    </style>
+    <style>
+        .navbar {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Тінь під навбаром */
+            border-bottom: 2px solid #ffc107; /* Золота лінія знизу */
+        }
+        .navbar-brand {
+            font-size: 1.5rem; /* Збільшення логотипу */
+            font-weight: bold;
+        }
+        .nav-link {
+            color: #f8f9fa; /* Білий текст */
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #ffc107; /* Золотий текст при наведенні */
+        }
+        .btn-primary {
+            background-color: #007bff; /* Синя кнопка */
+            border-color: #0056b3; /* Темний відтінок бордюру */
+            color: #fff;
+            transition: background-color 0.3s ease-in-out;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3; /* Трохи темніше при наведенні */
+        }
+    </style>
+    <style>
+        .navbar-dark.bg-dark {
+            background-color: #212529; /* Темно-сірий */
+        }
+        .navbar-dark .navbar-nav .nav-link {
+            color: #adb5bd; /* Світлий текст */
+        }
+        .navbar-dark .navbar-nav .nav-link:hover {
+            color: #ffc107; /* Жовтий текст */
+        }
+        .dropdown-item.btn.btn-warning.text-dark {
+            background-color: #ffc107; /* Жовтий фон */
+            color: #212529; /* Темний текст */
+            border: none; /* Видалення обводки */
+            font-weight: bold; /* Жирний текст для більшої видимості */
+            transition: background-color 0.3s ease, color 0.3s ease; /* Анімація переходу */
+        }
+
+        .dropdown-item.btn.btn-warning.text-dark:hover {
+            background-color: #e0a800; /* Темніший жовтий при наведенні */
+            color: #ffffff; /* Білий текст при наведенні */
+        }
+    </style>
+
 </head>
 <body class="bg-dark text-light">
 <!-- Top Navigation Bar -->
@@ -57,14 +140,13 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
+            <li class="nav-item mx-2">
                 <a class="nav-link" th:href="@{/tabs/person/{id}(id=${person.id})}">Закладки</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item mx-2">
                 <a class="nav-link" th:href="@{/comics/newShow}">Комікси</a>
             </li>
-            <li class="nav-item dropdown">
-                <!-- Меню з вкладеннями -->
+            <li class="nav-item dropdown mx-2">
                 <a class="nav-link dropdown-toggle" href="#" id="dropdownMenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Каталог
                 </a>
@@ -79,14 +161,14 @@
                     <a class="dropdown-item" href="#">Колекції</a>
                     <a class="dropdown-item" href="#">Персонажі</a>
                     <a class="dropdown-item" href="#">Команди</a>
-                    <a class="dropdown-item btn btn-warning text-dark" href="#">Випадковий тайтл</a>
+                    <a class="dropdown-item btn btn-warning text-dark" href="/comics/random">Випадковий тайтл</a>
                 </div>
             </li>
             <li class="nav-item">
                 <button class="btn btn-primary" data-toggle="modal" data-target="#searchModal">Пошук</button>
             </li>
         </ul>
-        <ul class="navbar-nav">
+        <ul class="navbar-nav ml-auto">
             <li class="nav-item" th:if="${#authentication.name == 'anonymousUser'}">
                 <a class="nav-link btn btn-warning text-dark" href="#">Вхід | Реєстрація</a>
             </li>
@@ -96,6 +178,7 @@
         </ul>
     </div>
 </nav>
+
 
 
 <!-- Модальне вікно -->

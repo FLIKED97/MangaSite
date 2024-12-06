@@ -139,4 +139,9 @@ public class ComicsService {
         LocalDateTime cutoffTime = LocalDateTime.now().minusDays(day); // Активність за останні 30 хв
         return readingProgressRepository.findCurrentlyReading(cutoffTime, pageable);
     }
+
+    public List<Integer> getAllComicIds() {
+        return comicsRepository.findAllComicIds(); // Запит до репозиторія
+    }
+
 }
