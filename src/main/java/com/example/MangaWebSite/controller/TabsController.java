@@ -12,6 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 
 @Controller
 @AllArgsConstructor
@@ -40,7 +42,7 @@ public class TabsController {
     @PostMapping("/create")
     public String createTab(@ModelAttribute("tab") Tabs tab) {
         int personId = tabsService.saveWithRedirect(tab);  //TODO Можливо переробити, не дуже подобається варіант
-        return "redirect:/tabs/person/" + personId;
+        return "redirect:/profile/" + personId;
     }
     @PostMapping("/delete/{id}")
     @ResponseBody
@@ -48,5 +50,6 @@ public class TabsController {
         tabsService.deleteById(id);
         return ResponseEntity.ok("Tab deleted");
     }
+
 }
 
