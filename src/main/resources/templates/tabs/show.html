@@ -3,53 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <title>User's Tabs</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-whVla/Y0KCwT+5Geeb+GcoysuWI6WKsDbkU7S0MlD4zWvS/4GfEAG1ylV85kLtJ+" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoB0DZSB0z4p3Y0ksWclpPYYfRycLiwP7LybYI6R3lTBT0" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            document.querySelectorAll('.list-group-item').forEach(function(tab) {
-                tab.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    var tabId = this.getAttribute('data-id');  // Отримуємо ID закладки
-                    var personId = this.getAttribute('data-person-id');  // Отримуємо ID користувача
-                    fetch(`/tabs/person/${personId}/tab/${tabId}`)  // Виклик AJAX запиту для закладки
-                        .then(response => response.text())
-                        .then(html => {
-                            document.getElementById('comics-container').innerHTML = html;  // Оновлюємо контейнер з коміксами
-                        });
+        document.addEventListener("DOMContentLoaded", function () {
+            // Завантаження коміксів при натисканні на закладку
+            document.querySelectorAll(".list-group-item").forEach(tab => {
+                tab.addEventListener("click", function () {
+                    const tabId = this.dataset.id;
+                    const personId = this.dataset.personId;
+
+                    $.ajax({
+                        url: `/tabs/person/${personId}/tab/${tabId}`,
+                        method: "GET",
+                        success: function (response) {
+                            // Замінюємо контент центральної панелі
+                            document.getElementById("comics-container").innerHTML = response;
+                        },
+                        error: function () {
+                            alert("Помилка завантаження коміксів.");
+                        }
+                    });
                 });
+            });
+
+            // Сортування коміксів
+            document.getElementById("sort-comics").addEventListener("change", function () {
+                const sortType = this.value;
+                const comicsContainer = document.getElementById("comics-container");
+                const comics = Array.from(comicsContainer.children);
+
+                comics.sort((a, b) => {
+                    if (sortType === "name") {
+                        return a.textContent.localeCompare(b.textContent);
+                    } else if (sortType === "date") {
+                        return new Date(a.dataset.date) - new Date(b.dataset.date);
+                    }
+                });
+
+                comics.forEach(comic => comicsContainer.appendChild(comic));
+            });
+
+            // Відкрити модальне вікно
+            document.getElementById("edit-lists-btn").addEventListener("click", function () {
+                const modal = new bootstrap.Modal(document.getElementById("edit-lists-modal"));
+                modal.show();
             });
         });
     </script>
 </head>
 <body>
 <div class="container mt-4">
-    <h1>Закладки користувача</h1>
-
-    <div class="list-group">
-        <!-- Перевірка, чи є закладки -->
-        <div th:if="${#lists.isEmpty(tabs)}">
-            <p>No tabs found for this user.</p>
-        </div>
-
-        <!-- Виведення списку закладок -->
-        <div th:each="tab : ${tabs}">
-            <a href="#" class="list-group-item list-group-item-action"
-               th:text="${tab.name}"
-               th:data-id="${tab.id}"
-               th:data-person-id="${tab.person.id}">
-                <!-- Назва закладки -->
-            </a>
-        </div>
+    <!-- Інформація користувача -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 th:text="${username}">Ім'я користувача</h1>
+        <a th:href="@{/profile}" class="btn btn-outline-primary">Налаштування профілю</a>
     </div>
 
-    <!-- Контейнер для динамічного виведення коміксів -->
-    <div id="comics-container" class="mt-4">
-        <!-- Сюди підвантажується HTML з коміксами -->
-    </div>
+    <div class="row">
+        <!-- Список закладок -->
+        <div class="col-md-3">
+            <h3>Закладки</h3>
+            <div class="list-group">
+                <div th:each="tab : ${tabs}" class="list-group-item"
+                     th:data-id="${tab.id}" th:data-person-id="${personId}"
+                     th:text="${tab.name}"></div>
+            </div>
+            <button id="edit-lists-btn" class="btn btn-outline-secondary mt-3">Редагувати списки</button>
+        </div>
 
-    <!-- Кнопка повернення -->
-    <a th:href="@{/main}" class="btn btn-primary mt-3">На головну</a>
+        <!-- Центральна панель -->
+        <div class="col-md-9">
+            <h3>Елементи закладки</h3>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <input type="text" id="search-input" class="form-control d-inline w-75" placeholder="Пошук за назвою">
+                    <button class="btn btn-primary">Шукати</button>
+                </div>
+                <select id="sort-comics" class="form-select w-25">
+                    <option value="name">Сортувати за назвою</option>
+                    <option value="date">Сортувати за датою</option>
+                </select>
+            </div>
+            <div id="comics-container">
+                <!-- Тут будуть підвантажуватись комікси -->
+                <p>Елементи відсутні у цій закладці.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальне вікно для створення та редагування списків -->
+<div class="modal fade" id="edit-lists-modal" tabindex="-1" aria-labelledby="editListsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editListsModalLabel">Редагувати списки</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/tabs/create}" method="post">
+                    <label for="new-tab-name">Назва нового списку:</label>
+                    <input type="text" id="new-tab-name" name="name" class="form-control mb-3" required>
+                    <input type="hidden" th:value="${personId}" name="personId">
+                    <button type="submit" class="btn btn-primary">Створити</button>
+                </form>
+                <hr>
+                <h5>Існуючі списки:</h5>
+                <ul class="list-group">
+                    <li th:each="tab : ${tabs}" class="list-group-item d-flex justify-content-between align-items-center">
+                        <span th:text="${tab.name}"></span>
+                        <button class="btn btn-danger btn-sm" th:onclick="'deleteTab(' + ${tab.id} + ')'">Видалити</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

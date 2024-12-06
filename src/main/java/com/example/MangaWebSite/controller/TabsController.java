@@ -6,6 +6,7 @@ import com.example.MangaWebSite.service.ComicsService;
 import com.example.MangaWebSite.service.TabsService;
 import lombok.AllArgsConstructor;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +42,11 @@ public class TabsController {
         int personId = tabsService.saveWithRedirect(tab);  //TODO Можливо переробити, не дуже подобається варіант
         return "redirect:/tabs/person/" + personId;
     }
-
-
+    @PostMapping("/delete/{id}")
+    @ResponseBody
+    public ResponseEntity<?> deleteTab(@PathVariable("id") int id) {
+        tabsService.deleteById(id);
+        return ResponseEntity.ok("Tab deleted");
+    }
 }
 

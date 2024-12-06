@@ -48,4 +48,8 @@ public class TabsService {
                 .map(Tabs::getComics)
                 .orElse(Collections.emptyList());
     }
+
+    public void deleteById(int id) {
+        tabsRepository.deleteById(id);
+    }
 }
