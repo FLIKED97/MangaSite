@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -63,7 +64,7 @@ public class ComicsController {
         }
 
         // Перевірити, чи комікс вже переглядався у цій сесії
-        String sessionKey = "viewed_comic_" + comicId;
+        String sessionKey = "viewed_comic_" + comicId; //TODO, зламалося, ВИПРАВИТИ
         if (session.getAttribute(sessionKey) == null) {
             comicsService.incrementViewCount(comic);
             session.setAttribute(sessionKey, true); // Позначити як переглянутий
@@ -114,16 +115,26 @@ public class ComicsController {
     }
 
     @PostMapping("/addComicToTab")
+    @Transactional
     public String addComicToTab(@RequestParam int comicId, @RequestParam int tabId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
 
-        Tabs tab = tabsService.findById(tabId);
+        Tabs newTab = tabsService.findById(tabId);
 
-        if (tab.getPerson().getId() == personDetails.getPerson().getId()) {
+        if (newTab.getPerson().getId() == personDetails.getPerson().getId()) {
             Comics comic = comicsService.getComicById(comicId);
-            tab.getComics().add(comic);
-            tabsService.save(tab); // Зберігаємо зміни в базі
+
+            // Видаляємо комікс з усіх поточних закладок користувача
+            List<Tabs> userTabs = tabsService.findTabsByPersonId(personDetails.getPerson().getId());
+            for (Tabs tab : userTabs) {
+                tab.getComics().remove(comic);
+                tabsService.save(tab);
+            }
+
+            // Додаємо комікс до нової закладки
+            newTab.getComics().add(comic);
+            tabsService.save(newTab);
         }
 
         return "redirect:/comics/" + comicId;

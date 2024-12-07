@@ -52,4 +52,8 @@ public class TabsService {
     public void deleteById(int id) {
         tabsRepository.deleteById(id);
     }
+
+    public List<Tabs> findTabsByPersonId(int id) {
+        return tabsRepository.findAllByPersonId(id);
+    }
 }
