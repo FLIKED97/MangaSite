@@ -55,9 +55,9 @@
 
   <!-- Navigation Section -->
   <div class="nav-section mt-3">
-    <button class="btn btn-outline-secondary" onclick="loadSection('bookmarks')">Bookmarks</button>
-    <button class="btn btn-outline-secondary" onclick="loadSection('comments')">Comments</button>
-    <button class="btn btn-outline-secondary" onclick="loadSection('friends')">Friends</button>
+    <button class="btn btn-outline-secondary" onclick="loadSection('bookmarks')">Закладки</button>
+    <button class="btn btn-outline-secondary" onclick="loadSection('comments')">Коментарі</button>
+    <button class="btn btn-outline-secondary" onclick="loadSection('friends')">Друзі</button>
   </div>
 
   <!-- Content Section -->
@@ -75,6 +75,9 @@
       modal.show();
     }
   });
+  document.addEventListener('DOMContentLoaded', function() {
+    loadSection('bookmarks'); // Автоматичне відкриття закладок при завантаженні сторінки
+  });
 
   // Simulate days since account creation
   const createdAt = new Date('2024-01-01'); // Replace with actual date from backend
@@ -91,7 +94,7 @@
       case 'bookmarks': {
         const personId = document.body.getAttribute('data-person-id');
         $.ajax({
-          url: `/tabs/person/${personId}`, // Використовуйте точно такий самий URL, як у контролері
+          url: `/tabs/person/${personId}`,
           method: 'GET',
           success: function (response) {
             content.innerHTML = response;
