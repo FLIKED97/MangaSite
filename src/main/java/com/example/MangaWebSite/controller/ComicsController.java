@@ -63,11 +63,17 @@ public class ComicsController {
             return "error/404";
         }
 
-        // Перевірити, чи комікс вже переглядався у цій сесії
-        String sessionKey = "viewed_comic_" + comicId; //TODO, зламалося, ВИПРАВИТИ
-        if (session.getAttribute(sessionKey) == null) {
+        // Унікальний ключ для сесії з прив'язкою до користувача
+        String sessionKey = "viewed_comic_" + personDetails.getPerson().getId() + "_" + comicId;
+
+        // Отримуємо час останнього перегляду
+        Long lastViewTime = (Long) session.getAttribute(sessionKey);
+        long currentTime = System.currentTimeMillis();
+
+        // Інкрементуємо лічильник переглядів не частіше, ніж раз на 5 хвилин
+        if (lastViewTime == null || (currentTime - lastViewTime) > 5 * 60 * 1000) {
             comicsService.incrementViewCount(comic);
-            session.setAttribute(sessionKey, true); // Позначити як переглянутий
+            session.setAttribute(sessionKey, currentTime);
         }
 
         model.addAttribute("comic", comic);
