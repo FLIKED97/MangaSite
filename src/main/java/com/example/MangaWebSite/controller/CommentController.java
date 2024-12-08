@@ -2,6 +2,7 @@ package com.example.MangaWebSite.controller;
 
 import com.example.MangaWebSite.service.CommentService;
 import lombok.AllArgsConstructor;
+import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,5 +30,11 @@ public class CommentController {
         commentService.createCommentInComics(comicsId, textComment);
 
         return "redirect:/comics/" + comicsId;
+    }
+
+    @GetMapping("/show")
+    public String showComment(Model model){
+        model.addAttribute("comment", commentService.getAllCommentPerson());
+        return "comment/show";
     }
 }

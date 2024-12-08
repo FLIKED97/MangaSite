@@ -36,4 +36,10 @@ public class CommentService {
     public List<Comment> getCommentsByComicsId(int comicsId) {
         return commentRepository.findAllByComicsIdOrderByCreatedAtDesc(comicsId);
     }
+
+    public List<Comment> getAllCommentPerson() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
+        return commentRepository.findAllByPersonId(personDetails.getPerson().getId());
+    }
 }
