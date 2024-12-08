@@ -39,6 +39,8 @@ public class ComicsController {
 
     private final RatingService ratingService;
 
+    private final CommentService commentService;
+
 //    @GetMapping()
 //    public String showAllComics(Model model){
 //        model.addAttribute("comics", comicsService.showAll());
@@ -81,6 +83,7 @@ public class ComicsController {
         model.addAttribute("tabs", tabsService.findByPersonId(personDetails.getPerson().getId()));
         model.addAttribute("chapters", chapterService.findAllChapterByComicsId(comicId));
         model.addAttribute("userRating", ratingService.getUserRating(comicId, personDetails.getPerson().getId()));
+        model.addAttribute("comments", commentService.getCommentsByComicsId(comicId));
         return "comics/comic-details";
     }
     @GetMapping("/image/{id}")

@@ -117,8 +117,31 @@
         <!-- Коментарі -->
         <div class="tab-pane fade" id="comments" role="tabpanel" aria-labelledby="comments-tab">
             <h3>Коментарі:</h3>
-            <p>Тут будуть коментарі...</p>
+            <!-- Форма для додавання коментарів -->
+            <form th:action="@{/comment/add}" method="post" class="mt-3">
+                <input type="hidden" name="comicsId" th:value="${comic.id}" />
+                <div class="mb-3">
+                    <textarea name="textComment" class="form-control" placeholder="Напишіть ваш коментар..." rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Додати коментар</button>
+            </form>
+
+            <!-- Вивід списку коментарів -->
+            <div id="comments-list" class="mt-4">
+                <div th:if="${#lists.isEmpty(comments)}">
+                    <p>Коментарів поки що немає. Станьте першим, хто прокоментує!</p>
+                </div>
+                <ul class="list-group" th:each="comment : ${comments}">
+                    <li class="list-group-item">
+                        <p><strong>Автор:</strong> <span th:text="${comment.person.username}">Користувач</span></p>
+                        <p><strong>Коментар:</strong></p>
+                        <p th:text="${comment.text}">Текст коментаря</p>
+                        <small class="text-muted" th:text="${comment.createdAt}">Дата створення</small>
+                    </li>
+                </ul>
+            </div>
         </div>
+
     </div>
 </div>
 <script>
