@@ -17,17 +17,9 @@
 <!-- Список друзів -->
 <ul>
   <li th:each="friend : ${friends}">
-    <span th:text="${friend.friend.name}">Friend Name</span>
+    <span th:text="${friend.friend.username}">Friend Name</span>
   </li>
 </ul>
 
-<!-- Форма для запиту на дружбу -->
-<h2>Запит на дружбу</h2>
-<form th:action="@{/friends/request}" method="post">
-  <input type="hidden" name="userId" value="/* ID користувача */">
-  <label for="friendId">ID друга:</label>
-  <input type="number" id="friendId" name="friendId">
-  <button type="submit">Надіслати запит</button>
-</form>
 </body>
 </html>

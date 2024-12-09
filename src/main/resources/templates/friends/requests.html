@@ -11,14 +11,18 @@
 <ul>
     <li th:if="${receivedRequests.isEmpty()}">Немає отриманих запитів.</li>
     <li th:each="request : ${receivedRequests}">
-        <span th:text="${request.sender.username}"></span>
+        <!-- Ім'я відправника запиту -->
+        <span th:text="${request.person.username}"></span>
+        <!-- Форма для прийняття запиту -->
         <form th:action="@{/friends/accept}" method="post" style="display: inline;">
             <input type="hidden" name="requestId" th:value="${request.id}">
-            <input type="hidden" name="userId" th:value="${request.recipient.id}">
+            <input type="hidden" name="userId" th:value="${request.friend.id}">
             <button type="submit">Прийняти</button>
         </form>
+        <!-- Форма для відхилення запиту -->
         <form th:action="@{/friends/decline}" method="post" style="display: inline;">
             <input type="hidden" name="requestId" th:value="${request.id}">
+            <input type="hidden" name="userId" th:value="${request.friend.id}">
             <button type="submit">Відхилити</button>
         </form>
     </li>
@@ -28,7 +32,8 @@
 <ul>
     <li th:if="${sentRequests.isEmpty()}">Немає надісланих запитів.</li>
     <li th:each="request : ${sentRequests}">
-        <span th:text="${request.recipient.username}"></span>
+        <!-- Ім'я отримувача запиту -->
+        <span th:text="${request.friend.username}"></span>
     </li>
 </ul>
 </body>

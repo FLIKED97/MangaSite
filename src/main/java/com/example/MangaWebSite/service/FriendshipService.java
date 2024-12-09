@@ -1,16 +1,13 @@
 package com.example.MangaWebSite.service;
 
-import com.example.MangaWebSite.models.FriendRequest;
 import com.example.MangaWebSite.models.Friendship;
 import com.example.MangaWebSite.models.FriendshipStatus;
 import com.example.MangaWebSite.models.Person;
-import com.example.MangaWebSite.repository.FriendRequestRepository;
 import com.example.MangaWebSite.repository.FriendshipRepository;
 import com.example.MangaWebSite.repository.PersonRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -18,66 +15,64 @@ import java.util.List;
 public class FriendshipService {
 
     private final FriendshipRepository friendshipRepository;
-    private final PersonRepository userRepository; // Для отримання користувачів
-    private final FriendRequestRepository friendRequestRepository;
-
-    // Отримання запитів, отриманих користувачем
-    public List<FriendRequest> getReceivedFriendRequests(int userId) {
-        return friendRequestRepository.findByRecipientId(userId);
-    }
-
-    // Отримання запитів, надісланих користувачем
-    public List<FriendRequest> getSentFriendRequests(int userId) {
-        return friendRequestRepository.findBySenderId(userId);
-    }
-
+    private final PersonRepository personRepository;
 
     // Відправити запит на дружбу
-    public void sendFriendRequest(int userId, int friendId) {
-        if (friendshipRepository.findFriendshipBetweenUsers(userId, friendId).isPresent()) {
-            throw new IllegalStateException("Дружба вже існує!");
+    public void createFriendRequest(int senderId, int recipientId) {
+        if (areFriends(senderId, recipientId)) {
+            throw new IllegalStateException("Ви вже друзі.");
         }
 
-        Person user = userRepository.findById(userId)
+        Person sender = personRepository.findById(senderId)
                 .orElseThrow(() -> new IllegalArgumentException("Користувач не знайдений"));
-        Person friend = userRepository.findById(friendId)
+        Person recipient = personRepository.findById(recipientId)
                 .orElseThrow(() -> new IllegalArgumentException("Друг не знайдений"));
 
-        Friendship friendship = new Friendship(user, friend, FriendshipStatus.REQUESTED, LocalDateTime.now());
+        Friendship friendship = new Friendship();
+        friendship.setPerson(sender);
+        friendship.setFriend(recipient);
+        friendship.setStatus(FriendshipStatus.PENDING);
         friendshipRepository.save(friendship);
     }
 
     // Підтвердити запит на дружбу
-    public void acceptFriendRequest(int requestId) {
-        FriendRequest request = friendRequestRepository.findById(requestId)
+    public void acceptFriendRequest(int friendshipId) {
+        Friendship friendship = friendshipRepository.findById(friendshipId)
                 .orElseThrow(() -> new IllegalArgumentException("Запит не знайдено"));
-        request.setStatus("ACCEPTED");
-        friendRequestRepository.save(request);
+
+        friendship.setStatus(FriendshipStatus.ACCEPTED);
+        friendshipRepository.save(friendship);
     }
 
     // Відхилити запит на дружбу
-    public void declineFriendRequest(int requestId) {
-        FriendRequest request = friendRequestRepository.findById(requestId)
+    public void declineFriendRequest(int friendshipId) {
+        Friendship friendship = friendshipRepository.findById(friendshipId)
                 .orElseThrow(() -> new IllegalArgumentException("Запит не знайдено"));
-        request.setStatus("DECLINED");
-        friendRequestRepository.save(request);
+
+        friendship.setStatus(FriendshipStatus.DECLINED);
+        friendshipRepository.save(friendship);
     }
 
-    // Отримати список друзів користувача
+    // Отримати список друзів (підтверджена дружба)
     public List<Friendship> getFriends(int userId) {
-        return friendshipRepository.findFriendsByPersonId(userId);
+        return friendshipRepository.findByPersonIdAndStatus(userId, FriendshipStatus.ACCEPTED);
+    }
+
+    // Отримати вхідні запити
+    public List<Friendship> getReceivedFriendRequests(int userId) {
+        return friendshipRepository.findByFriendIdAndStatus(userId, FriendshipStatus.PENDING);
+    }
+
+    // Отримати вихідні запити
+    public List<Friendship> getSentFriendRequests(int userId) {
+        return friendshipRepository.findByPersonIdAndStatus(userId, FriendshipStatus.PENDING);
     }
 
     public boolean areFriends(int userId, int friendId) {
-        return friendshipRepository.findFriendshipBetweenUsers(userId, friendId).isPresent();
-    }
-
-    public void createFriendRequest(Person sender, Person recipient) {
-        FriendRequest request = new FriendRequest();
-        request.setSender(sender);
-        request.setRecipient(recipient);
-        request.setStatus("PENDING");
-        friendRequestRepository.save(request);
+        return friendshipRepository.findFriendshipBetweenUsers(userId, friendId)
+                .map(f -> f.getStatus() == FriendshipStatus.ACCEPTED)
+                .orElse(false);
     }
 }
+
 

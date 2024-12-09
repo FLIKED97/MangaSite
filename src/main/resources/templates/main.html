@@ -181,6 +181,9 @@
 
 
 <a th:href="@{/friends/requests}" class="btn btn-secondary">Переглянути запити на дружбу</a>
+<form th:action="@{/logout}" method="post" style="display: inline;">
+    <button type="submit">Вийти</button>
+</form>
 
 <!-- Модальне вікно -->
 <div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">

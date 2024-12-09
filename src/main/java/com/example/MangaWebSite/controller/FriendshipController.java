@@ -1,6 +1,6 @@
 package com.example.MangaWebSite.controller;
 
-import com.example.MangaWebSite.models.FriendRequest;
+import com.example.MangaWebSite.models.Friendship;
 import com.example.MangaWebSite.models.Person;
 import com.example.MangaWebSite.security.PersonDetails;
 import com.example.MangaWebSite.service.FriendshipService;
@@ -14,7 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -39,10 +38,10 @@ public class FriendshipController {
         PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
 
         // Запити, які отримав користувач
-        List<FriendRequest> receivedRequests = friendshipService.getReceivedFriendRequests(personDetails.getPerson().getId());
+        List<Friendship> receivedRequests = friendshipService.getReceivedFriendRequests(personDetails.getPerson().getId());
 
         // Запити, які користувач надіслав
-        List<FriendRequest> sentRequests = friendshipService.getSentFriendRequests(personDetails.getPerson().getId());
+        List<Friendship> sentRequests = friendshipService.getSentFriendRequests(personDetails.getPerson().getId());
 
         model.addAttribute("receivedRequests", receivedRequests);
         model.addAttribute("sentRequests", sentRequests);
@@ -62,10 +61,9 @@ public class FriendshipController {
             return ResponseEntity.badRequest().body("Ви вже друзі.");
         }
 
-        friendshipService.createFriendRequest(personDetails.getPerson(), friend);
+        friendshipService.createFriendRequest(personDetails.getPerson().getId(), friend.getId());
         return ResponseEntity.ok("Запит на дружбу успішно відправлено.");
     }
-
 
     // Підтвердити запит на дружбу
     @PostMapping("/accept")

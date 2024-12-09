@@ -20,29 +20,23 @@ public class Friendship {
 
     @ManyToOne
     @JoinColumn(name = "person_id", nullable = false)
-    private Person person; // Користувач, який ініціює дружбу
+    private Person person; // Користувач, який ініціює дружбу або запит
 
     @ManyToOne
     @JoinColumn(name = "friend_id", nullable = false)
-    private Person friend; // Друг користувача
+    private Person friend; // Інший користувач
 
     @Enumerated(EnumType.STRING)
-    private FriendshipStatus status; // Статус дружби (наприклад, запит, підтверджено)
+    @Column(nullable = false)
+    private FriendshipStatus status; // PENDING, ACCEPTED, DECLINED
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
-
-    // Конструктор для створення нової дружби без id
-    public Friendship(Person person, Person friend, FriendshipStatus status, LocalDateTime createdAt) {
-        this.person = person;
-        this.friend = friend;
-        this.status = status;
-        this.createdAt = createdAt;
-    }
 
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
     }
 }
+
 
