@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <title>Профіль користувача</title>
+<!--  <link rel="stylesheet" href="/css/style.css">-->
+</head>
+<body>
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header d-flex align-items-center">
+      <img src="/default-avatar.png" alt="Аватарка" class="rounded-circle" style="width: 60px; height: 60px; object-fit: cover;">
+      <h3 class="ml-3" th:text="${user.username}"></h3>
+    </div>
+    <div class="card-body">
+      <h4>Комікси користувача:</h4>
+      <ul class="list-group">
+        <li class="list-group-item" th:if="${comics.isEmpty()}">Цей користувач ще не додав коміксів.</li>
+        <li class="list-group-item" th:each="comic : ${comics}">
+          <span th:text="${comic.title}"></span>
+        </li>
+      </ul>
+    </div>
+    <div class="card-footer">
+      <button class="btn btn-primary" th:if="${!isFriend}" th:onclick="'sendFriendRequest(' + ${user.id} + ')'">Додати в друзі</button>
+      <span th:if="${isFriend}" class="text-success">Ви вже друзі!</span>
+    </div>
+  </div>
+</div>
+<script>
+  function sendFriendRequest(userId) {
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+    fetch(`/friends/request/${userId}`, {
+      method: 'POST',
+      headers: {
+        [csrfHeader]: csrfToken // Передача CSRF-токена
+      }
+    })
+            .then(response => {
+              if (response.ok) {
+                alert('Запит на дружбу надіслано');
+                location.reload();
+              } else {
+                alert('Помилка під час відправлення запиту');
+              }
+            })
+            .catch(error => console.error('Помилка:', error));
+  }
+
+</script>
+</body>
+</html>

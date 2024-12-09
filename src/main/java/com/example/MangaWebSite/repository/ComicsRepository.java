@@ -43,4 +43,9 @@ public interface ComicsRepository extends JpaRepository<Comics, Integer> {
 
     @Query("SELECT c.id FROM Comics c")
     List<Integer> findAllComicIds();
+
+    @Query("SELECT c FROM Comics c " +
+            "JOIN c.tabs t " +
+            "WHERE t.person.id = :personId")
+    List<Comics> findAllByPersonId(@Param("personId") int personId);
 }

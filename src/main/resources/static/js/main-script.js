@@ -193,11 +193,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 case 'users':
                     li.innerHTML = `
-                        <div>
-                            <h5>${item.username}</h5>
-                            <small>${item.email}</small>
-                        </div>
-                    `;
+        <img src="/default-avatar.png" alt="Аватарка" class="mr-3 rounded-circle" style="width: 40px; height: 40px;">
+        <div>
+            <a href="/profile/${item.id}" class="text-light">
+                <h5>${item.username}</h5>
+            </a>
+            <small>${item.email}</small>
+        </div>
+    `;
                     break;
 
                 case 'groups':

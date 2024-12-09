@@ -144,4 +144,7 @@ public class ComicsService {
         return comicsRepository.findAllComicIds(); // Запит до репозиторія
     }
 
+    public List<Comics> findComicsByPersonId(int id) {
+        return comicsRepository.findAllByPersonId(id);
+    }
 }

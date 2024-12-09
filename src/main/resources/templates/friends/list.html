@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Friends</title>
+</head>
+<body>
+<h1>Список друзів</h1>
+
+<!-- Повідомлення -->
+<div>
+  <p th:if="${message}" th:text="${message}" class="alert alert-success"></p>
+  <p th:if="${error}" th:text="${error}" class="alert alert-danger"></p>
+</div>
+
+<!-- Список друзів -->
+<ul>
+  <li th:each="friend : ${friends}">
+    <span th:text="${friend.friend.name}">Friend Name</span>
+  </li>
+</ul>
+
+<!-- Форма для запиту на дружбу -->
+<h2>Запит на дружбу</h2>
+<form th:action="@{/friends/request}" method="post">
+  <input type="hidden" name="userId" value="/* ID користувача */">
+  <label for="friendId">ID друга:</label>
+  <input type="number" id="friendId" name="friendId">
+  <button type="submit">Надіслати запит</button>
+</form>
+</body>
+</html>

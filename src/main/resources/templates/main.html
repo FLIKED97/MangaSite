@@ -173,13 +173,14 @@
                 <a class="nav-link btn btn-warning text-dark" href="#">Вхід | Реєстрація</a>
             </li>
             <li class="nav-item" th:if="${#authentication.name != 'anonymousUser'}">
-                <a class="nav-link text-light" th:href="@{/profile/{id}(id=${person.id})}" th:text="${person.username}">[${person.username}]</a>
+                <a class="nav-link text-light" th:href="@{/profile/personal/{id}(id=${person.id})}" th:text="${person.username}">[${person.username}]</a>
             </li>
         </ul>
     </div>
 </nav>
 
 
+<a th:href="@{/friends/requests}" class="btn btn-secondary">Переглянути запити на дружбу</a>
 
 <!-- Модальне вікно -->
 <div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">

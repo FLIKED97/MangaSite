@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Запити на дружбу</title>
+</head>
+<body>
+<h1>Ваші запити на дружбу</h1>
+
+<h2>Отримані запити:</h2>
+<ul>
+    <li th:if="${receivedRequests.isEmpty()}">Немає отриманих запитів.</li>
+    <li th:each="request : ${receivedRequests}">
+        <span th:text="${request.sender.username}"></span>
+        <form th:action="@{/friends/accept}" method="post" style="display: inline;">
+            <input type="hidden" name="requestId" th:value="${request.id}">
+            <input type="hidden" name="userId" th:value="${request.recipient.id}">
+            <button type="submit">Прийняти</button>
+        </form>
+        <form th:action="@{/friends/decline}" method="post" style="display: inline;">
+            <input type="hidden" name="requestId" th:value="${request.id}">
+            <button type="submit">Відхилити</button>
+        </form>
+    </li>
+</ul>
+
+<h2>Надіслані запити:</h2>
+<ul>
+    <li th:if="${sentRequests.isEmpty()}">Немає надісланих запитів.</li>
+    <li th:each="request : ${sentRequests}">
+        <span th:text="${request.recipient.username}"></span>
+    </li>
+</ul>
+</body>
+</html>

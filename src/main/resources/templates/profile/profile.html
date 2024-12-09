@@ -125,10 +125,17 @@
         break;
       }
       case 'comments':
-        content.innerHTML = `
-        <h5>Your Comments</h5>
-        <p>Feature in development...</p>
-      `;
+        // Запит для завантаження коментарів
+        $.ajax({
+          url: '/comment/show',
+          method: 'GET',
+          success: function (response) {
+            content.innerHTML = response;
+          },
+          error: function () {
+            content.innerHTML = '<p class="text-danger">Failed to load comments.</p>';
+          }
+        });
         break;
       case 'friends':
         content.innerHTML = `

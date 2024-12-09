@@ -15,4 +15,6 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
 
     @Query("SELECT p FROM Person p WHERE LOWER(p.username) LIKE LOWER(CONCAT('%', :term, '%'))")
     List<Person> findByUsernameContaining(@Param("term") String term);
+
+    Person findByUsername(String name);
 }

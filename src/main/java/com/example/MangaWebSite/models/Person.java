@@ -52,6 +52,15 @@ public class Person {
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SearchHistory> searchHistory;
 
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Friendship> friendshipsInitiated; // Ініційовані користувачем дружби
+
+    @OneToMany(mappedBy = "friend", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Friendship> friendshipsReceived; // Запити дружби, отримані користувачем
+
+
     @ManyToOne
     @JoinColumn(name = "publisher_id")
     @JsonBackReference
