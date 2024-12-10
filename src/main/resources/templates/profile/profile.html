@@ -137,12 +137,20 @@
           }
         });
         break;
-      case 'friends':
-        content.innerHTML = `
-        <h5>Your Friends</h5>
-        <p>Feature in development...</p>
-      `;
+      case 'friends': {
+        const personId = document.body.getAttribute('data-person-id');
+        $.ajax({
+          url: `/friends/${personId}`,
+          method: 'GET',
+          success: function (response) {
+            content.innerHTML = response;
+          },
+          error: function () {
+            content.innerHTML = '<p class="text-danger">Failed to load friends.</p>';
+          }
+        });
         break;
+      }
       default:
         content.innerHTML = `
         <div class="placeholder">
