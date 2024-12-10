@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Створення новини</title>
+</head>
+<body>
+<h1>Створення новини</h1>
+<form th:action="@{/admin/news/create}" method="post">
+    <label for="title">Заголовок:</label>
+    <input type="text" id="title" name="title" required>
+
+    <label for="content">Текст новини:</label>
+    <textarea id="content" name="content" required></textarea>
+
+    <label for="category">Категорія:</label>
+    <select id="category" name="categoryId" required>
+        <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+    </select>
+
+    <button type="submit">Створити</button>
+</form>
+</body>
+</html>

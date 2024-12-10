@@ -61,7 +61,7 @@ public class SecurityConfig {
                         .requestMatchers("/user/**", "/reservation/**", "/main/**", "/ratings/**",
                                 "/currently-reading/**", "/search/**", "/comment/**", "/friends/**")
                         .hasAnyRole("USER", "PUBLISHER") // User routes for all
-                        .requestMatchers("/endpoint", "*/admin/**")
+                        .requestMatchers("/endpoint", "/admin/**")
                         .hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .formLogin((login) -> login
