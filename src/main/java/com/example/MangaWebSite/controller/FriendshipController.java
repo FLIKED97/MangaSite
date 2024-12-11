@@ -28,9 +28,13 @@ public class FriendshipController {
     // Сторінка зі списком друзів
     @GetMapping("/{userId}")
     public String getFriends(@PathVariable int userId, Model model) {
-        model.addAttribute("friends", friendshipService.getFriends(userId));
+        List<Person> friends = friendshipService.getFriends(userId);
+
+        model.addAttribute("friends", friends);
+
         return "friends/list"; // Повертає представлення friends/list.html
     }
+
 
     @GetMapping("/requests")
     public String viewFriendRequests(Model model) {

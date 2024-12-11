@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Чат</title>
+  <link rel="stylesheet" href="/css/chat.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="chat-container">
+  <!-- Список друзів -->
+  <div class="chat-sidebar">
+    <ul>
+      <li th:each="friend : ${friends}">
+        <a href="#" th:attr="data-id=${friend.id}" class="friend-link">
+          <img src="/images/default-avatar.png" alt="Avatar" class="avatar">
+          <span th:text="${friend.username}"></span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Основний чат -->
+  <div class="chat-main">
+    <div id="chat-header"></div>
+    <div id="chat-messages"></div>
+    <div class="chat-input">
+      <form id="chat-form">
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+        <input type="text" name="content" placeholder="Напишіть повідомлення..." required>
+        <button type="submit">Відправити</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function () {
+    const csrfToken = $("input[name='_csrf']").val();
+
+    // Клік по другу
+    $(".friend-link").click(function (e) {
+      e.preventDefault();
+      const friendId = $(this).data("id");
+
+      $.ajax({
+        url: `/chat/messages/${friendId}`,
+        method: "GET",
+        success: function (data) {
+          $("#chat-header").html(`<h2>${data.friend.username}</h2>`);
+          let messagesHtml = '';
+          let lastSenderId = null;
+
+          data.messages.forEach(msg => {
+            const messageClass = msg.sender.id === data.friend.id ? 'incoming' : 'outgoing';
+            const showSender = lastSenderId !== msg.sender.id;
+
+            messagesHtml += `<div class="message ${messageClass}">
+                            ${showSender ? `<span class="sender">${msg.sender.username}</span>` : ''}
+                            <p>${msg.content}</p>
+                            <span class="timestamp">${msg.createdAt}</span>
+                        </div>`;
+
+            lastSenderId = msg.sender.id;
+          });
+
+          $("#chat-messages").html(messagesHtml);
+          $("#chat-form").data("friend-id", friendId);
+        }
+      });
+    });
+    //TODO КОЛИ ЗАХОДИШ НА СТОРІНКУ ЧАТУ, ТАМ З САМОГО ПОЧАТКУ БАГ ПОЯВЛЯЄТЬСЯ ВІДПРАВИТИ ПОВІДОМЛЕННЯ
+    // Відправлення повідомлення
+    $("#chat-form").submit(function (e) {
+      e.preventDefault();
+      const content = $(this).find("input[name='content']").val();
+      const friendId = $(this).data("friend-id");
+
+      $.ajax({
+        url: "/chat/send",
+        method: "POST",
+        data: { friendId, content, _csrf: csrfToken }, // CSRF-токен в тілі
+        headers: { 'X-CSRF-TOKEN': csrfToken },       // CSRF-токен в заголовку
+        success: function () {
+          $(".friend-link[data-id='" + friendId + "']").click();
+          $("#chat-form").find("input[name='content']").val('');
+        },
+        error: function (xhr) {
+          console.error("Помилка при відправці повідомлення:", xhr.status, xhr.responseText);
+        }
+      });
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Чат з другом</title>
+    <link rel="stylesheet" href="/css/chat.css">
+</head>
+<body>
+<div class="chat-container">
+    <div class="chat-sidebar">
+        <ul>
+            <li th:each="friend : ${friends}">
+                <a th:href="@{/chat/{id}(id=${friend.friend.id})}">
+                    <img src="/images/default-avatar.png" alt="Avatar" class="avatar">
+                    <span th:text="${friend.friend.username}"></span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="chat-main">
+        <div class="chat-header">
+            <h2 th:text="${friend.username}">Друже</h2>
+        </div>
+        <div class="chat-messages">
+            <div th:each="message : ${messages}">
+                <div th:class="'message ' + (${message.sender.id} == ${#authentication.principal.person.id} ? 'outgoing' : 'incoming')">
+                    <p th:text="${message.content}"></p>
+                    <span th:text="${message.createdAt}"></span>
+                </div>
+            </div>
+        </div>
+        <div class="chat-input">
+            <form th:action="@{/chat/{friendId}/send(friendId=${friend.id})}" method="post">
+                <input type="text" name="content" placeholder="Напишіть повідомлення..." required>
+                <button type="submit">Відправити</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

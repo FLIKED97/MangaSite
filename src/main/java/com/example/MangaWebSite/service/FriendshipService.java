@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -54,9 +55,14 @@ public class FriendshipService {
     }
 
     // Отримати список друзів (підтверджена дружба)
-    public List<Friendship> getFriends(int userId) {
-        return friendshipRepository.findByPersonIdAndStatus(userId, FriendshipStatus.ACCEPTED);
+    public List<Person> getFriends(int userId) {
+        List<Friendship> friendships = friendshipRepository.findAllByPersonIdAndStatus(userId, FriendshipStatus.ACCEPTED);
+
+        return friendships.stream()
+                .map(friendship -> friendship.getPerson().getId() == userId ? friendship.getFriend() : friendship.getPerson())
+                .collect(Collectors.toList());
     }
+
 
     // Отримати вхідні запити
     public List<Friendship> getReceivedFriendRequests(int userId) {
@@ -72,6 +78,10 @@ public class FriendshipService {
         return friendshipRepository.findFriendshipBetweenUsers(userId, friendId)
                 .map(f -> f.getStatus() == FriendshipStatus.ACCEPTED)
                 .orElse(false);
+    }
+
+    public Person getPersonById(int friendId) {
+        return personRepository.findById(friendId).orElse(null);
     }
 }
 
