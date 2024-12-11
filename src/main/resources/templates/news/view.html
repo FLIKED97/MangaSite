@@ -7,16 +7,16 @@
 <h1 th:text="${news.title}"></h1>
 <p th:text="${news.content}"></p>
 <p>Автор: <span th:text="${news.author.username}"></span></p>
-<p>Опубліковано: <span th:text="${#dates.format(news.createdAt, 'dd.MM.yyyy HH:mm:ss')}"></span></p>
+<p>Опубліковано: <span th:text="${#temporals.format(news.createdAt, 'dd.MM.yyyy HH:mm:ss')}"></span></p>
 <!--//TODO ДОРОБИТИ ЧАС-->
 
 <hr>
 
-<!--&lt;!&ndash; Коментарі &ndash;&gt;-->
-<!--<h2>Коментарі</h2>-->
-<!--<div th:each="comment : ${comments}">-->
-<!--    <p><strong th:text="${comment.author.username}"></strong>: <span th:text="${comment.content}"></span></p>-->
-<!--</div>-->
+<!-- Коментарі -->
+<h2>Коментарі</h2>
+<div th:each="comment : ${comments}">
+    <p><strong th:text="${comment.person.username}"></strong>: <span th:text="${comment.text}"></span></p>
+</div>
 
 <!-- Форма для додавання коментаря -->
 <div th:if="${#authentication.principal}">

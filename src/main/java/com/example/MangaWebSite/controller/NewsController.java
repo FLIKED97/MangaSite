@@ -2,7 +2,9 @@ package com.example.MangaWebSite.controller;
 
 import com.example.MangaWebSite.models.News;
 import com.example.MangaWebSite.models.Person;
+import com.example.MangaWebSite.security.PersonDetails;
 import com.example.MangaWebSite.service.CommentService;
+import com.example.MangaWebSite.service.NewsCommentService;
 import com.example.MangaWebSite.service.NewsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class NewsController {
 
     private final NewsService newsService;
-    private final CommentService commentService;
+    private final NewsCommentService newsCommentService;
 
     @GetMapping
     public String listNews(Model model) {
@@ -28,13 +30,13 @@ public class NewsController {
     public String viewNews(@PathVariable int id, Model model) {
         News news = newsService.getNewsById(id);
         model.addAttribute("news", news);
-//        model.addAttribute("comments", commentService.getCommentsForNews(news));
+        model.addAttribute("comments", newsCommentService.getCommentsForNews(news));
         return "news/view";
     }
 
-//    @PostMapping("/{id}/comments/add")
-//    public String addComment(@PathVariable int id, @AuthenticationPrincipal Person user, @RequestParam String content) {
-//        commentService.addComment(id, user, content);
-//        return "redirect:/news/" + id;
-//    }
+    @PostMapping("/{id}/comments/add")
+    public String addComment(@PathVariable int id, @AuthenticationPrincipal PersonDetails user, @RequestParam String content) {
+        newsCommentService.addComment(id, user.getPerson(), content);
+        return "redirect:/news/" + id;
+    }
 }
