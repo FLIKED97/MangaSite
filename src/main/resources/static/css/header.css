@@ -1,0 +1,96 @@
+/* header.css - Custom styles for the header */
+
+/* General utility classes */
+.box-shadow-light {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Легка тінь */
+}
+.border-gold {
+    border-bottom: 2px solid #ffc107; /* Золота лінія */
+}
+.text-white {
+    color: #f8f9fa; /* Білий текст */
+}
+.text-gold {
+    color: #ffc107; /* Золотий текст */
+}
+.text-light-gray {
+    color: #adb5bd; /* Світло-сірий текст */
+}
+.bg-dark-gray {
+    background-color: #212529; /* Темно-сірий фон */
+}
+.bg-dark {
+    background-color: #343a40; /* Темний фон */
+}
+.border-dark {
+    border: 1px solid #495057; /* Темна обводка */
+}
+.transition-color {
+    transition: color 0.3s ease;
+}
+.transition-bg-color {
+    transition: background-color 0.3s ease-in-out;
+}
+.font-bold {
+    font-weight: bold; /* Жирний текст */
+}
+
+/* Navbar styles */
+.navbar {
+    composes: box-shadow-light border-gold;
+}
+.navbar-brand {
+    font-size: 1.5rem; /* Збільшення логотипу */
+    composes: font-bold;
+}
+.nav-link {
+    composes: text-white transition-color;
+}
+.nav-link:hover {
+    composes: text-gold;
+}
+.navbar-dark.bg-dark {
+    composes: bg-dark-gray;
+}
+.navbar-dark .navbar-nav .nav-link {
+    composes: text-light-gray;
+}
+.navbar-dark .navbar-nav .nav-link:hover {
+    composes: text-gold;
+}
+
+/* Dropdown styles */
+.dropdown-menu {
+    composes: bg-dark border-dark;
+}
+.dropdown-header {
+    composes: text-white font-bold;
+}
+.dropdown-item {
+    composes: text-light-gray transition-bg-color;
+}
+.dropdown-item:hover {
+    background-color: #495057; /* Фон при наведенні */
+    color: #fff; /* Білий текст при наведенні */
+}
+.dropdown-item.btn.btn-warning.text-dark {
+    background-color: #ffc107; /* Жовтий фон */
+    color: #212529; /* Темний текст */
+    border: none; /* Видалення обводки */
+    composes: font-bold transition-bg-color;
+}
+.dropdown-item.btn.btn-warning.text-dark:hover {
+    background-color: #e0a800; /* Темніший жовтий при наведенні */
+    color: #ffffff; /* Білий текст при наведенні */
+}
+
+/* Button styles */
+.btn-primary {
+    background-color: #007bff; /* Синя кнопка */
+    border-color: #0056b3; /* Темний відтінок бордюру */
+    color: #fff;
+    composes: transition-bg-color;
+}
+.btn-primary:hover {
+    background-color: #0056b3; /* Трохи темніше при наведенні */
+}

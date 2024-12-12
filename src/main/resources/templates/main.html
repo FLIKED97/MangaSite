@@ -9,7 +9,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/main.css">
     <th:block th:replace="~{fragments/header :: head-styles}"></th:block>
-
 </head>
 <body class="bg-dark text-light">
 
@@ -21,113 +20,6 @@
 
 <!-- Include search modal fragment -->
 <th:block th:replace="~{fragments/header :: search-modal}"></th:block>
-<!-- Top Navigation Bar -->
-<!--<nav class="navbar navbar-expand-lg navbar-dark bg-dark">-->
-<!--    <a class="navbar-brand" href="#">ComicsHub</a>-->
-<!--    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">-->
-<!--        <span class="navbar-toggler-icon"></span>-->
-<!--    </button>-->
-<!--    <div class="collapse navbar-collapse" id="navbarNav">-->
-<!--        <ul class="navbar-nav mr-auto">-->
-<!--            <li class="nav-item mx-2">-->
-<!--                <a class="nav-link" th:href="@{/tabs/person/{id}(id=${person.id})}">Закладки</a>-->
-<!--            </li>-->
-<!--            <li class="nav-item mx-2">-->
-<!--                <a class="nav-link" th:href="@{/comics/newShow}">Комікси</a>-->
-<!--            </li>-->
-<!--            <li class="nav-item dropdown mx-2">-->
-<!--                <a class="nav-link dropdown-toggle" href="#" id="dropdownMenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
-<!--                    Каталог-->
-<!--                </a>-->
-<!--                <div class="dropdown-menu" aria-labelledby="dropdownMenu">-->
-<!--                    <h6 class="dropdown-header">Тайтли</h6>-->
-<!--                    <a class="dropdown-item" href="#">Манга</a>-->
-<!--                    <a class="dropdown-item" href="#">Манхва</a>-->
-<!--                    <a class="dropdown-item" href="#">Манхуа</a>-->
-<!--                    <a class="dropdown-item" href="#">Комікс</a>-->
-<!--                    <div class="dropdown-divider"></div>-->
-<!--                    <h6 class="dropdown-header">Інше</h6>-->
-<!--                    <a class="dropdown-item" href="#">Колекції</a>-->
-<!--                    <a class="dropdown-item" href="#">Персонажі</a>-->
-<!--                    <a class="dropdown-item" href="#">Команди</a>-->
-<!--                    <a class="dropdown-item btn btn-warning text-dark" href="/comics/random">Випадковий тайтл</a>-->
-<!--                </div>-->
-<!--            </li>-->
-<!--            <li class="nav-item">-->
-<!--                <button class="btn btn-primary" data-toggle="modal" data-target="#searchModal">Пошук</button>-->
-<!--            </li>-->
-<!--        </ul>-->
-<!--        <ul class="navbar-nav ml-auto">-->
-<!--            <li class="nav-item" th:if="${#authentication.name == 'anonymousUser'}">-->
-<!--                <a class="nav-link btn btn-warning text-dark" href="#">Вхід | Реєстрація</a>-->
-<!--            </li>-->
-<!--            <li class="nav-item" th:if="${#authentication.name != 'anonymousUser'}">-->
-<!--                <a class="nav-link text-light" th:href="@{/profile/personal/{id}(id=${person.id})}" th:text="${person.username}">[${person.username}]</a>-->
-<!--            </li>-->
-<!--        </ul>-->
-<!--    </div>-->
-<!--</nav>-->
-
-
-<!--<a th:href="@{/friends/requests}" class="btn btn-secondary">Переглянути запити на дружбу</a>-->
-<!--<form th:action="@{/logout}" method="post" style="display: inline;">-->
-<!--    <button type="submit">Вийти</button>-->
-<!--</form>-->
-
-<!-- Модальне вікно -->
-<div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content bg-dark text-light">
-            <div class="modal-header">
-                <h5 class="modal-title" id="searchModalLabel">Пошук</h5>
-                <button type="button" class="close text-light" data-dismiss="modal" aria-label="Закрити">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- Навігація вкладок -->
-                <ul class="nav nav-tabs" id="searchTabs" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link active" id="comics-tab" data-toggle="tab" href="#comics" role="tab" aria-controls="comics" aria-selected="true">Комікси</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="authors-tab" data-toggle="tab" href="#authors" role="tab" aria-controls="authors" aria-selected="false">Автори</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="users-tab" data-toggle="tab" href="#users" role="tab" aria-controls="users" aria-selected="false">Користувачі</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="groups-tab" data-toggle="tab" href="#groups" role="tab" aria-controls="groups" aria-selected="false">Групи</a>
-                    </li>
-                </ul>
-                <!-- Контент вкладок -->
-                <div class="tab-content mt-3" id="searchTabsContent">
-                    <!-- Вкладка "Комікси" -->
-                    <div class="tab-pane fade show active" id="comics" role="tabpanel" aria-labelledby="comics-tab">
-                        <input type="text" class="form-control mb-3" id="comicsSearchInput" placeholder="Шукати комікси">
-                        <ul id="comicsResults" class="list-group"></ul>
-                    </div>
-                    <!-- Вкладка "Автори" -->
-                    <div class="tab-pane fade" id="authors" role="tabpanel" aria-labelledby="authors-tab">
-                        <input type="text" class="form-control mb-3" id="authorsSearchInput" placeholder="Шукати авторів">
-                        <ul id="authorsResults" class="list-group"></ul>
-                    </div>
-                    <!-- Вкладка "Користувачі" -->
-                    <div class="tab-pane fade" id="users" role="tabpanel" aria-labelledby="users-tab">
-                        <input type="text" class="form-control mb-3" id="usersSearchInput" placeholder="Шукати користувачів">
-                        <ul id="usersResults" class="list-group"></ul>
-                    </div>
-                    <!-- Вкладка "Групи" -->
-                    <div class="tab-pane fade" id="groups" role="tabpanel" aria-labelledby="groups-tab">
-                        <input type="text" class="form-control mb-3" id="groupsSearchInput" placeholder="Шукати групи">
-                        <ul id="groupsResults" class="list-group"></ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 <!-- Main Content -->
 <div class="container main-content">
@@ -247,11 +139,6 @@
         </div>
     </div>
 
-
-
-
-
-
     <!-- Placeholder for Future Content -->
     <section class="my-5">
         <h3>Нові комікси (заглушка)</h3>
@@ -311,7 +198,6 @@
                 </div>
             </div>
         </section>
-
     </div>
 
 </div>
