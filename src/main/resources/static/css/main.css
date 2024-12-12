@@ -1,0 +1,116 @@
+/* Custom styles for padding */
+.main-content {
+    margin: 20px;
+}
+.comic-card {
+    margin-right: 15px;
+}
+.comic-cover {
+    height: 200px;
+    object-fit: cover;
+}
+/* Приховуємо секцію */
+.d-none {
+    display: none;
+}
+#comicsResults .list-group-item {
+    display: flex;
+    align-items: center;
+    border: 1px solid #444;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+#comicsResults .img-thumbnail {
+    flex-shrink: 0;
+}
+
+#comicsResults h5 {
+    margin: 0;
+    font-size: 16px;
+    color: #fff;
+}
+
+#comicsResults small {
+    font-size: 12px;
+    color: #ccc;
+}
+.btn-primary {
+    background-color: #28a745; /* Зелений */
+    border-color: #218838;
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Додати тінь */
+    transition: transform 0.2s, background-color 0.2s;
+}
+.btn-primary:hover {
+    background-color: #218838;
+    transform: scale(1.05); /* Легка зміна розміру при наведенні */
+}
+
+  .dropdown-menu {
+      background-color: #343a40; /* Темний фон */
+      border: 1px solid #495057; /* Тонка обводка */
+  }
+.dropdown-header {
+    color: #f8f9fa; /* Світлий текст */
+    font-weight: bold;
+}
+.dropdown-item {
+    color: #adb5bd; /* Текст меншого контрасту */
+    transition: background-color 0.3s ease-in-out;
+}
+.dropdown-item:hover {
+    background-color: #495057; /* Фон при наведенні */
+    color: #fff; /* Білий текст при наведенні */
+}
+.btn-warning.text-dark {
+    color: #212529; /* Темний текст на кнопках */
+}
+
+  .navbar {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Тінь під навбаром */
+      border-bottom: 2px solid #ffc107; /* Золота лінія знизу */
+  }
+.navbar-brand {
+    font-size: 1.5rem; /* Збільшення логотипу */
+    font-weight: bold;
+}
+.nav-link {
+    color: #f8f9fa; /* Білий текст */
+    transition: color 0.3s ease;
+}
+.nav-link:hover {
+    color: #ffc107; /* Золотий текст при наведенні */
+}
+.btn-primary {
+    background-color: #007bff; /* Синя кнопка */
+    border-color: #0056b3; /* Темний відтінок бордюру */
+    color: #fff;
+    transition: background-color 0.3s ease-in-out;
+}
+.btn-primary:hover {
+    background-color: #0056b3; /* Трохи темніше при наведенні */
+}
+
+
+.navbar-dark.bg-dark {
+      background-color: #212529; /* Темно-сірий */
+}
+.navbar-dark .navbar-nav .nav-link {
+    color: #adb5bd; /* Світлий текст */
+}
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: #ffc107; /* Жовтий текст */
+}
+.dropdown-item.btn.btn-warning.text-dark {
+    background-color: #ffc107; /* Жовтий фон */
+    color: #212529; /* Темний текст */
+    border: none; /* Видалення обводки */
+    font-weight: bold; /* Жирний текст для більшої видимості */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Анімація переходу */
+}
+
+.dropdown-item.btn.btn-warning.text-dark:hover {
+    background-color: #e0a800; /* Темніший жовтий при наведенні */
+    color: #ffffff; /* Білий текст при наведенні */
+}

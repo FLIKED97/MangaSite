@@ -263,3 +263,33 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+function changeDays(days) {
+    fetch(`/main/data?days=${days}`)
+        .then(response => response.json())
+        .then(data => {
+            updateComicsSection('newCreatedComics', data.newCreatedComics);
+            updateComicsSection('currentlyPopularReading', data.currentlyPopularReading);
+            updateComicsSection('popularComics', data.popularComics);
+        })
+        .catch(error => console.error('Error fetching data:', error));
+}
+
+function updateComicsSection(sectionId, comics) {
+    const container = document.getElementById(sectionId);
+    container.innerHTML = ''; // Очищуємо старі дані
+
+    comics.forEach(comic => {
+        const comicDiv = document.createElement('div');
+        comicDiv.className = 'd-flex align-items-center mb-3';
+        comicDiv.innerHTML = `
+            <img src="/comics/image/${comic.id}" alt="Comic Cover" class="img-fluid rounded me-3" style="width: 60px; height: 90px;">
+            <div>
+                <h6 class="mb-1">${comic.title}</h6>
+                <p class="mb-0 small">Манга</p>
+            </div>
+        `;
+        container.appendChild(comicDiv);
+    });
+}
+

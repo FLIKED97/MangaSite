@@ -20,10 +20,10 @@
   </div>
 
   <!-- Основний чат -->
-  <div class="chat-main">
+  <div class="chat-main ">
     <div id="chat-header"></div>
     <div id="chat-messages"></div>
-    <div class="chat-input">
+    <div class="chat-input hidden">
       <form id="chat-form">
         <input type="hidden" name="_csrf" th:value="${_csrf.token}">
         <input type="text" name="content" placeholder="Напишіть повідомлення..." required>
@@ -65,10 +65,13 @@
 
           $("#chat-messages").html(messagesHtml);
           $("#chat-form").data("friend-id", friendId);
+
+          // Показуємо поле для вводу повідомлень
+          $(".chat-input").removeClass("hidden");
         }
       });
     });
-    //TODO КОЛИ ЗАХОДИШ НА СТОРІНКУ ЧАТУ, ТАМ З САМОГО ПОЧАТКУ БАГ ПОЯВЛЯЄТЬСЯ ВІДПРАВИТИ ПОВІДОМЛЕННЯ
+
     // Відправлення повідомлення
     $("#chat-form").submit(function (e) {
       e.preventDefault();
