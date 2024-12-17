@@ -1,23 +1,27 @@
-/* Основні стилі для головної сторінки */
-
 body {
     margin: 0;
     font-family: 'Arial', sans-serif;
     background-color: #0A0A0A !important;
-    /*background-color: #1e1e1e !important; !* Темний фон *!*/
-    color: #BFBFBF; /* Світлий текст */
+    color: #BFBFBF;
 }
-
+.popular-chapters img{
+    border-radius: 10px; /* Заокруглення зображення */
+}
+section h3{
+    font-size: 18px;
+}
 .container {
-    max-width: 1200px;
-    margin: 0 auto; /* Центрування контейнера */
-    padding: 0 5px; /* Відступи з боків */
+    max-width: 100%;
+    margin: 16px auto; /* Відступи зверху та знизу, як у .my-5, та центрування */
+    padding: 0 5px;
 }
-
+.my-4{
+    width: 1170px;
+    margin: 16px auto;
+}
 header {
     background-color: #0A0A0A !important;
-    /*background-color: #1e1e1e !important; !* Темніший відтінок для хедера *!*/
-    color: #ff7f50; /* Акцентний колір */
+    color: #ff7f50;
     padding: 20px 0;
     text-align: center;
 }
@@ -26,15 +30,14 @@ header h1 {
     margin: 0;
     font-size: 2.5rem;
 }
-.my-5{
-    width: 1170px ;
-}
+
 nav {
     margin-top: 10px;
+    text-align: center; /* Центрування навігації */
 }
 
 nav a {
-    color: #ff4500; /* Другий акцентний колір */
+    color: #ff4500;
     text-decoration: none;
     margin: 0 15px;
     font-size: 1.1rem;
@@ -45,22 +48,25 @@ nav a:hover {
 }
 
 .main-content {
-    padding: 40px 0;
+    padding: 20px 0;
 }
 
-section {
-    margin-bottom: 40px;
+.main-content section {
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-section h2 {
-    color: #00bfff; /* Третій акцентний колір */
-    margin-bottom: 15px;
-    font-size: 2rem;
+.main-content h3 {
+    color: #BFBFBF;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 footer {
     background-color: #0A0A0A !important;
-    /*background-color: #1e1e1e !important; !*#262626 !important*!*/
     color: #ccc;
     text-align: center;
     padding: 20px 0;
@@ -76,108 +82,154 @@ footer a:hover {
     text-decoration: underline;
 }
 
-/* Стилі для основного контенту головної сторінки */
-
-/* Загальний стиль для секцій */
-.main-content section {
-    background-color: #1e1e1e;
-    /*background-color: #2c2f33; !* Темний фон для секцій *!*/
-    border-radius: 10px; /* Заокруглені кути */
-    padding: 20px; /* Відступи всередині секції */
-    margin-bottom: 30px; /* Відступ між секціями */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Тінь для секцій */
-}
-
-/* Заголовки секцій */
-.main-content h3 {
-    color: #BFBFBF; /* Золотий колір заголовків */
-    /*border-bottom: 2px solid #ffc107; !* Лінія під заголовком *!*/
-    padding-bottom: 10px; /* Відступ під заголовком */
-    margin-bottom: 20px; /* Відступ від заголовка до контенту */
-}
-
-/* Популярні нові глави */
-.comic-card {
-    margin-right: 15px; /* Відступ між картками */
-}
+/* Стилі для карток */
 .card {
-    border-radius: 10px; /* Заокруглені кути карток */
-    overflow: hidden; /* Щоб зображення не виходили за межі */
-}
-.card .comic-cover {
-    height: 200px; /* Фіксована висота обкладинок */
-    object-fit: cover; /* Обрізання зображення без спотворення */
-}
-.card-title {
-    font-size: 14px; /* Менший шрифт для назв */
-    white-space: nowrap; /* Обрізання тексту в одну лінію */
+    background-color: #23272a; /* Фон карток */
+    border: none;
+    border-radius: 10px;
     overflow: hidden;
-    text-overflow: ellipsis; /* Три крапки для довгих назв */
 }
 
-/* Продовжити читати */
-.card.bg-secondary {
-    background-color: #23272a; /* Темний фон для карток */
-    border: none; /* Видалення обводки */
+.card .comic-cover {
+    height: 189px;
+    width: 135px;
+    object-fit: cover;
+    border-radius: 10px; /* Заокруглення зображення */
 }
+
 .card-body {
-    padding: 10px; /* Зменшений внутрішній відступ */
-}
-.progress {
-    background-color: #343a40; /* Темний фон прогресу */
-    border-radius: 50px; /* Заокруглений прогрес */
-}
-.progress-bar {
-    border-radius: 50px; /* Заокруглені кінці прогресу */
+    padding: 10px;
 }
 
-/* Секція "Зараз читають" */
+.card-title {
+    font-size: 14px;
+    line-height: 1.2;
+    color: #BFBFBF;
+    max-height: 2.4em; /* Обмеження на 2 рядки */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    padding: 6px 0 0;
+    margin-bottom: 0 !important;
+}
 .card-title a {
-    color: #ffc107; /* Золотий текст посилань */
-    text-decoration: none; /* Без підкреслення */
+    color: #ffc107;
+    text-decoration: none;
 }
+
 .card-title a:hover {
-    text-decoration: underline; /* Підкреслення при наведенні */
-}
-select {
-    background-color: #2c2f33; /* Темний фон випадаючого списку */
-    color: #fff; /* Білий текст */
-    border: 1px solid #495057; /* Тонка обводка */
-    border-radius: 5px; /* Заокруглені кути */
-    padding: 5px 10px; /* Внутрішні відступи */
-}
-select:focus {
-    outline: none; /* Видалення стандартного фокусу */
-    border-color: #ffc107; /* Жовтий фокус */
+    text-decoration: underline;
 }
 
-/* Списки новинок і популярного */
+.progress {
+    background-color: #343a40;
+    border-radius: 50px;
+}
+
+.progress-bar {
+    border-radius: 50px;
+}
+
+/* Стилі для "Глава ..." */
+.chapter-label {
+    position: absolute;
+    bottom: 4px; /* Відступ віднизу */
+    right: 4px; /* Відступ справа */
+    background-color: rgba(0, 0, 0, 0.7); /* Напівпрозорий фон */
+    color: #fff;
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    line-height: 1;
+}
+/* Стилі для списків та зображень */
 .img-fluid {
-    border-radius: 5px; /* Легке заокруглення для зображень */
+    border-radius: 5px;
 }
+
 .mb-3 {
-    margin-bottom: 20px; /* Стандартний відступ між блоками */
+    margin-bottom: 20px;
 }
 
-/* Кнопки для "Нових коміксів" */
+/* Стилі для кнопок */
+.btn { /* Загальний стиль для кнопок */
+    border: none;
+}
 .btn-primary {
-    background-color: #ffc107; /* Золотий фон */
-    border: none; /* Видалення бордюру */
-    color: #212529; /* Темний текст */
+    background-color: #ffc107;
+    color: #212529;
 }
+
 .btn-secondary {
-    background-color: #6c757d; /* Темно-сірий фон */
-    color: #f8f9fa; /* Світлий текст */
+    background-color: #6c757d;
+    color: #f8f9fa;
 }
+
 .btn:hover {
-    opacity: 0.9; /* Легка прозорість при наведенні */
+    opacity: 0.9;
 }
 
-/* Секція "Закладки з новими главами" */
+/* Стилі для заглушки */
 .alert-secondary {
-    background-color: #495057; /* Темний фон заглушки */
-    color: #adb5bd; /* Світлий текст */
-    border: none; /* Видалення бордюру */
-    border-radius: 10px; /* Заокруглення */
+    background-color: #495057;
+    color: #adb5bd;
+    border: none;
+    border-radius: 10px;
 }
 
+select {
+    background-color: #2c2f33;
+    color: #fff;
+    border: 1px solid #495057;
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+
+select:focus {
+    outline: none;
+    border-color: #ffc107;
+}
+main .container-fluid{
+    margin-bottom: 5px !important;
+}
+/* Секція "Продовжити читати" */
+.continue-reading .reading-progress-item {
+    width: 300px; /* Фіксована ширина для об'єкта */
+    flex-direction: row; /* Відображення в рядок */
+    background-color: #201c1c !important;
+    padding: 8px 13px 8px 8px !important;
+    margin-right: 10px !important;
+}
+/*.continue-reading{*/
+/*    gap: 10px;*/
+/*}*/
+.continue-reading img {
+    border-radius: 8px; /* Заокруглення зображення */
+    margin-right: 12px; /* Більший відступ праворуч від фотографії */
+}
+
+.continue-reading .text-container {
+    width: 210px; /* Ширина контейнера */
+    white-space: normal; /* Дозволити тексту переноситися */
+}
+
+.continue-reading h6.two-line-title {
+    font-size: 14px; /* Зменшений розмір заголовку */
+    line-height: 1.2;
+    max-height: 2.4em; /* Обмеження до 2 рядків */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.continue-reading .progress {
+    background-color: #2c2f33; /* Темний фон прогрес-бара */
+}
+
+.continue-reading .progress-bar {
+    background-color: #ffc107; /* Колір прогресу */
+}

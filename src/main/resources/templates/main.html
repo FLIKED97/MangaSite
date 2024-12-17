@@ -10,62 +10,68 @@
     <link rel="stylesheet" href="/css/main.css">
     <th:block th:replace="~{fragments/header :: head-styles}"></th:block>
 </head>
-<body class="text-light">
-
+<body >
+<!--class="text-light"-->
 <!-- Header Section -->
 <header>
     <!-- Include top navbar fragment -->
     <th:block th:replace="~{fragments/header :: top-navbar}"></th:block>
 
     <!-- Include navbar actions fragment -->
-    <th:block th:replace="~{fragments/header :: navbar-actions}"></th:block>
+<!--    <th:block th:replace="~{fragments/header :: navbar-actions}"></th:block>-->
 
     <!-- Include search modal fragment -->
     <th:block th:replace="~{fragments/header :: search-modal}"></th:block>
 </header>
 
 <!-- Main Content -->
-<main class="container main-content">
+<main class="container-fluid main-content">
+<!--<main class="container main-content">-->
     <!-- Popular New Chapters Section -->
-    <section class="popular-chapters my-5">
+    <section class="popular-chapters my-4">
         <div class="d-flex overflow-auto">
             <div th:each="comic : ${popularComicsWithNewChapters}"
-                 class="comic-card mx-2 text-left">
-                <img th:src="@{/comics/image/{id}(id=${comic.id})}"
-                     th:alt="${comic.title}"
-                     class="card-img-top comic-cover object-fit-cover"
-                     width="135"
-                     height="189"
-                     loading="lazy">
+                 class="comic-card mx-2 text-left position-relative">
+                <div class="position-relative">
+                    <img th:src="@{/comics/image/{id}(id=${comic.id})}"
+                         th:alt="${comic.title}"
+                         class="card-img-top comic-cover object-fit-cover"
+                         width="135"
+                         height="189"
+                         loading="lazy">
+                    <!-- Глава знизу справа в межах фото -->
+                    <div class="chapter-label position-absolute">
+                        <a th:text="'Глава ' + ${latestChapters[comic.id]}"></a>
+                    </div>
+                </div>
                 <div class="card-body p-0">
-                    <h6 class="card-title text-truncate" th:text="${comic.title}"></h6>
-                    <p class="card-text text-muted">
-                        <small th:text="'Глава ' + ${latestChapters[comic.id]}"></small>
-                    </p>
+                    <!-- Назва коміксу обмежена 2 рядками -->
+                    <h6 class="card-title comic-title" th:text="${comic.title}"></h6>
                 </div>
             </div>
         </div>
     </section>
 
+
     <!-- Continue Reading Section -->
-    <section class="continue-reading my-5">
+    <section class="continue-reading my-4">
         <h3 class="mb-3">Продовжити читати</h3>
-        <div class="card bg-transparent text-light p-3">
+        <div class="d-flex overflow-auto gap-3">
             <div th:each="progress : ${recentlyReadProgress}"
-                 class="reading-progress-item d-flex align-items-center mb-3">
+                 class="reading-progress-item d-flex align-items-center flex-shrink-0 mx-0 bg-dark rounded">
                 <img th:src="@{/comics/image/{id}(id=${progress.comics.id})}"
                      th:alt="${progress.comics.title}"
-                     class="mr-3 rounded object-fit-cover"
-                     width="60"
-                     height="60"
+                     class="rounded object-fit-cover me-2"
+                     width="56"
+                     height="78.38"
                      loading="lazy">
-                <div class="flex-grow-1">
-                    <h6 th:text="${progress.comics.title}"></h6>
-                    <div class="d-flex justify-content-between small">
-                        <span th:text="'Глава ' + ${progress.chapter.chapterNumber} + ': ' + ${progress.chapter.title}"></span>
+                <div class="text-container" style="width: 210px;">
+                    <h6 class="small mb-1 text-light text-truncate" th:text="${progress.comics.title}"></h6>
+                    <div class="d-flex justify-content-between small text-muted">
+                        <span th:text="'Глава ' + ${progress.chapter.chapterNumber}"></span>
                         <span th:text="'Сторінка ' + ${progress.lastPage}"></span>
                     </div>
-                    <div class="progress mt-2" style="height: 5px;">
+                    <div class="progress mt-1" style="height: 4px;">
                         <div class="progress-bar bg-warning"
                              role="progressbar"
                              th:style="'width: ' + (${progress.lastPage} / ${@chapterService.getTotalPagesForChapter()} * 100) + '%;'">
@@ -77,7 +83,7 @@
     </section>
 
     <!-- Currently Reading Section -->
-    <section class="my-5">
+    <section class="my-4">
         <div class="card bg-dark text-light p-3">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h3 class="card-title">
@@ -144,14 +150,14 @@
     </section>
 
     <!-- Placeholder for Future Content -->
-    <section class="my-5">
+    <section class="my-4">
         <div class="d-flex justify-content-center mb-3">
             <button id="newComicsButton" class="btn btn-primary mx-2">Нові комікси</button>
             <button id="bookmarkedComicsButton" class="btn btn-secondary mx-2">Закладки</button>
         </div>
 
         <!-- Секція "Нові комікси" -->
-        <div class="my-5" id="new-comics-section">
+        <div class="my-4" id="new-comics-section">
             <h3>Нові комікси</h3>
             <div id="new-comics-container">
                 <div th:if="${not #lists.isEmpty(newComics)}">
@@ -175,7 +181,7 @@
         </div>
 
         <!-- Секція "Закладки з новими главами" -->
-        <div class="my-5 d-none" id="bookmarked-comics-section">
+        <div class="my-4 d-none" id="bookmarked-comics-section">
             <h3>Нові глави у закладках</h3>
             <div id="bookmarked-comics-container">
                 <div th:if="${not #lists.isEmpty(bookmarkedComics)}">
