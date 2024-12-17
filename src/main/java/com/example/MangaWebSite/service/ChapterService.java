@@ -109,14 +109,20 @@ public class ChapterService {
 
     @Transactional(readOnly = true)
     public Page<Chapter> getNewChaptersInTabs(int page) {
-        // Отримуємо поточного користувача
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // Якщо користувач не авторизований, повертаємо порожню сторінку
+        if (authentication == null ||
+                authentication.getPrincipal().equals("anonymousUser")) {
+            Pageable pageable = PageRequest.of(page, 10, Sort.by("releaseDate").descending());
+            return Page.empty(pageable);
+        }
+
+        // Якщо користувач авторизований
         PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
         int personId = personDetails.getPerson().getId();
         Pageable pageable = PageRequest.of(page, 10, Sort.by("releaseDate").descending());
 
-
-        // Отримуємо нові глави з репозиторію
         return chapterRepository.findNewChaptersInTabs(personId, pageable);
     }
 }

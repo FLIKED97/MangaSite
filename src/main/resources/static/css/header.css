@@ -20,7 +20,8 @@
     background-color: #212529; /* Темно-сірий фон */
 }
 .bg-dark {
-    background-color: #343a40; /* Темний фон */
+    /*background-color: #343a40; !* Темний фон *!*/
+    background-color: #1e1e1e !important;
 }
 .border-dark {
     border: 1px solid #495057; /* Темна обводка */

@@ -10,77 +10,78 @@
     <link rel="stylesheet" href="/css/main.css">
     <th:block th:replace="~{fragments/header :: head-styles}"></th:block>
 </head>
-<body class="bg-dark text-light">
+<body class="text-light">
 
-<!-- Include top navbar fragment -->
-<th:block th:replace="~{fragments/header :: top-navbar}"></th:block>
+<!-- Header Section -->
+<header>
+    <!-- Include top navbar fragment -->
+    <th:block th:replace="~{fragments/header :: top-navbar}"></th:block>
 
-<!-- Include navbar actions fragment -->
-<th:block th:replace="~{fragments/header :: navbar-actions}"></th:block>
+    <!-- Include navbar actions fragment -->
+    <th:block th:replace="~{fragments/header :: navbar-actions}"></th:block>
 
-<!-- Include search modal fragment -->
-<th:block th:replace="~{fragments/header :: search-modal}"></th:block>
+    <!-- Include search modal fragment -->
+    <th:block th:replace="~{fragments/header :: search-modal}"></th:block>
+</header>
 
 <!-- Main Content -->
-<div class="container main-content">
-    <!-- Recommended Comics Section -->
-    <section class="my-5">
-        <h3>Популярні нові глави</h3>
+<main class="container main-content">
+    <!-- Popular New Chapters Section -->
+    <section class="popular-chapters my-5">
         <div class="d-flex overflow-auto">
-            <div th:each="comic : ${popularComicsWithNewChapters}" class="comic-card">
-                <div class="card bg-secondary text-light" style="width: 150px;">
-                    <img th:src="@{/comics/image/{id}(id=${comic.id})}" alt="Comic Cover" class="card-img-top comic-cover">
-                    <div class="card-body p-2">
-                        <h6 th:text="${comic.title}" class="card-title text-truncate"></h6>
-                        <p class="card-text">
-                            <small th:text="'Глава ' + ${latestChapters[comic.id]}"></small>
-                        </p>
-                     </div>
+            <div th:each="comic : ${popularComicsWithNewChapters}"
+                 class="comic-card mx-2 text-left">
+                <img th:src="@{/comics/image/{id}(id=${comic.id})}"
+                     th:alt="${comic.title}"
+                     class="card-img-top comic-cover object-fit-cover"
+                     width="135"
+                     height="189"
+                     loading="lazy">
+                <div class="card-body p-0">
+                    <h6 class="card-title text-truncate" th:text="${comic.title}"></h6>
+                    <p class="card-text text-muted">
+                        <small th:text="'Глава ' + ${latestChapters[comic.id]}"></small>
+                    </p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Continue Reading Section -->
-    <section class="my-5">
-        <h3>Продовжити читати</h3>
-        <div class="card bg-secondary text-light p-3">
-            <div th:each="progress : ${recentlyReadProgress}" class="d-flex align-items-center mb-3">
-                <!-- Зображення -->
+    <section class="continue-reading my-5">
+        <h3 class="mb-3">Продовжити читати</h3>
+        <div class="card bg-transparent text-light p-3">
+            <div th:each="progress : ${recentlyReadProgress}"
+                 class="reading-progress-item d-flex align-items-center mb-3">
                 <img th:src="@{/comics/image/{id}(id=${progress.comics.id})}"
-                     alt="Comic Thumbnail"
-                     class="mr-3"
-                     style="width: 60px; height: 60px; object-fit: cover;">
-
-                <!-- Інформація про комікс -->
-                <div>
-                    <h6 th:text="${progress.comics.title}">Назва коміксу</h6>
-
-                    <!-- Дані про главу і сторінки -->
-                    <small>
+                     th:alt="${progress.comics.title}"
+                     class="mr-3 rounded object-fit-cover"
+                     width="60"
+                     height="60"
+                     loading="lazy">
+                <div class="flex-grow-1">
+                    <h6 th:text="${progress.comics.title}"></h6>
+                    <div class="d-flex justify-content-between small">
                         <span th:text="'Глава ' + ${progress.chapter.chapterNumber} + ': ' + ${progress.chapter.title}"></span>
-                        <span th:text="'— Сторінка ' + ${progress.lastPage}"></span>
-                    </small>
-                    <div th:with="totalPages=${@chapterService.getTotalPagesForChapter()}">
-                    <!-- Прогрес читання -->
-                    <div class="progress" style="height: 5px;">
-                        <div class="progress-bar bg-warning" role="progressbar"
-                             th:style="'width: ' + (${progress.lastPage} / ${totalPages} * 100) + '%;'">
-                        </div>
+                        <span th:text="'Сторінка ' + ${progress.lastPage}"></span>
                     </div>
+                    <div class="progress mt-2" style="height: 5px;">
+                        <div class="progress-bar bg-warning"
+                             role="progressbar"
+                             th:style="'width: ' + (${progress.lastPage} / ${@chapterService.getTotalPagesForChapter()} * 100) + '%;'">
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <div class="container my-5">
+    <!-- Currently Reading Section -->
+    <section class="my-5">
         <div class="card bg-dark text-light p-3">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h3 class="card-title">
-                    <a th:href="@{/comics/sections(section='current')}">
-                        Зараз читають →
-                    </a>
+                    <a th:href="@{/comics/sections(section='current')}">Зараз читають →</a>
                 </h3>
                 <select id="daysSelect" onchange="changeDays(this.value)">
                     <option value="1" th:selected="${selectedDays == 1}">За добу</option>
@@ -89,8 +90,9 @@
                     <option value="365" th:selected="${selectedDays == 365}">За рік</option>
                 </select>
             </div>
+
             <div class="row">
-                <!-- Новинки -->
+                <!-- New Comics Section -->
                 <div class="col-md-4">
                     <h5 class="mb-3">Новинки</h5>
                     <div id="newCreatedComics">
@@ -105,7 +107,8 @@
                         </div>
                     </div>
                 </div>
-                <!-- Набирає популярності -->
+
+                <!-- Trending Section -->
                 <div class="col-md-4">
                     <h5 class="mb-3">Набирає популярності</h5>
                     <div id="currentlyPopularReading">
@@ -120,7 +123,8 @@
                         </div>
                     </div>
                 </div>
-                <!-- Популярное -->
+
+                <!-- Popular Section -->
                 <div class="col-md-4">
                     <h5 class="mb-3">Популярное</h5>
                     <div id="popularComics">
@@ -137,23 +141,17 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Placeholder for Future Content -->
-    <section class="my-5">
-        <h3>Нові комікси (заглушка)</h3>
-        <div class="alert alert-secondary">Тут з'являться нові комікси...</div>
     </section>
 
     <!-- Placeholder for Future Content -->
-    <div class="my-5">
+    <section class="my-5">
         <div class="d-flex justify-content-center mb-3">
             <button id="newComicsButton" class="btn btn-primary mx-2">Нові комікси</button>
             <button id="bookmarkedComicsButton" class="btn btn-secondary mx-2">Закладки</button>
         </div>
 
         <!-- Секція "Нові комікси" -->
-        <section class="my-5" id="new-comics-section">
+        <div class="my-5" id="new-comics-section">
             <h3>Нові комікси</h3>
             <div id="new-comics-container">
                 <div th:if="${not #lists.isEmpty(newComics)}">
@@ -174,10 +172,10 @@
             <div id="loading" class="text-center my-3" style="display: none;">
                 <span>Завантаження...</span>
             </div>
-        </section>
+        </div>
 
         <!-- Секція "Закладки з новими главами" -->
-        <section class="my-5 d-none" id="bookmarked-comics-section">
+        <div class="my-5 d-none" id="bookmarked-comics-section">
             <h3>Нові глави у закладках</h3>
             <div id="bookmarked-comics-container">
                 <div th:if="${not #lists.isEmpty(bookmarkedComics)}">
@@ -197,11 +195,15 @@
                     <p>Немає нових глав у закладках</p>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
+</main>
+<!-- Footer Section -->
+<footer class="bg-dark text-light py-4">
+    <div class="container text-center">
+        <p>&copy; 2024 Мангаклуб. Усі права захищено.</p>
     </div>
-
-</div>
-
+</footer>
 <!-- JavaScript Dependencies -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>

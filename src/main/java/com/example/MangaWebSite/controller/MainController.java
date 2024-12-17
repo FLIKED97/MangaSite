@@ -41,24 +41,26 @@ public class MainController {
     @GetMapping()
     public String mainPage(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
 
-            List<Comics> popularComics = comicsService.getPopularComicsWithNewChapters(1.0);
-            Map<Integer, String> latestChapters = new HashMap<>();
-            for (Comics comic : popularComics) {
-                latestChapters.put(comic.getId(), chapterService.getLatestChapterTitle(comic.getId()));
-            }
+        // Комікси, які можна показати без авторизації
+        List<Comics> popularComics = comicsService.getPopularComicsWithNewChapters(1.0);
+        Map<Integer, String> latestChapters = new HashMap<>();
+        for (Comics comic : popularComics) {
+            latestChapters.put(comic.getId(), chapterService.getLatestChapterTitle(comic.getId()));
+        }
 
-            model.addAttribute("popularComicsWithNewChapters", popularComics);
-            model.addAttribute("latestChapters", latestChapters);
+        model.addAttribute("popularComicsWithNewChapters", popularComics);
+        model.addAttribute("latestChapters", latestChapters);
 
-        List<ReadingProgress> readingProgresses = readingProgressService.getRecentlyReadComicsWithProgress(personDetails.getPerson().getId());
-        model.addAttribute("recentlyReadProgress", readingProgresses);
-
-        model.addAttribute("person", personDetails.getPerson());
+        // Додаткові атрибути тільки для авторизованих користувачів
+        if (authentication != null && authentication.getPrincipal() instanceof PersonDetails personDetails) {
+            List<ReadingProgress> readingProgresses = readingProgressService.getRecentlyReadComicsWithProgress(personDetails.getPerson().getId());
+            model.addAttribute("recentlyReadProgress", readingProgresses);
+            model.addAttribute("person", personDetails.getPerson());
+        }
 
         //комікси з новими главами, за останній час.
-        model.addAttribute("newComics", comicsService.getAllComicsWithNewChapter(0)); //TODO Серйозний баг.
+        model.addAttribute("newComics", comicsService.getAllComicsWithNewChapter(0));
         //Оновлені комікси з закадок.
         model.addAttribute("bookmarkedComics", chapterService.getNewChaptersInTabs(0));
 
