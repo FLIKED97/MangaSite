@@ -18,7 +18,7 @@
     <th:block th:replace="~{fragments/header :: top-navbar}"></th:block>
 
     <!-- Include navbar actions fragment -->
-<!--    <th:block th:replace="~{fragments/header :: navbar-actions}"></th:block>-->
+   <th:block th:replace="~{fragments/header :: navbar-actions}"></th:block>
 
     <!-- Include search modal fragment -->
     <th:block th:replace="~{fragments/header :: search-modal}"></th:block>
@@ -55,26 +55,27 @@
 
     <!-- Continue Reading Section -->
     <section class="continue-reading my-4">
-        <h3 class="mb-3">Продовжити читати</h3>
+        <h3>Продовжити читати</h3>
         <div class="d-flex overflow-auto gap-3">
             <div th:each="progress : ${recentlyReadProgress}"
-                 class="reading-progress-item d-flex align-items-center flex-shrink-0 mx-0 bg-dark rounded">
+                 class="reading-progress-item d-flex align-items-start flex-shrink-0 mx-0 bg-dark rounded">
                 <img th:src="@{/comics/image/{id}(id=${progress.comics.id})}"
                      th:alt="${progress.comics.title}"
                      class="rounded object-fit-cover me-2"
                      width="56"
                      height="78.38"
                      loading="lazy">
-                <div class="text-container" style="width: 210px;">
-                    <h6 class="small mb-1 text-light text-truncate" th:text="${progress.comics.title}"></h6>
-                    <div class="d-flex justify-content-between small text-muted">
-                        <span th:text="'Глава ' + ${progress.chapter.chapterNumber}"></span>
-                        <span th:text="'Сторінка ' + ${progress.lastPage}"></span>
-                    </div>
-                    <div class="progress mt-1" style="height: 4px;">
-                        <div class="progress-bar bg-warning"
-                             role="progressbar"
-                             th:style="'width: ' + (${progress.lastPage} / ${@chapterService.getTotalPagesForChapter()} * 100) + '%;'">
+                <div class="text-container d-flex flex-column justify-content-between" style="width: 210px; height: 100%;">
+                    <h6 class="small text-light two-line-title" th:text="${progress.comics.title}"></h6>
+                    <div>
+                        <div class="d-flex small text-muted" style="font-size: 12px">
+                            <span th:text="'Глава ' + ${progress.chapter.chapterNumber} + ' — ' + 'Сторінка ' + ${progress.lastPage}" ></span>
+                        </div>
+                        <div class="progress ">
+                            <div class="progress-bar bg-warning"
+                                 role="progressbar"
+                                 th:style="'width: ' + (${progress.lastPage} / ${@chapterService.getTotalPagesForChapter()} * 100) + '%;'">
+                            </div>
                         </div>
                     </div>
                 </div>
