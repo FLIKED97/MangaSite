@@ -58,7 +58,7 @@
         <h3>Продовжити читати</h3>
         <div class="d-flex overflow-auto gap-3">
             <div th:each="progress : ${recentlyReadProgress}"
-                 class="reading-progress-item d-flex align-items-start flex-shrink-0 mx-0 bg-dark rounded">
+                 class="reading-progress-item d-flex align-items-start flex-shrink-0 mx-0 rounded">
                 <img th:src="@{/comics/image/{id}(id=${progress.comics.id})}"
                      th:alt="${progress.comics.title}"
                      class="rounded object-fit-cover me-2"
@@ -85,19 +85,18 @@
 
     <!-- Currently Reading Section -->
     <section class="my-4">
-        <div class="card bg-dark text-light p-3">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3 class="card-title">
-                    <a th:href="@{/comics/sections(section='current')}">Зараз читають →</a>
-                </h3>
-                <select id="daysSelect" onchange="changeDays(this.value)">
-                    <option value="1" th:selected="${selectedDays == 1}">За добу</option>
-                    <option value="7" th:selected="${selectedDays == 7}">За тиждень</option>
-                    <option value="31" th:selected="${selectedDays == 31}">За місяць</option>
-                    <option value="365" th:selected="${selectedDays == 365}">За рік</option>
-                </select>
-            </div>
-
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="card-titles">
+                <a th:href="@{/comics/sections(section='current')}">Зараз читають →</a>
+            </h3>
+            <select id="daysSelect" onchange="changeDays(this.value)">
+                <option value="1" th:selected="${selectedDays == 1}">За добу</option>
+                <option value="7" th:selected="${selectedDays == 7}">За тиждень</option>
+                <option value="31" th:selected="${selectedDays == 31}">За місяць</option>
+                <option value="365" th:selected="${selectedDays == 365}">За рік</option>
+            </select>
+        </div>
+        <div class="card text-light">
             <div class="row">
                 <!-- New Comics Section -->
                 <div class="col-md-4">
@@ -105,7 +104,7 @@
                     <div id="newCreatedComics">
                         <div class="mb-3" th:each="comic : ${newCreatedComics}">
                             <div class="d-flex align-items-center">
-                                <img th:src="@{/comics/image/{id}(id=${comic.id})}" alt="Comic Cover" class="img-fluid rounded me-3" style="width: 60px; height: 90px;">
+                                <img th:src="@{/comics/image/{id}(id=${comic.id})}" alt="Comic Cover" class="images">
                                 <div>
                                     <h6 class="mb-1" th:text="${comic.title}"></h6>
                                     <p class="mb-0 small">Манга</p>
@@ -121,7 +120,7 @@
                     <div id="currentlyPopularReading">
                         <div class="mb-3" th:each="comic : ${currentlyPopularReading}">
                             <div class="d-flex align-items-center">
-                                <img th:src="@{/comics/image/{id}(id=${comic.id})}" alt="Comic Cover" class="img-fluid rounded me-3" style="width: 60px; height: 90px;">
+                                <img th:src="@{/comics/image/{id}(id=${comic.id})}" alt="Comic Cover" class="images ">
                                 <div>
                                     <h6 class="mb-1" th:text="${comic.title}"></h6>
                                     <p class="mb-0 small">Манга</p>
@@ -137,7 +136,7 @@
                     <div id="popularComics">
                         <div class="mb-3" th:each="comic : ${popularComics}">
                             <div class="d-flex align-items-center">
-                                <img th:src="@{/comics/image/{id}(id=${comic.id})}" alt="Comic Cover" class="img-fluid rounded me-3" style="width: 60px; height: 90px;">
+                                <img th:src="@{/comics/image/{id}(id=${comic.id})}" alt="Comic Cover" class="images ">
                                 <div>
                                     <h6 class="mb-1" th:text="${comic.title}"></h6>
                                     <p class="mb-0 small">Манга</p>

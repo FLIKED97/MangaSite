@@ -1,14 +1,28 @@
 body {
     margin: 0;
-    font-family: 'Arial', sans-serif;
+    /*font-family: 'Arial', sans-serif;*/
     background-color: #0A0A0A !important;
     color: #BFBFBF;
+    line-height: 1.4 !important;
+    font-family: -apple-system, BlinkMacSystemFont, Open Sans, Roboto, Helvetica Neue, Helvetica, sans-serif !important;
+
 }
 .popular-chapters img{
     border-radius: 10px; /* Заокруглення зображення */
 }
 section h3{
     font-size: 18px;
+}
+section h3 a{
+    font-size: 18px;
+}
+section h3 a:hover {
+    text-decoration: none;
+    color: #BFBFBF;
+}
+h5{
+    font-size: 15px !important;
+    color: #EBEBF580;
 }
 .container {
     max-width: 100%;
@@ -52,11 +66,11 @@ nav a:hover {
 }
 
 .main-content section {
-    background-color: #1e1e1e;
+    /*background-color: #1e1e1e;*/
+    background: #1c1c1c;
     border-radius: 10px;
     padding: 20px;
     margin-bottom: 30px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .main-content h3 {
@@ -83,12 +97,16 @@ footer a:hover {
 
 /* Стилі для карток */
 .card {
-    background-color: #23272a; /* Фон карток */
-    border: none;
-    border-radius: 10px;
+    background-color: #1c1c1c !important;
+    border: none !important;
+    /*border-radius: 10px;*/
     overflow: hidden;
 }
-
+h3 a{
+    color: #BFBFBF;
+    text-decoration: none; /* Забирає підкреслювання при фокусі */
+    box-shadow: none; /* Забирає синю рамку при фокусі */
+}
 .card .comic-cover {
     height: 189px;
     width: 135px;
@@ -103,7 +121,7 @@ footer a:hover {
 .card-title {
     font-size: 14px;
     line-height: 1.2;
-    color: #BFBFBF;
+    color: #BFBFBF !important;
     max-height: 2.4em; /* Обмеження на 2 рядки */
     overflow: hidden;
     text-overflow: ellipsis;
@@ -114,7 +132,7 @@ footer a:hover {
     margin-bottom: 0 !important;
 }
 .card-title a {
-    color: #ffc107;
+    color: #BFBFBF;
     text-decoration: none;
 }
 
@@ -147,11 +165,42 @@ footer a:hover {
 .img-fluid {
     border-radius: 5px;
 }
+.images{
+    border-radius: 5px;
+    width: 72px !important;
+    height: 72px !important;
+    object-fit: cover; /* Забезпечує пропорційне заповнення фотографії */
+}
+.tg_sg{
+    display: flex;
+    gap: 16px;
+    padding: 8px 0px;
+    font-size: 14px;
+    color: #BFBFBF;
+
+}
+.tg_si{
+    font-weight: 600;
+}
+.ts_f4{
+    font-size: 12px!important;
+    color: #EBEBF580;
+}
+.two-line-title {
+    display: -webkit-box; /* Використовує веб-коробку для обмеження рядків */
+    -webkit-line-clamp: 2; /* Максимум 2 рядки тексту */
+    -webkit-box-orient: vertical; /* Встановлює вертикальну орієнтацію */
+    overflow: hidden; /* Приховує текст, що виходить за межі */
+    text-overflow: ellipsis; /* Додає три крапки до обрізаного тексту */
+    white-space: normal; /* Дозволяє перенос тексту */
+}
 
 .mb-3 {
     margin-bottom: 20px;
 }
-
+h5{
+    font-weight: 600 !important;
+}
 /* Стилі для кнопок */
 .btn { /* Загальний стиль для кнопок */
     border: none;
@@ -183,13 +232,18 @@ select {
     color: #fff;
     border: 1px solid #495057;
     border-radius: 5px;
-    padding: 5px 10px;
+    padding: 2px 4px;
+    font-size: 12px !important;
+    text-align: center; /* Горизонтальне вирівнювання тексту */
+    text-align-last: center; /* Для останнього елемента в списку */
+    line-height: 1.5; /* Вирівнювання тексту вертикально */
 }
 
 select:focus {
     outline: none;
     border-color: #ffc107;
 }
+
 main .container-fluid{
     margin-bottom: 5px !important;
 }
@@ -197,9 +251,11 @@ main .container-fluid{
 .continue-reading .reading-progress-item {
     width: 300px; /* Фіксована ширина для об'єкта */
     flex-direction: row; /* Відображення в рядок */
-    background-color: #201c1c !important;
+    /*background-color: #201c1c !important;*/
+    background: rgb(37, 37, 39);
     padding: 8px 13px 8px 0 !important;
     margin-right: 10px !important;
+    /*border: solid 1px #2c2c2c;*/
 }
 .continue-reading .overflow-auto{
     padding: 12px 0;
