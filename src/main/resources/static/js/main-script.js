@@ -38,7 +38,7 @@ function loadMoreContent() {
                         <img src="/comics/image/${item.comics.id}"
                              alt="Comic Thumbnail"
                              class="mr-3"
-                             style="width: 60px; height: 60px; object-fit: cover;">
+                             style="width: 80px; height: 112px; object-fit: cover;">
                         <div>
                             <h6>${item.comics.title}</h6>
                             <small>Глава ${item.chapterNumber}</small>
@@ -50,7 +50,7 @@ function loadMoreContent() {
                         <img src="/comics/image/${item.id}"
                              alt="Comic Thumbnail"
                              class="mr-3"
-                             style="width: 60px; height: 60px; object-fit: cover;">
+                             style="width: 80px; height: 112px; object-fit: cover;">
                         <div>
                             <h6>${item.title}</h6>
                         </div>
@@ -77,30 +77,48 @@ function loadMoreContent() {
 // Обробка подій на кнопках для перемикання табів
 //TODO Доробити нижні функції більш оптимізовано
 document.addEventListener('DOMContentLoaded', () => {
-    const newComicsButton = document.getElementById('newComicsButton');
-    const bookmarkedComicsButton = document.getElementById('bookmarkedComicsButton');
+    const allUpdatesButton = document.getElementById('allUpdatesButton');
+    const myUpdatesButton = document.getElementById('myUpdatesButton');
 
     const newComicsSection = document.getElementById('new-comics-section');
     const bookmarkedComicsSection = document.getElementById('bookmarked-comics-section');
 
-    newComicsButton.addEventListener('click', () => {
+    // Встановити "Усі оновлення" як активне при завантаженні сторінки
+    if (allUpdatesButton && myUpdatesButton && newComicsSection && bookmarkedComicsSection) {
         newComicsSection.classList.remove('d-none');
         bookmarkedComicsSection.classList.add('d-none');
-        newComicsButton.classList.add('btn-primary');
-        newComicsButton.classList.remove('btn-secondary');
-        bookmarkedComicsButton.classList.add('btn-secondary');
-        bookmarkedComicsButton.classList.remove('btn-primary');
-    });
+        allUpdatesButton.classList.add('active');
+        myUpdatesButton.classList.remove('active');
 
-    bookmarkedComicsButton.addEventListener('click', () => {
-        bookmarkedComicsSection.classList.remove('d-none');
-        newComicsSection.classList.add('d-none');
-        bookmarkedComicsButton.classList.add('btn-primary');
-        bookmarkedComicsButton.classList.remove('btn-secondary');
-        newComicsButton.classList.add('btn-secondary');
-        newComicsButton.classList.remove('btn-primary');
-    });
+        allUpdatesButton.addEventListener('click', () => {
+            newComicsSection.classList.remove('d-none');
+            bookmarkedComicsSection.classList.add('d-none');
+            allUpdatesButton.classList.add('active');
+            myUpdatesButton.classList.remove('active');
+        });
+
+        myUpdatesButton.addEventListener('click', () => {
+            bookmarkedComicsSection.classList.remove('d-none');
+            newComicsSection.classList.add('d-none');
+            myUpdatesButton.classList.add('active');
+            allUpdatesButton.classList.remove('active');
+        });
+
+        // Запобігти зникненню підкреслення при натисканні на інші місця
+        document.addEventListener('click', (event) => {
+            if (event.target !== allUpdatesButton && event.target !== myUpdatesButton) {
+                if (allUpdatesButton.classList.contains('active')) {
+                    allUpdatesButton.classList.add('active');
+                } else if (myUpdatesButton.classList.contains('active')) {
+                    myUpdatesButton.classList.add('active');
+                }
+            }
+        });
+    } else {
+        console.error("Some elements could not be found in the DOM.");
+    }
 });
+
 // document.addEventListener('DOMContentLoaded', () => {
 //     const newComicsButton = document.getElementById('newComicsButton');
 //     const bookmarkedComicsButton = document.getElementById('bookmarkedComicsButton');

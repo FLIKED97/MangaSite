@@ -2,7 +2,7 @@ body {
     margin: 0;
     /*font-family: 'Arial', sans-serif;*/
     background-color: #0A0A0A !important;
-    color: #BFBFBF;
+    color: #BFBFBF !important;
     line-height: 1.4 !important;
     font-family: -apple-system, BlinkMacSystemFont, Open Sans, Roboto, Helvetica Neue, Helvetica, sans-serif !important;
 
@@ -207,19 +207,6 @@ h5{
 .btn { /* Загальний стиль для кнопок */
     border: none;
 }
-.btn-primary {
-    background-color: #ffc107;
-    color: #212529;
-}
-
-.btn-secondary {
-    background-color: #6c757d;
-    color: #f8f9fa;
-}
-
-.btn:hover {
-    opacity: 0.9;
-}
 
 /* Стилі для заглушки */
 .alert-secondary {
@@ -295,4 +282,53 @@ main .container-fluid{
 
 .continue-reading .progress-bar {
     background-color: #ffc107; /* Колір прогресу */
+}
+/*Дві секції останніх оновлень*/
+.custom-btn {
+    background: none;
+    border: none;
+    color: inherit;
+    position: relative;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.custom-btn:hover {
+    color: #ffffff;
+}
+
+.custom-btn:focus {
+    outline: none;
+    color: #ffffff;
+}
+
+.custom-btn:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 3px;
+    background-color: #ffc107;
+    border-radius: 2px;
+    transition: width 0.3s ease, left 0.3s ease;
+}
+
+.custom-btn:hover:after,
+.custom-btn:focus:after {
+    width: 100%;
+    left: 0;
+}
+
+.custom-btn.active {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.custom-btn.active:after {
+    width: 100%;
+    left: 0;
 }
