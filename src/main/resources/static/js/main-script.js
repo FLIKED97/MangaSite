@@ -281,7 +281,7 @@ function updateComicsSection(sectionId, comics) {
 
     comics.forEach(comic => {
         const comicDiv = document.createElement('div');
-        comicDiv.className = 'd-flex align-items-center mb-3 tg_sg two-line-title';
+        comicDiv.className = 'd-flex align-items-center tg_sg two-line-title';
         comicDiv.innerHTML = `
             <img src="/comics/image/${comic.id}" alt="Comic Cover" class="images rounded me-3" style="width: 60px; height: 90px;">
             <div>

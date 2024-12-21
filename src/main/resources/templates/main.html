@@ -66,7 +66,7 @@
                      height="78.38"
                      loading="lazy">
                 <div class="text-container d-flex flex-column justify-content-between" style="width: 210px; height: 100%;">
-                    <h6 class="small text-light two-line-title" th:text="${progress.comics.title}"></h6>
+                    <h6 class="small two-line-title" th:text="${progress.comics.title}"></h6>
                     <div>
                         <div class="d-flex small text-muted" style="font-size: 12px">
                             <span th:text="'Глава ' + ${progress.chapter.chapterNumber} + ' — ' + 'Сторінка ' + ${progress.lastPage}" ></span>
@@ -96,11 +96,11 @@
                 <option value="365" th:selected="${selectedDays == 365}">За рік</option>
             </select>
         </div>
-        <div class="card text-light">
+        <div class="card">
             <div class="row">
                 <!-- New Comics Section -->
                 <div class="col-md-4">
-                    <h5 class="mb-3">Новинки</h5>
+                    <h5 class="mb-2">Новинки</h5>
                     <div id="newCreatedComics">
                         <div class="mb-3" th:each="comic : ${newCreatedComics}">
                             <div class="d-flex align-items-center">
@@ -116,7 +116,7 @@
 
                 <!-- Trending Section -->
                 <div class="col-md-4">
-                    <h5 class="mb-3">Набирає популярності</h5>
+                    <h5 class="mb-2">Набирає популярності</h5>
                     <div id="currentlyPopularReading">
                         <div class="mb-3" th:each="comic : ${currentlyPopularReading}">
                             <div class="d-flex align-items-center">
@@ -132,7 +132,7 @@
 
                 <!-- Popular Section -->
                 <div class="col-md-4">
-                    <h5 class="mb-3">Популярное</h5>
+                    <h5 class="mb-2">Популярное</h5>
                     <div id="popularComics">
                         <div class="mb-3" th:each="comic : ${popularComics}">
                             <div class="d-flex align-items-center">
