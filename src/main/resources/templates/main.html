@@ -151,7 +151,7 @@
 
     <!-- Placeholder for Future Content -->
     <section class="my-4">
-        <div class="d-flex justify-content-between mb-3">
+        <div class="d-flex justify-content-between align-items-center"> <!-- Додано align-items-center -->
             <h3>Останні оновлення</h3>
             <div>
                 <button id="allUpdatesButton" class="custom-btn mx-2">Всі оновлення</button>
@@ -160,16 +160,21 @@
         </div>
 
         <!-- Секція "Нові комікси" -->
-        <div class="my-4" id="new-comics-section">
+        <div class="my-0" id="new-comics-section">
             <div id="new-comics-container">
                 <div th:if="${not #lists.isEmpty(newComics)}">
-                    <div th:each="newCom : ${newComics}" class="d-flex align-items-center mb-3">
-                        <img loading="lazy" th:src="@{/comics/image/{id}(id=${newCom.id})}"
-                             alt="Comic Thumbnail"
-                             class="mr-3"
-                             style="width: 60px; height: 60px; object-fit: cover;">
-                        <div>
-                            <h6 th:text="${newCom.title}">Назва коміксу</h6>
+                    <div th:each="chapter : ${newComics}" class="d-flex align-items-center chapter-container">
+                        <div class="image-container" style="position: relative; width: 80px; height: 112px;">
+                            <img loading="lazy" th:src="@{/comics/image/{id}(id=${chapter.comics.id})}"
+                                 alt="Comic Thumbnail"
+                                 style="width: 100%; height: 100%; object-fit: cover;">
+                            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0) 30%);"></div>
+                            <span class="image-label" style="position: absolute; top: 4px; left: 50%; transform: translateX(-50%); color: white; font-size: 12px; padding: 2px 6px;">Манга</span>
+                        </div>
+                        <div class="z3_c">
+                            <h6 th:text="${chapter.comics.title}">Назва коміксу</h6>
+                            <small th:text="'Глава ' + ${chapter.chapterNumber}"></small>
+                            <p class="release-date z3_ox" th:data-release-date="${chapter.releaseDate}"></p>
                         </div>
                     </div>
                 </div>
@@ -183,18 +188,21 @@
         </div>
 
         <!-- Секція "Закладки з новими главами" -->
-        <div class="my-4 d-none" id="bookmarked-comics-section">
+        <div class="my-0 d-none" id="bookmarked-comics-section">
             <div id="bookmarked-comics-container">
                 <div th:if="${not #lists.isEmpty(bookmarkedComics)}">
-                    <div th:each="chapter : ${bookmarkedComics}" class="d-flex align-items-center mb-3">
-                        <img loading="lazy" th:src="@{/comics/image/{id}(id=${chapter.comics.id})}"
-                             alt="Comic Thumbnail"
-                             class="mr-3"
-                             style="width: 60px; height: 60px; object-fit: cover;">
-                        <div>
+                    <div th:each="chapter : ${bookmarkedComics}" class="d-flex align-items-center chapter-container">
+                        <div class="image-container" style="position: relative; width: 80px; height: 112px;">
+                            <img loading="lazy" th:src="@{/comics/image/{id}(id=${chapter.comics.id})}"
+                                 alt="Comic Thumbnail"
+                                 style="width: 100%; height: 100%; object-fit: cover;">
+                            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0) 30%);"></div>
+                            <span class="image-label" style="position: absolute; top: 4px; left: 50%; transform: translateX(-50%); color: white; font-size: 12px; padding: 2px 6px;">Манга</span>
+                        </div>
+                        <div class="z3_c">
                             <h6 th:text="${chapter.comics.title}">Назва коміксу</h6>
                             <small th:text="'Глава ' + ${chapter.chapterNumber}"></small>
-                            <p th:text="'Додано: ' + ${chapter.releaseDate}"></p>
+                            <p class="release-date z3_ox" th:data-release-date="${chapter.releaseDate}"></p>
                         </div>
                     </div>
                 </div>
@@ -203,6 +211,7 @@
                 </div>
             </div>
         </div>
+
     </section>
 </main>
 <!-- Footer Section -->

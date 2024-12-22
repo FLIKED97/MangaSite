@@ -125,4 +125,11 @@ public class ChapterService {
 
         return chapterRepository.findNewChaptersInTabs(personId, pageable);
     }
+    @Transactional(readOnly = true)
+    public Page<Chapter> getAllNewChapters(int page) {
+        Pageable pageable = PageRequest.of(page, 10, Sort.by("releaseDate").descending());
+        LocalDateTime oneMonthAgo = LocalDateTime.now().minusDays(70);
+        return chapterRepository.findAllNewChapters(oneMonthAgo, pageable);
+    }
+
 }

@@ -60,7 +60,7 @@ public class MainController {
         }
 
         //комікси з новими главами, за останній час.
-        model.addAttribute("newComics", comicsService.getAllComicsWithNewChapter(0));
+        model.addAttribute("newComics", chapterService.getAllNewChapters(0));
         //Оновлені комікси з закадок.
         model.addAttribute("bookmarkedComics", chapterService.getNewChaptersInTabs(0));
 
@@ -69,14 +69,15 @@ public class MainController {
 
     @GetMapping("/comics/new")
     @ResponseBody
-    public ResponseEntity<List<Comics>> getNewComics(@RequestParam("page") int page) {
+    public ResponseEntity<List<Chapter>> getNewChapters(@RequestParam("page") int page) {
         try {
-            Page<Comics> comicsPage = comicsService.getAllComicsWithNewChapter(page);
-            return ResponseEntity.ok(comicsPage.getContent());
+            Page<Chapter> chaptersPage = chapterService.getAllNewChapters(page);
+            return ResponseEntity.ok(chaptersPage.getContent());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
     @GetMapping("/comics/bookmarked")
     @ResponseBody

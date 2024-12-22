@@ -31,31 +31,44 @@ function loadMoreContent() {
 
             data.forEach(item => {
                 const div = document.createElement('div');
-                div.className = 'd-flex align-items-center mb-3';
+                div.className = 'd-flex align-items-center chapter-container';
 
                 if (currentTab === 'bookmarked') {
+                    const timeDifference = getTimeDifference(item.releaseDate);
                     div.innerHTML = `
-                        <img src="/comics/image/${item.comics.id}"
-                             alt="Comic Thumbnail"
-                             class="mr-3"
-                             style="width: 80px; height: 112px; object-fit: cover;">
-                        <div>
-                            <h6>${item.comics.title}</h6>
-                            <small>Глава ${item.chapterNumber}</small>
-                            <p>Додано: ${item.releaseDate}</p>
-                        </div>
-                    `;
+                    <hr>
+                    <img src="/comics/image/${item.comics.id}"
+                         alt="Comic Thumbnail"
+                         class=""
+                         style="width: 80px; height: 112px; object-fit: cover;">
+                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0) 30%);"></div>
+                    <span class="image-label" style="position: absolute; top: 4px; left: 50%; transform: translateX(-50%); color: white; font-size: 12px; padding: 2px 6px;">Манга</span>
+                    <div class="z3_c">
+                        <h6>${item.comics.title}</h6>
+                        <small>Глава ${item.chapterNumber}</small>
+                        <p class="release-date z3_ox" th:data-release-date="${item.releaseDate}"></p>
+                    </div>
+                    <hr>
+                `;
                 } else {
                     div.innerHTML = `
-                        <img src="/comics/image/${item.id}"
-                             alt="Comic Thumbnail"
-                             class="mr-3"
-                             style="width: 80px; height: 112px; object-fit: cover;">
-                        <div>
-                            <h6>${item.title}</h6>
-                        </div>
-                    `;
+                    <hr>
+                    <img src="/comics/image/${item.comics.id}"
+                         alt="Comic Thumbnail"
+                         class=""
+                         style="width: 80px; height: 112px; object-fit: cover;">
+                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0) 30%);"></div>
+                    <span class="image-label" style="position: absolute; top: 4px; left: 50%; transform: translateX(-50%); color: white; font-size: 12px; padding: 2px 6px;">Манга</span>
+
+                    <div class="z3_c">
+                        <h6>${item.comics.title}</h6>
+                        <small>Глава ${item.chapterNumber}</small>
+                            <p class="release-date z3_ox" th:data-release-date="${item.releaseDate}"></p>
+                    </div>
+                    <hr>
+                `;
                 }
+
 
                 container.appendChild(div);
             });
@@ -117,6 +130,24 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         console.error("Some elements could not be found in the DOM.");
     }
+});
+document.querySelectorAll('.release-date').forEach(element => {
+    const releaseDate = new Date(element.getAttribute('data-release-date'));
+    const now = new Date();
+    const diff = Math.floor((now - releaseDate) / 1000);
+
+    let relativeTime = '';
+    if (diff < 60) {
+        relativeTime = 'Опубліковано щойно';
+    } else if (diff < 3600) {
+        relativeTime = `${Math.floor(diff / 60)} хв назад`;
+    } else if (diff < 86400) {
+        relativeTime = `${Math.floor(diff / 3600)} год назад`;
+    } else {
+        relativeTime = `${Math.floor(diff / 86400)} днів назад`;
+    }
+
+    element.textContent = relativeTime;
 });
 
 // document.addEventListener('DOMContentLoaded', () => {
