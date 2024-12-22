@@ -32,53 +32,57 @@
         <div class="d-flex overflow-auto">
             <div th:each="comic : ${popularComicsWithNewChapters}"
                  class="comic-card mx-2 text-left position-relative">
-                <div class="position-relative">
+                <a th:href="@{/comics/{id}(id=${comic.id})}" class="position-relative d-block">
                     <img th:src="@{/comics/image/{id}(id=${comic.id})}"
                          th:alt="${comic.title}"
                          class="card-img-top comic-cover object-fit-cover"
-                         width="135"
-                         height="189"
+                         style="width:135px; height:189px;"
                          loading="lazy">
                     <!-- Глава знизу справа в межах фото -->
                     <div class="chapter-label position-absolute">
-                        <a th:text="'Глава ' + ${latestChapters[comic.id]}"></a>
+                        <span th:text="'Глава ' + ${latestChapters[comic.id]}"></span>
                     </div>
-                </div>
+                </a>
                 <div class="card-body p-0">
                     <!-- Назва коміксу обмежена 2 рядками -->
-                    <h6 class="card-title comic-title" th:text="${comic.title}"></h6>
+                    <a th:href="@{/comics/{id}(id=${comic.id})}" class="card-title comic-title" th:text="${comic.title}"></a>
                 </div>
             </div>
         </div>
     </section>
-
 
     <!-- Continue Reading Section -->
     <section class="continue-reading my-4">
         <h3>Продовжити читати</h3>
         <div class="d-flex overflow-auto gap-3">
             <div th:each="progress : ${recentlyReadProgress}"
-                 class="reading-progress-item d-flex align-items-start flex-shrink-0 mx-0 rounded">
-                <img th:src="@{/comics/image/{id}(id=${progress.comics.id})}"
-                     th:alt="${progress.comics.title}"
-                     class="rounded object-fit-cover me-2"
-                     width="56"
-                     height="78.38"
-                     loading="lazy">
-                <div class="text-container d-flex flex-column justify-content-between" style="width: 210px; height: 100%;">
-                    <h6 class="small two-line-title" th:text="${progress.comics.title}"></h6>
-                    <div>
-                        <div class="d-flex small text-muted" style="font-size: 12px">
-                            <span th:text="'Глава ' + ${progress.chapter.chapterNumber} + ' — ' + 'Сторінка ' + ${progress.lastPage}" ></span>
-                        </div>
-                        <div class="progress ">
-                            <div class="progress-bar bg-warning"
-                                 role="progressbar"
-                                 th:style="'width: ' + (${progress.lastPage} / ${@chapterService.getTotalPagesForChapter()} * 100) + '%;'">
+                 class="reading-progress-item flex-shrink-0 mx-0 rounded">
+                <!-- Обгортаємо весь елемент у посилання -->
+                <a th:href="@{/chapters/{id}(id=${progress.chapter.id})}"
+                   class="d-flex align-items-start text-decoration-none text-reset"
+                   style="display: flex; gap: 10px; width: 100%; height: 100%; align-items: start;">
+                    <img th:src="@{/comics/image/{id}(id=${progress.comics.id})}"
+                         th:alt="${progress.comics.title}"
+                         class="rounded object-fit-cover"
+                         width="56"
+                         height="78.38"
+                         loading="lazy">
+                    <div class="text-container d-flex flex-column justify-content-between"
+                         style="width: 210px; height: 100%;">
+                        <h6 class="two-line-title" th:text="${progress.comics.title}"></h6>
+                        <div>
+                            <div class="d-flex small text-muted" style="font-size: 12px">
+                                <span th:text="'Глава ' + ${progress.chapter.chapterNumber} + ' — ' + 'Сторінка ' + ${progress.lastPage}"></span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar bg-warning"
+                                     role="progressbar"
+                                     th:style="'width: ' + (${progress.lastPage} / ${@chapterService.getTotalPagesForChapter()} * 100) + '%;'">
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
     </section>
