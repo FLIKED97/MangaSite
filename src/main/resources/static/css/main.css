@@ -7,6 +7,7 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, Open Sans, Roboto, Helvetica Neue, Helvetica, sans-serif !important;
 
 }
+
 .card-title {
     text-decoration: none; /* Забороняє підкреслення тексту */
     color: inherit; /* Встановлює початковий колір */
@@ -44,33 +45,6 @@ h5{
 .my-4{
     width: 1170px;
     margin: 16px auto;
-}
-header {
-    background-color: #0A0A0A !important;
-    color: #ff7f50;
-    padding: 20px 0;
-    text-align: center;
-}
-
-header h1 {
-    margin: 0;
-    font-size: 2.5rem;
-}
-
-nav {
-    margin-top: 10px;
-    text-align: center; /* Центрування навігації */
-}
-
-nav a {
-    color: #ff4500;
-    text-decoration: none;
-    margin: 0 15px;
-    font-size: 1.1rem;
-}
-
-nav a:hover {
-    text-decoration: underline;
 }
 
 .main-content {
@@ -222,6 +196,7 @@ h5{
 /* Стилі для кнопок */
 .btn { /* Загальний стиль для кнопок */
     border: none;
+    padding: 8px !important;
 }
 
 /* Стилі для заглушки */

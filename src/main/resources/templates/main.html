@@ -17,12 +17,12 @@
     <!-- Include top navbar fragment -->
     <th:block th:replace="~{fragments/header :: top-navbar}"></th:block>
 
-    <!-- Include navbar actions fragment -->
-   <th:block th:replace="~{fragments/header :: navbar-actions}"></th:block>
-
     <!-- Include search modal fragment -->
     <th:block th:replace="~{fragments/header :: search-modal}"></th:block>
 </header>
+<th:block th:replace="~{fragments/header :: bottom-navbar}"></th:block>
+<!-- Include navbar actions fragment -->
+<th:block th:replace="~{fragments/header :: navbar-actions}"></th:block>
 
 <!-- Main Content -->
 <main class="container-fluid main-content">
