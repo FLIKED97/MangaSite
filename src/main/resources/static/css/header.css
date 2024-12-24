@@ -58,7 +58,9 @@
 .navbar-dark .navbar-nav .nav-link:hover {
     composes: text-gold;
 }
-
+.nav-item{
+    padding: 12px 5px;
+}
 /* Dropdown styles */
 .dropdown-menu {
     composes: bg-dark border-dark;
@@ -96,6 +98,22 @@
     outline: none !important; /* Забрати рамку при фокусі */
     box-shadow: none !important; /* Вимкнути тінь */
 }
+svg {
+    width: 14px;
+    height: 14px;
+    fill: #BFBFBF;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.nav-item {
+    display: inline-flex;
+    align-items: center;
+}
+
+.nav-item svg {
+    margin-right: 5px;
+}
 
 .btn-primary:hover {
     background-color: transparent !important; /* Прозора при наведенні */
@@ -109,12 +127,16 @@
     outline: none !important; /* Забрати рамку при фокусі */
     box-shadow: none !important; /* Вимкнути тінь */
 }
-
+.navbar-dark .navbar-brand{
+    color: #BFBFBF;
+}
 /*Header*/
 header {
     background: rgb(37, 37, 39) !important;
-    color: #ff7f50;
+    color: #BFBFBF;
     text-align: center;
+    line-height: 1.4;
+    font-family: -apple-system, BlinkMacSystemFont, Open Sans, Roboto, Helvetica Neue, Helvetica, sans-serif !important;
 }
 
 header h1 {
@@ -142,3 +164,67 @@ nav a:hover {
 .navbar{
     padding: 2px 0;
 }
+#hamburgerMenu {
+    background: none; /* Видаляємо фон */
+    border: none; /* Видаляємо рамку */
+    padding: 5px; /* Зменшуємо розмір */
+}
+
+.navbar-toggler-icon {
+    width: 20px; /* Зменшення розміру */
+    height: 20px; /* Зменшення розміру */
+}
+
+.dropdown-menu {
+    background-color: rgb(48, 48, 50); /* Фон випадаючого меню */
+    border-radius: 8px; /* Заокруглені краї */
+    animation: fadeIn 0.3s ease-in-out; /* Анімація появи */
+    color: #BFBFBF; /* Колір тексту */
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdown-item {
+    color: #BFBFBF; /* Колір тексту */
+}
+
+.dropdown-item:hover {
+    background-color: rgba(116, 116, 128, 0.1); /* Фон при наведенні */
+}
+
+.dropdown-header {
+    font-size: 1.2rem; /* Збільшений шрифт */
+    background-color: rgba(116, 116, 128, 0.1); /* Фон з заокругленням */
+    padding: 10px; /* Відступи */
+    border-radius: 8px; /* Заокруглення */
+    text-align: center;
+}
+
+.separator {
+    height: 1px;
+    background-color: #6c757d; /* Колір лінії */
+    margin: 8px 0; /* Відступи */
+}
+
+.dropdown-section {
+    padding: 5px 0;
+}
+
+/* Кнопка виходу */
+form[th\\:action="@{/logout}"] button {
+                                   background-color: transparent;
+                                   color: #BFBFBF;
+                                   border: none;
+                                   cursor: pointer;
+                                   font-size: 14px;
+                                   padding: 5px;
+                               }
