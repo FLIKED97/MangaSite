@@ -63,6 +63,8 @@
 }
 /* Dropdown styles */
 .dropdown-menu {
+    text-align: left;
+    padding: 8px;
     composes: bg-dark border-dark;
 }
 .dropdown-header {
@@ -105,7 +107,12 @@ svg {
     margin-right: 5px;
     vertical-align: middle;
 }
-
+.menu-item__icon {
+    height: 15.31px;
+    width: 12.25px;
+    margin-right: 5px;
+    flex-shrink: 0;
+}
 .nav-item {
     display: inline-flex;
     align-items: center;
@@ -194,9 +201,21 @@ nav a:hover {
 }
 
 .dropdown-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 8px;
     color: #BFBFBF; /* Колір тексту */
+    gap: 8px;
+}
+.dropdown-profile {
+    text-decoration: none;
 }
 
+.dropdown-profile:hover {
+    text-decoration: none;
+    color: inherit;
+}
 .dropdown-item:hover {
     background-color: rgba(116, 116, 128, 0.1); /* Фон при наведенні */
 }
@@ -228,3 +247,38 @@ form[th\\:action="@{/logout}"] button {
                                    font-size: 14px;
                                    padding: 5px;
                                }
+.dropdown-profile {
+    display: flex;
+    align-items: center;
+    background-color: rgba(116, 116, 128, 0.1);
+    padding: 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    gap: 8px;
+    width: 100%;
+    color: #BFBFBF;
+}
+.profile-label {
+    font-size: 11px; /* Менший шрифт */
+    color: #BFBFBF;
+}
+.profile-text {
+    display: flex;
+    flex-direction: column !important;
+    gap: 4px;
+}
+.profile-username {
+    font-size: 14px; /* Більший шрифт */
+    font-weight: bold;
+    color: #BFBFBF;
+}
+form button {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 8px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    text-align: left;
+}
