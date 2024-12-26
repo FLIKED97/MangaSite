@@ -250,17 +250,20 @@ form[th\\:action="@{/logout}"] button {
 .dropdown-profile {
     display: flex;
     align-items: center;
-    background-color: rgba(116, 116, 128, 0.1);
+    background-color: rgba(116, 116, 128, .1);
     padding: 10px;
-    border-radius: 8px;
+    border-radius: 4px;
     text-decoration: none;
     gap: 8px;
     width: 100%;
     color: #BFBFBF;
 }
+.dropdown-menu{
+    transition: color .2s ease, background .2s ease;
+}
 .profile-label {
     font-size: 11px; /* Менший шрифт */
-    color: #BFBFBF;
+    color: rgba(235, 235, 245, .5);
 }
 .profile-text {
     display: flex;
@@ -272,7 +275,9 @@ form[th\\:action="@{/logout}"] button {
     font-weight: bold;
     color: #BFBFBF;
 }
-form button {
+.dropdown-item,
+form button,
+.dropdown-profile {
     display: flex;
     align-items: center;
     width: 100%;
@@ -281,4 +286,65 @@ form button {
     background: none;
     cursor: pointer;
     text-align: left;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    color: #BFBFBF; /* Default text color */
+    border-radius: 4px;
+}
+form button,
+form svg{
+    color: #DE7072 !important;
+    gap: 8px;
+}
+.dropdown-item:hover,
+form button:hover,
+.dropdown-profile:hover {
+    background-color: rgba(116, 116, 128, 0.1);
+    color: inherit; /* Ensure text color remains consistent */
+}
+
+.dropdown-menu {
+    background-color: rgb(48, 48, 50);
+    border-radius: 8px;
+    animation: fadeIn 0.3s ease-in-out;
+    transition: color 0.2s ease, background 0.2s ease;
+    color: #BFBFBF;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+/* Profile-specific styles */
+.profile-label {
+    font-size: 11px;
+    color: rgba(235, 235, 245, 0.5);
+}
+
+.profile-username {
+    font-size: 14px;
+    font-weight: bold;
+    color: #BFBFBF;
+}
+
+.profile-text {
+    display: flex;
+    flex-direction: column !important;
+    gap: 4px;
+}
+
+/* Separators and section padding */
+.separator {
+    height: 1px;
+    background-color: #6c757d;
+    margin: 8px 0;
+}
+
+.dropdown-section {
+    padding: 5px 0;
 }
