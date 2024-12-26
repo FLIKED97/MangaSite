@@ -78,14 +78,15 @@
     color: #fff; /* Білий текст при наведенні */
 }
 .dropdown-item.btn.btn-warning.text-dark {
-    background-color: #ffc107; /* Жовтий фон */
-    color: #212529; /* Темний текст */
+    border-radius: 5px;
+    background-color: #f77519;
+    color: #ffffff !important;
     border: none; /* Видалення обводки */
     composes: font-bold transition-bg-color;
 }
 .dropdown-item.btn.btn-warning.text-dark:hover {
-    background-color: #e0a800; /* Темніший жовтий при наведенні */
-    color: #ffffff; /* Білий текст при наведенні */
+    background-color: #d66615;
+    color: #ffffff !important;
 }
 
 /* Button styles */
@@ -199,7 +200,34 @@ nav a:hover {
         transform: translateY(0);
     }
 }
+.dropdown-item .menu-icon {
+    margin-right: 8px;
+    width: 16px;
+    height: 16px;
+}
+.sub-menu {
+    display: none;
+    position: absolute;
+    top: -10px;
+    left: calc(100% + 5px); /* Додаємо відступ */
+    width: 200px;
+    background-color: rgb(48, 48, 50);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    margin: 2px 0 0;
+    padding: 8px;
+    z-index: 1000;
+    font-size: 14px !important;
+}
+.dropdown-title:hover .sub-menu,
+.dropdown-title.show .sub-menu {
+    display: block;
+    opacity: 1;
+}
 
+.dropdown-title {
+    position: relative;
+}
 .dropdown-item {
     display: flex;
     align-items: center;
