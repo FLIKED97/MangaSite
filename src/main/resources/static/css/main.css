@@ -196,7 +196,7 @@ h5{
 /* Стилі для кнопок */
 .btn { /* Загальний стиль для кнопок */
     border: none;
-    padding: 8px !important;
+    padding: 0 !important;
 }
 
 /* Стилі для заглушки */
@@ -293,12 +293,13 @@ main .container-fluid{
 }
 
 .custom-btn:hover {
-    color: #ffffff;
+    color: #cdcdd4;
+    text-decoration: none; /* Забезпечує, що лінія не з'являється при наведенні */
 }
 
 .custom-btn:focus {
     outline: none;
-    color: #ffffff;
+    color: #cdcdd4;
 }
 
 .custom-btn:after {
@@ -320,8 +321,7 @@ main .container-fluid{
 }
 
 .custom-btn.active {
-    color: #ffffff;
-    font-weight: bold;
+    color: #cdcdd4;
 }
 
 .custom-btn.active:after {
