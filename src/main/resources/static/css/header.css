@@ -1,15 +1,5 @@
-/* General utility classes */
-/*.box-shadow-light {*/
-/*    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); !* Легка тінь *!*/
-/*}*/
-.border-gold {
-    border-bottom: 2px solid #ffc107; /* Золота лінія */
-}
 .text-white {
     color: #f8f9fa; /* Білий текст */
-}
-.text-gold {
-    color: #ffc107; /* Золотий текст */
 }
 .text-light-gray {
     color: #adb5bd; /* Світло-сірий текст */
@@ -37,24 +27,15 @@
     font-size: 1.5rem; /* Збільшення логотипу */
     composes: font-bold;
 }
-/*.nav-link {*/
-/*    composes: text-white transition-color;*/
-/*}*/
-/*.nav-link:hover {*/
-/*    composes: text-gold;*/
-/*}*/
+
 .navbar-dark.bg-dark {
     composes: bg-dark-gray;
 }
 .navbar-dark .navbar-nav .nav-link {
     composes: text-light-gray;
-
-}
-.navbar-dark .navbar-nav .nav-link:hover {
-    composes: text-gold;
 }
 .nav-item{
-    padding: 12px 5px;
+    padding: 8px 5px;
 }
 /* Dropdown styles */
 .dropdown-menu {
@@ -154,10 +135,6 @@ nav {
     margin: 0 234.5px;
     text-align: center; /* Центрування навігації */
 }
-.navbar-dark .navbar-nav .nav-link{
-    color: #BFBFBF;
-    padding: 0 !important;
-}
 nav a {
     /*color: #ff4500;*/
     text-decoration: none;
@@ -165,7 +142,10 @@ nav a {
     line-height: 1.4;
     font-size: 14px;
 }
-
+.header.nav-link{
+    /*padding-right: 0;*/
+    /*padding-left: 0;*/
+}
 nav a:hover {
     text-decoration: underline;
 }
@@ -329,16 +309,30 @@ form button:hover,
     background-color: rgba(116, 116, 128, 0.1);
     color: inherit; /* Ensure text color remains consistent */
 }
+.navbar-dark .navbar-nav .nav-link {
+    color: #BFBFBF;
+}
 .hover-el {
     transition: background-color 0.2s ease;
     border-radius: 5px;
-    padding: 3px 12px;
+    padding: 8px 12px;
     gap: 8px;
 }
-
+.hover-el .nav-link {
+    padding: 0;
+}
 .hover-el:hover {
     background-color: rgba(255, 255, 255, .1);
-    border-radius: 5px;
+}
+@media (min-width: 992px) {
+    .navbar-expand-lg .navbar-nav .nav-link {
+        padding: 0;
+    }
+
+    /* Якщо потрібні відступи тільки для певних nav-link елементів */
+    .navbar-expand-lg .navbar-nav .nav-link:not(.hover-el .nav-link) {
+        padding: 9px 12px;
+    }
 }
 .dropdown-menu {
     background-color: rgb(48, 48, 50);
@@ -385,4 +379,7 @@ form button:hover,
 
 .dropdown-section {
     padding: 5px 0;
+}
+.modal-header{
+    border-bottom: none;
 }
