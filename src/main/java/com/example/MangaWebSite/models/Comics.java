@@ -1,6 +1,7 @@
 package com.example.MangaWebSite.models;
 
 import com.example.MangaWebSite.serializer.ComicsSerializer;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -55,7 +56,9 @@ public class Comics {
     private String status;
 
     @Column(name = "created_at", nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private LocalDateTime createdAt;
+
 
     @JsonIgnoreProperties({"comics", "comicPages"})
     @OneToMany(mappedBy = "comics", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)

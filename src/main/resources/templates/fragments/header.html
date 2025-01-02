@@ -144,25 +144,42 @@
           <li class="sm-item">
             <a class="custom-btn" id="groups-tab" data-toggle="tab" href="#groups" role="tab" aria-controls="groups" aria-selected="false">Групи</a>
           </li>
-          <button type="button" class="close text-light" data-dismiss="modal" aria-label="Закрити">
+          <button type="button" class="close text-light ml-auto" data-dismiss="modal" aria-label="Закрити">
             <span aria-hidden="true">&times;</span>
           </button>
         </ul>
+        <div class="separator-search"></div>
         <div class="tab-content mt-3" id="searchTabsContent">
           <div class="tab-pane fade show active" id="comics" role="tabpanel" aria-labelledby="comics-tab">
-            <input type="text" class="form-control mb-3" id="comicsSearchInput" placeholder="Шукати комікси">
+            <div style="display: flex; align-items: center;">
+              <svg class="svg-inline--fa fa-magnifying-glass" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="magnifying-glass" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path class="" fill="currentColor" d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"></path></svg>
+              <input type="text" class="form-control search-input" id="comicsSearchInput" placeholder="Шукати комікси">
+            </div>
+            <div class="separator-search"></div>
             <ul id="comicsResults" class="list-group"></ul>
           </div>
           <div class="tab-pane fade" id="authors" role="tabpanel" aria-labelledby="authors-tab">
-            <input type="text" class="form-control mb-3" id="authorsSearchInput" placeholder="Шукати авторів">
+            <div style="display: flex; align-items: center;">
+              <svg class="svg-inline--fa fa-magnifying-glass" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="magnifying-glass" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path class="" fill="currentColor" d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"></path></svg>
+              <input type="text" class="form-control search-input" id="authorsSearchInput" placeholder="Шукати авторів">
+            </div>
+            <div class="separator-search"></div>
             <ul id="authorsResults" class="list-group"></ul>
           </div>
           <div class="tab-pane fade" id="users" role="tabpanel" aria-labelledby="users-tab">
-            <input type="text" class="form-control mb-3" id="usersSearchInput" placeholder="Шукати користувачів">
+            <div style="display: flex; align-items: center;">
+              <svg class="svg-inline--fa fa-magnifying-glass" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="magnifying-glass" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path class="" fill="currentColor" d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"></path></svg>
+              <input type="text" class="form-control search-input" id="usersSearchInput" placeholder="Шукати користувачів">
+            </div>
+            <div class="separator-search"></div>
             <ul id="usersResults" class="list-group"></ul>
           </div>
           <div class="tab-pane fade" id="groups" role="tabpanel" aria-labelledby="groups-tab">
-            <input type="text" class="form-control mb-3" id="groupsSearchInput" placeholder="Шукати групи">
+            <div style="display: flex; align-items: center;">
+              <svg class="svg-inline--fa fa-magnifying-glass" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="magnifying-glass" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path class="" fill="currentColor" d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"></path></svg>
+              <input type="text" class="form-control search-input" id="groupsSearchInput" placeholder="Шукати групи">
+            </div>
+            <div class="separator-search"></div>
             <ul id="groupsResults" class="list-group"></ul>
           </div>
         </div>

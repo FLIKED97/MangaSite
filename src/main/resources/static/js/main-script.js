@@ -149,57 +149,6 @@ document.querySelectorAll('.release-date').forEach(element => {
 
     element.textContent = relativeTime;
 });
-
-// document.addEventListener('DOMContentLoaded', () => {
-//     const newComicsButton = document.getElementById('newComicsButton');
-//     const bookmarkedComicsButton = document.getElementById('bookmarkedComicsButton');
-//
-//     const newComicsSection = document.getElementById('new-comics-section');
-//     const bookmarkedComicsSection = document.getElementById('bookmarked-comics-section');
-//
-//     // Перемикання на "Нові комікси"
-//     newComicsButton.addEventListener('click', () => {
-//         switchTab('new', newComicsSection, bookmarkedComicsSection, newComicsButton, bookmarkedComicsButton);
-//     });
-//
-//     // Перемикання на "Закладки"
-//     bookmarkedComicsButton.addEventListener('click', () => {
-//         switchTab('bookmarked', bookmarkedComicsSection, newComicsSection, bookmarkedComicsButton, newComicsButton);
-//     });
-//
-//     // Ініціалізація: показуємо закладки як перший таб
-//     bookmarkedComicsButton.click();
-// });
-//
-// // Зміна табу
-// function switchTab(tab, showSection, hideSection, activeButton, inactiveButton) {
-//     console.log(`Перемикаємось на таб: ${tab}`);
-//     currentTab = tab;
-//     page = 1;
-//
-//     // Очищення контейнера
-//     const containerId = tab === 'bookmarked' ? 'bookmarked-comics-container' : 'new-comics-container';
-//     const container = document.getElementById(containerId);
-//
-//     if (!container) {
-//         console.error(`Контейнер ${containerId} не знайдено`);
-//         return;
-//     }
-//     container.innerHTML = '';
-//
-//     // Завантаження контенту
-//     loadMoreContent();
-//
-//     // Перемикання видимості секцій
-//     showSection.classList.remove('d-none');
-//     hideSection.classList.add('d-none');
-//
-//     // Зміна стилю кнопок
-//     activeButton.classList.add('btn-primary');
-//     activeButton.classList.remove('btn-secondary');
-//     inactiveButton.classList.add('btn-secondary');
-//     inactiveButton.classList.remove('btn-primary');
-// }
 document.addEventListener('DOMContentLoaded', function() {
     // Функція для очищення та виведення результатів
     function displayResults(resultsElement, data, type) {
@@ -212,6 +161,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         data.forEach(item => {
             const li = document.createElement('li');
+            console.log('CreatedAt:', item.createdAt);
+            console.log('Data object:', item);
             li.className = 'list-group-item bg-secondary text-light d-flex align-items-center';
 
             switch(type) {
@@ -227,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
                              style="width: 60px; height: 60px; object-fit: cover;">
                         <div>
                             <h5>${item.title}</h5>
-                            <small>${new Date(item.createdAt).toLocaleDateString()}</small>
+                            <small>${new Intl.DateTimeFormat('uk-UA').format(new Date(item.createdAt))}</small>
                         </div>
                     `;
                     break;

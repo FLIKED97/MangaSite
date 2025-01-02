@@ -376,10 +376,99 @@ form button:hover,
     background-color: #6c757d;
     margin: 8px 0;
 }
+.separator-search {
+    height: 1px;
+    background-color: #6c757d;
+}
+.search-input {
+    background-color: transparent;
+    border: none;
+    outline: none;
+}
+
+.search-input:focus {
+    box-shadow: none;
+    border-color: transparent;
+    background-color: transparent;
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #BFBFBF;
+    background-color: transparent;
+    background-clip: padding-box;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+.form-control:focus{
+    color: #BFBFBF;
+}
+@media (prefers-reduced-motion: reduce) {
+    .form-control {
+        transition: none;
+    }
+}
+
+.close {
+    position: absolute;
+    right: 16px;
+}
 
 .dropdown-section {
     padding: 5px 0;
 }
 .modal-header{
     border-bottom: none;
+}
+
+.list-group-item {
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+.list-group{
+    background: var(rgba(116, 116, 128, .1));
+    position: relative;
+    display: flex;
+    gap: 12px;
+    border-radius: 6px;
+}
+.list-group-item {
+    background-color: rgba(116, 116, 128, .1) !important;
+    margin-top: 8px;
+}
+.img-thumbnail {
+    padding: 0;
+    background-color: transparent;
+    border: none;
+}
+.list-group-item img {
+width: 56px !important;
+height: 78.38px !important;
+object-fit: cover;
+margin-right: 12px;
+}
+
+.list-group-item h5 {
+margin: 0;
+font-size: 14px;
+    color: #BFBFBF;
+}
+
+.list-group-item small {
+color: #BFBFBF;
+font-size: 13px;
+}
+
+.list-group-item a {
+text-decoration: none;
+}
+
+.list-group-item a:hover {
+text-decoration: underline;
 }

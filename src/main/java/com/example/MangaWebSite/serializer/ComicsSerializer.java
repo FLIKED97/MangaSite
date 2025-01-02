@@ -36,6 +36,11 @@ public class ComicsSerializer extends JsonSerializer<Comics> {
             jsonGenerator.writeEndArray();
         }
 
+        // Серіалізуємо createdAt
+        if (comics.getCreatedAt() != null) {
+            jsonGenerator.writeStringField("createdAt", comics.getCreatedAt().toString());
+        }
+
         // Додаткові поля
         jsonGenerator.writeNumberField("viewCount", comics.getViewCount());
         jsonGenerator.writeNumberField("popularityRating", comics.getPopularityRating());
