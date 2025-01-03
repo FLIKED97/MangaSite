@@ -425,50 +425,65 @@ form button:hover,
 .modal-header{
     border-bottom: none;
 }
-
 .list-group-item {
     padding: 8px 16px;
     cursor: pointer;
     transition: background-color 0.2s ease;
+    display: flex;
+    align-items: start; /* Змінюємо з center на start */
 }
-.list-group{
+
+.list-group {
     background: var(rgba(116, 116, 128, .1));
     position: relative;
     display: flex;
     gap: 12px;
     border-radius: 6px;
 }
+
 .list-group-item {
     background-color: rgba(116, 116, 128, .1) !important;
     margin-top: 8px;
 }
+
 .img-thumbnail {
     padding: 0;
     background-color: transparent;
     border: none;
 }
+
 .list-group-item img {
-width: 56px !important;
-height: 78.38px !important;
-object-fit: cover;
-margin-right: 12px;
+    width: 56px !important;
+    height: 78.38px !important;
+    object-fit: cover;
+    margin-right: 12px;
+}
+
+.list-group-item div {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Додаємо вирівнювання по лівому краю */
+    align-items: flex-start; /* Додаємо вирівнювання по лівому краю */
 }
 
 .list-group-item h5 {
-margin: 0;
-font-size: 14px;
+    font-size: 14px;
     color: #BFBFBF;
+    text-align: left; /* Додаємо вирівнювання тексту вліво */
+    margin: 0 0 8px;
 }
 
 .list-group-item small {
-color: #BFBFBF;
-font-size: 13px;
+    color: #BFBFBF;
+    font-size: 13px;
+    text-align: left; /* Додаємо вирівнювання тексту вліво */
+    margin-top: 8px;
 }
 
 .list-group-item a {
-text-decoration: none;
+    text-decoration: none;
 }
 
 .list-group-item a:hover {
-text-decoration: underline;
+    text-decoration: underline;
 }

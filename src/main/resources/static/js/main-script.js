@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 case 'users':
                     li.innerHTML = `
-        <img src="/default-avatar.png" alt="Аватарка" class="mr-3 rounded-circle" style="width: 40px; height: 40px;">
+        <img src="/avatarPerson.webp" alt="Аватарка" class="mr-3 rounded-circle" style="width: 40px; height: 40px;">
         <div>
             <a href="/profile/${item.id}" class="text-light">
                 <h5>${item.username}</h5>

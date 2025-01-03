@@ -5,7 +5,6 @@ body {
     color: #BFBFBF !important;
     line-height: 1.4 !important;
     font-family: -apple-system, BlinkMacSystemFont, Open Sans, Roboto, Helvetica Neue, Helvetica, sans-serif !important;
-
 }
 
 .card-title {
@@ -55,7 +54,7 @@ h5{
     /*background-color: #1e1e1e;*/
     background: #1c1c1c;
     border-radius: 10px;
-    padding: 20px;
+    padding: 12px 16px;
     margin-bottom: 30px;
 }
 

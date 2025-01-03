@@ -1,0 +1,140 @@
+body {
+    background-color: #0A0A0A !important;
+    color: #BFBFBF;
+    line-height: 1.4 !important;
+    font-family: -apple-system, BlinkMacSystemFont, Open Sans, Roboto, Helvetica Neue, Helvetica, sans-serif !important;
+}
+
+.container {
+    max-width: 1200px;
+    padding: 2rem;
+    background-color: #1c1c1c;
+    border-radius: 5px;
+}
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem; /* Зменшуємо проміжок з 1.5rem (g-4) до 1rem */
+}
+/*#1c1c1c*/
+.comic-col {
+    width: 148.86px;
+    padding: 0;
+    margin: 0;
+}
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid rgba(84, 84, 88, 0.65); /* Відокремлююча лінія */
+    padding-bottom: 1rem; /* Відступ від лінії */
+}
+
+h3 {
+    color: #BFBFBF;
+    font-size: 24px;
+    margin: 0;
+}
+
+.filters {
+    display: flex;
+    gap: 1rem;
+}
+
+.form-select {
+    background-color: #2C2C2E;
+    border: 1px solid #3A3A3C;
+    color: #BFBFBF;
+    font-size: 14px;
+    padding: 0.5rem;
+    width: auto;
+    min-width: 150px;
+    cursor: pointer;
+}
+
+.form-select:focus {
+    border-color: #0A84FF;
+    box-shadow: none;
+}
+
+.card {
+    background-color: #2C2C2E;
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.2s;
+    width: 148.86px;
+    height: 268.39px;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.comic-image-container {
+    position: relative;
+    width: 100%;
+    height: 210px;
+}
+
+.card-img-top {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.rating-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #FFD700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.views-badge {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #FFFFFF;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.views-badge svg {
+    width: 12px;
+    height: 12px;
+}
+
+.card-body {
+    padding: 0.75rem;
+}
+
+.card-title {
+    color: #BFBFBF;
+    font-size: 14px;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    .header-container {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+
+    .filters {
+        flex-direction: column;
+    }
+}
