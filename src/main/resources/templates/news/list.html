@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Список новин</title>
+    <link rel="stylesheet" th:href="@{/css/list-news-style.css}">
+
+</head>
+<body>
+<h1>Новини</h1>
+
+<!-- Кнопка для адміністраторів -->
+<div th:if="${#authentication.principal.authorities.contains('ROLE_ADMIN')}">
+    <a href="/admin/news/create" class="btn btn-primary">Створити новину</a>
+</div>
+
+<div class="news-list">
+    <div class="news-item" th:each="news : ${newsList}">
+        <a th:href="@{/news/{id}(id=${news.id})}">
+            <!-- Заголовок новини -->
+            <h5 th:text="${news.title}"></h5>
+            <!-- Дата створення -->
+            <div class="news-date" th:text="${#temporals.format(news.createdAt, 'dd.MM.yyyy')}"></div>
+            <!-- Тип новини -->
+            <span class="news-category" th:text="'#' + ${news.category.name}"></span>
+        </a>
+    </div>
+</div>
+
+</body>
+</html>
