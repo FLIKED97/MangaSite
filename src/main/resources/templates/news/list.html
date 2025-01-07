@@ -6,7 +6,6 @@
 
 </head>
 <body>
-<h1>Новини</h1>
 
 <!-- Кнопка для адміністраторів -->
 <div th:if="${#authentication.principal.authorities.contains('ROLE_ADMIN')}">
@@ -14,17 +13,86 @@
 </div>
 
 <div class="news-list">
+    <div class="news-header">
+        <h1>Новини</h1>
+        <div class="filters">
+            <div class="select-wrapper">
+                <div class="custom-selects" id="categorySelect">
+                    <svg class="svg-inline--fa fa-sliders" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="sliders" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path class="" fill="currentColor" d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"></path></svg>
+                    <div class="select-selected" th:text="${selectedCategory != null ? selectedCategory.name : 'Всі категорії'}">Всі категорії</div>
+                    <div class="select-items select-hide">
+                        <div class="selected" data-value="">Всі категорії</div>
+                        <div th:each="category : ${categories}"
+                             th:text="${category.name}"
+                             th:data-value="${category.id}"
+                             th:class="${selectedCategory != null && selectedCategory.id == category.id ? 'selected' : ''}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="news-item" th:each="news : ${newsList}">
-        <a th:href="@{/news/{id}(id=${news.id})}">
-            <!-- Заголовок новини -->
-            <h5 th:text="${news.title}"></h5>
-            <!-- Дата створення -->
-            <div class="news-date" th:text="${#temporals.format(news.createdAt, 'dd.MM.yyyy')}"></div>
-            <!-- Тип новини -->
+        <a class="gn_news" th:href="@{/news/{id}(id=${news.id})}">
+            <div class="news-headeres">
+                <h5 th:text="${news.title}"></h5>
+                <div class="news-date" th:text="${#temporals.format(news.createdAt, 'dd.MM.yyyy')}"></div>
+            </div>
             <span class="news-category" th:text="'#' + ${news.category.name}"></span>
         </a>
     </div>
-</div>
 
+</div>
+<SCRIPT>
+    function navigateToCategory(categoryId) {
+        const currentUrl = new URL(window.location.href);
+
+        if (categoryId) {
+            currentUrl.searchParams.set('category', categoryId);
+        } else {
+            currentUrl.searchParams.delete('category');
+        }
+
+        window.location.href = currentUrl.toString();
+    }
+
+    function closeAllSelect(element) {
+        document.querySelectorAll('.select-items').forEach(item => {
+            if (!item.contains(element)) {
+                item.classList.add('select-hide');
+            }
+        });
+    }
+
+    function initCustomSelects() {
+        document.querySelectorAll('.custom-selects').forEach(select => {
+            const selectedElement = select.querySelector('.select-selected');
+            const itemsContainer = select.querySelector('.select-items');
+
+            selectedElement.addEventListener('click', function (e) {
+                e.stopPropagation();
+                closeAllSelect(this);
+                itemsContainer.classList.toggle('select-hide');
+            });
+
+            itemsContainer.querySelectorAll('div').forEach(option => {
+                option.addEventListener('click', function () {
+                    selectedElement.textContent = this.textContent;
+                    itemsContainer.classList.add('select-hide');
+
+                    itemsContainer.querySelectorAll('div').forEach(div => div.classList.remove('selected'));
+                    this.classList.add('selected');
+
+                    navigateToCategory(this.getAttribute('data-value'));
+                });
+            });
+        });
+
+        document.addEventListener('click', closeAllSelect);
+    }
+
+    document.addEventListener('DOMContentLoaded', initCustomSelects);
+
+</SCRIPT>
 </body>
 </html>

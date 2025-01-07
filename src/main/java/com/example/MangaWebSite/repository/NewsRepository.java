@@ -1,5 +1,6 @@
 package com.example.MangaWebSite.repository;
 
+import com.example.MangaWebSite.models.Category;
 import com.example.MangaWebSite.models.News;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -12,5 +13,7 @@ public interface NewsRepository extends JpaRepository<News, Integer> {
     List<News> findByIsPublished(boolean isPublished);
 
     List<News> findAllByIsPublishedTrueOrderByCreatedAtDesc();
+
+    List<News> findByCategory(Category category);
 }
 

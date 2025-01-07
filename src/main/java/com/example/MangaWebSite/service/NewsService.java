@@ -1,5 +1,6 @@
 package com.example.MangaWebSite.service;
 
+import com.example.MangaWebSite.models.Category;
 import com.example.MangaWebSite.models.News;
 import com.example.MangaWebSite.repository.NewsRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -37,6 +38,14 @@ public class NewsService {
     public News getNewsById(int id) {
         return newsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Новина не знайдена"));
+    }
+
+    public List<News> findByCategory(Category category) {
+        return newsRepository.findByCategory(category);
+    }
+
+    public List<News> findAll() {
+        return newsRepository.findAll();
     }
 }
 
