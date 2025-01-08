@@ -8,13 +8,18 @@
 <body>
 
 <!-- Кнопка для адміністраторів -->
-<div th:if="${#authentication.principal.authorities.contains('ROLE_ADMIN')}">
-    <a href="/admin/news/create" class="btn btn-primary">Створити новину</a>
-</div>
+<!--<div th:if="${#authentication.principal.authorities.contains('ROLE_ADMIN')}">-->
+<!--    <a href="/admin/news/create" class="btn btn-primary">Створити новину</a>-->
+<!--</div>-->
 
 <div class="news-list">
     <div class="news-header">
-        <h1>Новини</h1>
+        <div class="dp_admin">
+            <h1>Новини</h1>
+            <div th:if="${isAdmin}">
+                <a th:href="@{/admin/news/create}" class="btn btn-primary">Створити</a>
+            </div>
+        </div>
         <div class="filters">
             <div class="select-wrapper">
                 <div class="custom-selects" id="categorySelect">
@@ -41,7 +46,31 @@
             <span class="news-category" th:text="'#' + ${news.category.name}"></span>
         </a>
     </div>
+    <div class="pagination" th:if="${totalPages > 1}">
+        <div class="pagination-items">
+            <a th:if="${currentPage > 0}"
+               th:href="@{/news(page=${currentPage - 1}, category=${selectedCategory != null ? selectedCategory.id : ''})}"
+               class="arrow">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M15 18l-6-6 6-6"/>
+                </svg>
+            </a>
 
+            <a th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}"
+               th:href="@{/news(page=${pageNumber}, category=${selectedCategory != null ? selectedCategory.id : ''})}"
+               th:text="${pageNumber + 1}"
+               th:class="${pageNumber == currentPage ? 'active' : ''}">
+            </a>
+
+            <a th:if="${currentPage < totalPages - 1}"
+               th:href="@{/news(page=${currentPage + 1}, category=${selectedCategory != null ? selectedCategory.id : ''})}"
+               class="arrow">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M9 18l6-6-6-6"/>
+                </svg>
+            </a>
+        </div>
+    </div>
 </div>
 <SCRIPT>
     function navigateToCategory(categoryId) {

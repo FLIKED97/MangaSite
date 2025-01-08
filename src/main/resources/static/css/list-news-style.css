@@ -129,3 +129,83 @@ body {
 .selected {
     background-color: #3A3A3C;
 }
+.news-header .btn {
+    background-color: #3A3A3C;
+    color: #BFBFBF;
+    padding: 4px 12px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    text-transform: uppercase;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    text-decoration: none; /* Прибирає підкреслення */
+    display: inline-block; /* Гарантує коректне вирівнювання */
+    vertical-align: baseline; /* Вирівнює по текстовій базовій лінії */
+}
+
+.news-header .btn:hover {
+    background-color: #505050;
+    transform: scale(1.05);
+}
+
+.news-header .btn:active {
+    background-color: #6A6A6C;
+    transform: scale(0.95);
+}
+
+.news-header .btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+}
+.dp_admin {
+    display: flex; /* Використовуємо флексбокс для розташування елементів в один рядок */
+    align-items: center; /* Вирівнюємо по центру вертикально */
+    justify-content: space-between; /* Додає відступ між заголовком і кнопкою */
+    gap: 5px;
+}
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination-items {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.pagination-items a {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #2C2C2E;
+    color: #BFBFBF;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.pagination-items a.active {
+    background: #ef6c00;
+    color: black;
+}
+
+.pagination-items a:hover:not(.active) {
+    background: #3A3A3C;
+}
+.pagination-items .arrow {
+    background: transparent;
+}
+
+.pagination-items .arrow:hover {
+    background: #3A3A3C;
+}
+
+.pagination-items svg {
+    stroke-width: 2;
+}

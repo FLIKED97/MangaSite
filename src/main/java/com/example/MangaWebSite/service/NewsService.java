@@ -5,6 +5,8 @@ import com.example.MangaWebSite.models.News;
 import com.example.MangaWebSite.repository.NewsRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,12 +42,12 @@ public class NewsService {
                 .orElseThrow(() -> new EntityNotFoundException("Новина не знайдена"));
     }
 
-    public List<News> findByCategory(Category category) {
-        return newsRepository.findByCategory(category);
+    public Page<News> findByCategory(Category category, Pageable pageable) {
+        return newsRepository.findByCategory(category, pageable);
     }
 
-    public List<News> findAll() {
-        return newsRepository.findAll();
+    public Page<News> findAll(Pageable pageable) {
+        return newsRepository.findAll(pageable);
     }
 }
 

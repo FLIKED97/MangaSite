@@ -2,6 +2,8 @@ package com.example.MangaWebSite.repository;
 
 import com.example.MangaWebSite.models.Category;
 import com.example.MangaWebSite.models.News;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,6 +16,6 @@ public interface NewsRepository extends JpaRepository<News, Integer> {
 
     List<News> findAllByIsPublishedTrueOrderByCreatedAtDesc();
 
-    List<News> findByCategory(Category category);
+    Page<News> findByCategory(Category category, Pageable pageable);
 }
 
