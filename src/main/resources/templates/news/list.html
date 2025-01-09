@@ -3,21 +3,28 @@
 <head>
     <title>Список новин</title>
     <link rel="stylesheet" th:href="@{/css/list-news-style.css}">
-
+    <link rel="stylesheet" href="/css/main.css">
+    <th:block th:replace="~{fragments/header :: head-styles}"></th:block>
 </head>
 <body>
 
-<!-- Кнопка для адміністраторів -->
-<!--<div th:if="${#authentication.principal.authorities.contains('ROLE_ADMIN')}">-->
-<!--    <a href="/admin/news/create" class="btn btn-primary">Створити новину</a>-->
-<!--</div>-->
+<header>
+    <!-- Include top navbar fragment -->
+    <th:block th:replace="~{fragments/header :: top-navbar}"></th:block>
 
+    <!-- Include search modal fragment -->
+    <th:block th:replace="~{fragments/header :: search-modal}"></th:block>
+</header>
+<th:block th:replace="~{fragments/header :: bottom-navbar}"></th:block>
 <div class="news-list">
     <div class="news-header">
         <div class="dp_admin">
+            <div class="hd">
+            <svg class="svg-inline--fa fa-newspaper" aria-hidden="true" focusable="false" data-prefix="far" data-icon="newspaper" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path class="" fill="currentColor" d="M168 80c-13.3 0-24 10.7-24 24l0 304c0 8.4-1.4 16.5-4.1 24L440 432c13.3 0 24-10.7 24-24l0-304c0-13.3-10.7-24-24-24L168 80zM72 480c-39.8 0-72-32.2-72-72L0 112C0 98.7 10.7 88 24 88s24 10.7 24 24l0 296c0 13.3 10.7 24 24 24s24-10.7 24-24l0-304c0-39.8 32.2-72 72-72l272 0c39.8 0 72 32.2 72 72l0 304c0 39.8-32.2 72-72 72L72 480zM176 136c0-13.3 10.7-24 24-24l96 0c13.3 0 24 10.7 24 24l0 80c0 13.3-10.7 24-24 24l-96 0c-13.3 0-24-10.7-24-24l0-80zm200-24l32 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-32 0c-13.3 0-24-10.7-24-24s10.7-24 24-24zm0 80l32 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-32 0c-13.3 0-24-10.7-24-24s10.7-24 24-24zM200 272l208 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-208 0c-13.3 0-24-10.7-24-24s10.7-24 24-24zm0 80l208 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-208 0c-13.3 0-24-10.7-24-24s10.7-24 24-24z"></path></svg>
             <h1>Новини</h1>
+            </div>
             <div th:if="${isAdmin}">
-                <a th:href="@{/admin/news/create}" class="btn btn-primary">Створити</a>
+                <a th:href="@{/admin/news/create}" class="btns">Створити</a>
             </div>
         </div>
         <div class="filters">
@@ -50,7 +57,7 @@
         <div class="pagination-items">
             <a th:if="${currentPage > 0}"
                th:href="@{/news(page=${currentPage - 1}, category=${selectedCategory != null ? selectedCategory.id : ''})}"
-               class="arrow">
+               class="arr_bt">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <path d="M15 18l-6-6 6-6"/>
                 </svg>
@@ -64,7 +71,7 @@
 
             <a th:if="${currentPage < totalPages - 1}"
                th:href="@{/news(page=${currentPage + 1}, category=${selectedCategory != null ? selectedCategory.id : ''})}"
-               class="arrow">
+               class="arr_bt">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <path d="M9 18l6-6-6-6"/>
                 </svg>
@@ -123,5 +130,6 @@
     document.addEventListener('DOMContentLoaded', initCustomSelects);
 
 </SCRIPT>
+<div th:insert="~{fragments/header :: page-scripts}"></div>
 </body>
 </html>

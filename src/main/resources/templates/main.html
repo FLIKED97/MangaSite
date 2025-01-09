@@ -90,7 +90,7 @@
             <h3 class="card-titles">
                 <a th:href="@{/comics/sections(section='current')}">Зараз читають →</a>
             </h3>
-            <select id="daysSelect" onchange="changeDays(this.value)">
+            <select class="sl_bt" id="daysSelect" onchange="changeDays(this.value)">
                 <option value="1" th:selected="${selectedDays == 1}">За добу</option>
                 <option value="7" th:selected="${selectedDays == 7}">За тиждень</option>
                 <option value="31" th:selected="${selectedDays == 31}">За місяць</option>

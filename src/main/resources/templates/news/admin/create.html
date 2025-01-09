@@ -4,8 +4,19 @@
 <head>
     <title>Створення новини</title>
     <link rel="stylesheet" th:href="@{/css/create-news-style.css}">
+    <link rel="stylesheet" href="/css/main.css">
+    <th:block th:replace="~{fragments/header :: head-styles}"></th:block>
 </head>
 <body>
+
+<header>
+    <!-- Include top navbar fragment -->
+    <th:block th:replace="~{fragments/header :: top-navbar}"></th:block>
+
+    <!-- Include search modal fragment -->
+    <th:block th:replace="~{fragments/header :: search-modal}"></th:block>
+</header>
+<th:block th:replace="~{fragments/header :: bottom-navbar}"></th:block>
 <div class="main_cl">
     <h1>Створення новини</h1>
     <form th:action="@{/admin/news/create}" method="post">
@@ -20,8 +31,9 @@
             <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
         </select>
 
-        <button type="submit">Створити</button>
+        <button class="bt_fr" type="submit">Створити</button>
     </form>
 </div>
+<div th:insert="~{fragments/header :: page-scripts}"></div>
 </body>
 </html>

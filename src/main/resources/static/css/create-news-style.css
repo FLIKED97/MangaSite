@@ -6,45 +6,46 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, Open Sans, Roboto, Helvetica Neue, Helvetica, sans-serif !important;
 }
 .container {
-    width: 900px;
-    margin: 0 auto;
-    background-color: #1c1c1c;
-    padding: 20px 40px;
+    width: 900px!important;
+    margin: 0 auto!important;
+    background-color: #1c1c1c!important;
+    padding: 20px 40px!important;
 }
 
 h1 {
-    margin: 0 0 20px;
+    margin: 0 0 20px!important;
 }
 
 form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+    display: flex!important;
+    flex-direction: column!important;
+    gap: 15px!important;
 }
 
 label {
-    font-size: 14px;
+    font-size: 14px !important;
+    font-weight: 600;
 }
 
 input[type="text"],
 textarea,
 select {
-    padding: 10px;
-    border: 1px solid rgba(80, 80, 80, .5);
-    border-radius: 5px;
-    background-color: #2C2C2E;
-    color: #BFBFBF;
-    font-family: inherit;
+    padding: 10px !important;
+    border: 1px solid rgba(80, 80, 80, .5) !important;
+    border-radius: 5px!important;
+    background-color: #2C2C2E!important;
+    color: #BFBFBF!important;
+    font-family: inherit !important;
+    font-size: 16px !important;
 }
 
 textarea {
-    min-height: 200px;
-    resize: vertical;
+    min-height: 200px!important;
+    resize: vertical!important;
 }
-
-button {
+.bt_fr {
     background-color: #ef6c00;
-    color: black;
+    color: black !important;
     padding: 8px 16px;
     border: none;
     border-radius: 5px;
@@ -52,18 +53,24 @@ button {
     cursor: pointer;
     align-self: flex-start;
     transition: background-color 0.3s, transform 0.2s;
+    width: auto !important;
 }
 
-button:hover {
+.bt_fr:hover {
     background-color: #ff7d00;
     transform: scale(1.05);
 }
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+}
 .main_cl{
-    display: flex;
-    flex-direction: column;
-    width: 900px;
-    margin: 0 auto;
+    display: flex!important;
+    flex-direction: column!important;
+    width: 900px!important;
+    margin: 20px auto;
     background-color: #1c1c1c;
     padding: 30px 20px;
-    border-radius: 10px;
+    border-radius: 5px;
 }
