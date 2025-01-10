@@ -58,6 +58,7 @@
     background-color: #f77519;
     color: #ffffff !important;
     border: none; /* Видалення обводки */
+    padding: 3px !important;
     composes: font-bold transition-bg-color;
 }
 .dropdown-item.btn.btn-warning.text-dark:hover {
