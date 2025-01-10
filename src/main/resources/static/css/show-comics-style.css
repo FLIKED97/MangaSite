@@ -1,0 +1,15 @@
+.mn_sec{
+    display: flex;
+    flex-direction: column;
+    width: 902px;
+    margin: 20px auto;
+    background-color: #1c1c1c;
+    border-radius: 5px;
+}
+body {
+    margin: 0;
+    background-color: #0A0A0A !important;
+    color: #BFBFBF;
+    line-height: 1.4 !important;
+    font-family: -apple-system, BlinkMacSystemFont, Open Sans, Roboto, Helvetica Neue, Helvetica, sans-serif !important;
+}
