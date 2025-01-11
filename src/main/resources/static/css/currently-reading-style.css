@@ -132,7 +132,7 @@ h3 {
     border-radius: 10px;
 }
 .comics-card {
-    border-radius: 12px;
+    /*border-radius: 12px;*/
     border: none;
     overflow: hidden;
     transition: transform 0.2s;
@@ -140,7 +140,7 @@ h3 {
     height: 100%;
 }
 .card-title-comics {
-    border-radius: 12px;
+    /*border-radius: 12px;*/
     hyphens: auto;
     line-height: 18px;
     font-weight: 600;
