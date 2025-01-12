@@ -149,29 +149,6 @@ public class ComicsController {
 
         return "redirect:/comics/" + comicId;
     }
-
-//    @GetMapping("/newShow")
-////    public String listComics(
-////            @RequestParam(name = "sortBy", required = false, defaultValue = "rating") String sortBy,
-////            @RequestParam(name = "search", required = false) String search,
-////            Model model
-////    ) {
-////        List<Comics> comics = comicsService.getComicsSortedBy(sortBy);
-////
-////        // Фільтруємо за пошуком якщо він є
-////        if (search != null && !search.trim().isEmpty()) {
-////            comics = comics.stream()
-////                    .filter(comic -> comic.getTitle().toLowerCase()
-////                            .contains(search.toLowerCase().trim()))
-////                    .collect(Collectors.toList());
-////        }
-////
-////        model.addAttribute("comics", comics);
-////        model.addAttribute("sortBy", sortBy);
-////        model.addAttribute("search", search);
-////
-////        return "comics/newShow";
-////    }
 @GetMapping("/newShow")
 public String listComics(@RequestParam(name = "sortBy", required = false, defaultValue = "rating") String sortBy,
                          Model model) {

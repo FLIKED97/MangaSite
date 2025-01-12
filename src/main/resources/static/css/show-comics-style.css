@@ -30,29 +30,6 @@ padding: 8px !important;
     justify-content: space-between;
     align-items: center;
 }
-
-.ct_bt {
-    height: 26px;
-    line-height: 24px;
-    font-size: 13px;
-    padding: 0 10px;
-    font-weight: 400;
-    background: #2C2C30;
-    position: relative;
-    z-index: 3;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    column-gap: 8px;
-    min-width: 1px;
-    flex-shrink: 0;
-    border-radius: 6px;
-    -webkit-tap-highlight-color: transparent;
-    color: #BFBFBF;
-    cursor: pointer;
-    user-select: none;
-    transition: color .2s ease, border .2s ease, opacity .2s ease, transform .2s ease, filter .2s ease;
-}
 .cm_header_wrapper {
     background: inherit;
 }
@@ -86,4 +63,53 @@ padding: 8px !important;
 .ct_search:focus {
     outline: none;
     box-shadow: 0 0 0 2px rgba(255,255,255,0.1);
+}
+.ct_bt {
+    height: 26px;
+    line-height: 24px;
+    font-size: 13px;
+    font-weight: 400;
+    background: #2C2C30 !important;
+    border-radius: 6px; /* Задає заокруглення країв */
+    border: 1px solid #2C2C30 !important; /* Створює рамку з заданим кольором */
+    color: #BFBFBF !important; /* Колір тексту */
+}
+.st-wr {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    color: #BFBFBF !important;
+    padding: 0 10px;
+    background: #2C2C30 !important;
+    z-index: 3;
+    justify-content: center;
+    /*column-gap: 8px;*/
+    min-width: 1px;
+    flex-shrink: 0;
+    border-radius: 6px !important;
+    -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
+    user-select: none;
+    transition: color .2s ease, border .2s ease, opacity .2s ease, transform .2s ease, filter .2s ease;
+}
+
+.st-wr .svg-icon {
+    width: 14.63px;
+    height: 13px;
+    color: #BFBFBF !important;
+}
+/* При наведенні миші */
+.st-wr select:hover {
+    border-color: #888;
+}
+
+/* Для мобільних пристроїв */
+@media (max-width: 576px) {
+    .st-wr {
+        width: 100%;
+    }
+
+    .st-wr select {
+        width: 100%;
+    }
 }
