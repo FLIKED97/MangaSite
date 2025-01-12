@@ -1,0 +1,48 @@
+.custom-btn {
+    background: none;
+    border: none;
+    color: inherit;
+    position: relative;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 5px 15px; /* Зменшений верхній і нижній відступ */
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.custom-btn:hover {
+    color: #cdcdd4;
+    text-decoration: none; /* Забезпечує, що лінія не з'являється при наведенні */
+}
+
+.custom-btn:focus {
+    outline: none;
+    color: #cdcdd4;
+}
+
+.custom-btn:after {
+    content: '';
+    position: absolute;
+    bottom: -2px; /* Підняти підкреслення ближче до кнопки */
+    left: 50%;
+    width: 0;
+    height: 3px;
+    background-color: #ffc107;
+    border-radius: 2px;
+    transition: width 0.3s ease, left 0.3s ease;
+}
+
+.custom-btn:hover:after,
+.custom-btn:focus:after {
+    width: 100%;
+    left: 0;
+}
+
+.custom-btn.active {
+    color: #cdcdd4;
+}
+
+.custom-btn.active:after {
+    width: 100%;
+    left: 0;
+}

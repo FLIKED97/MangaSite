@@ -48,4 +48,9 @@ public interface ComicsRepository extends JpaRepository<Comics, Integer> {
             "JOIN c.tabs t " +
             "WHERE t.person.id = :personId")
     List<Comics> findAllByPersonId(@Param("personId") int personId);
+
+    @Query("SELECT c FROM Comics c WHERE LOWER(c.title) LIKE LOWER(CONCAT('%', :search, '%'))")
+    Page<Comics> findByTitleContainingIgnoreCase(@Param("search") String search, Pageable pageable);
+
+
 }

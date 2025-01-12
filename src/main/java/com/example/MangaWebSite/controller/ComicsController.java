@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/comics")
@@ -149,23 +150,38 @@ public class ComicsController {
         return "redirect:/comics/" + comicId;
     }
 
-    @GetMapping("/newShow")
-    public String listComics(@RequestParam(name = "sortBy", required = false, defaultValue = "rating") String sortBy,
-                             Model model,
-                             @RequestParam(name = "genres", required = false) List<Integer> genres) {
-        List<Comics> comics;
-        if (genres != null && !genres.isEmpty()) {
-            comics = comicsService.getComicsByGenresAndSort(genres, sortBy); // Фільтрація за жанрами
-        } else {
-            comics = comicsService.getComicsSortedBy(sortBy); // Без фільтрації
-        }
+//    @GetMapping("/newShow")
+////    public String listComics(
+////            @RequestParam(name = "sortBy", required = false, defaultValue = "rating") String sortBy,
+////            @RequestParam(name = "search", required = false) String search,
+////            Model model
+////    ) {
+////        List<Comics> comics = comicsService.getComicsSortedBy(sortBy);
+////
+////        // Фільтруємо за пошуком якщо він є
+////        if (search != null && !search.trim().isEmpty()) {
+////            comics = comics.stream()
+////                    .filter(comic -> comic.getTitle().toLowerCase()
+////                            .contains(search.toLowerCase().trim()))
+////                    .collect(Collectors.toList());
+////        }
+////
+////        model.addAttribute("comics", comics);
+////        model.addAttribute("sortBy", sortBy);
+////        model.addAttribute("search", search);
+////
+////        return "comics/newShow";
+////    }
+@GetMapping("/newShow")
+public String listComics(@RequestParam(name = "sortBy", required = false, defaultValue = "rating") String sortBy,
+                         Model model) {
+    List<Comics> comics = comicsService.getComicsSortedBy(sortBy);
 
-        model.addAttribute("comics", comics);
-        model.addAttribute("sortBy", sortBy);
-        model.addAttribute("allGenres", genreService.findAll());
-        model.addAttribute("selectedGenres", genres != null ? genres : new ArrayList<>()); // Для відображення вибраних
-        return "comics/newShow";
-    }
+    model.addAttribute("comics", comics);
+    model.addAttribute("sortBy", sortBy);
+
+    return "comics/newShow";
+}
 
     @GetMapping("/sections")
     public String getComicsBySection(

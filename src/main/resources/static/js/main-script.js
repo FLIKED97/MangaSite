@@ -42,7 +42,7 @@ function loadMoreContent() {
                          class=""
                          style="width: 80px; height: 112px; object-fit: cover;">
                     <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0) 30%);"></div>
-                    <span class="image-label" style="position: absolute; top: 4px; left: 50%; transform: translateX(-50%); color: white; font-size: 12px; padding: 2px 6px;">Манга</span>
+                    <span class="image-label" style="position: absolute; top: 4px; left: 50%; transform: translateX(-50%); color: white; font-size: 12px; padding: 2px 6px;" th:text="${item.comics.comicsTypeDisplay}">Манга</span>
                     <div class="z3_c">
                         <h6>${item.comics.title}</h6>
                         <small>Глава ${item.chapterNumber}</small>
@@ -58,7 +58,7 @@ function loadMoreContent() {
                          class=""
                          style="width: 80px; height: 112px; object-fit: cover;">
                     <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0) 30%);"></div>
-                    <span class="image-label" style="position: absolute; top: 4px; left: 50%; transform: translateX(-50%); color: white; font-size: 12px; padding: 2px 6px;">Манга</span>
+                    <span class="image-label" style="position: absolute; top: 4px; left: 50%; transform: translateX(-50%); color: white; font-size: 12px; padding: 2px 6px;" th:text="${item.comics.comicsTypeDisplay}">Манга</span>
 
                     <div class="z3_c">
                         <h6>${item.comics.title}</h6>
@@ -286,7 +286,7 @@ function updateComicsSection(sectionId, comics) {
             <img src="/comics/image/${comic.id}" alt="Comic Cover" class="images rounded me-3" style="width: 60px; height: 90px;">
             <div>
                 <div class="mb-1 tg_si">${comic.title}</div>
-                <span class="mb-0 small ts_f4">Манга</span>
+                <span class="mb-0 small ts_f4">${comic.comicsTypeDisplay}</span>
             </div>
         `;
         container.appendChild(comicDiv);

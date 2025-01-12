@@ -21,6 +21,13 @@ public class ComicsSerializer extends JsonSerializer<Comics> {
         jsonGenerator.writeStringField("description", comics.getDescription());
         jsonGenerator.writeStringField("status", comics.getStatus());
 
+        // Додаємо серіалізацію типу коміксу
+        if (comics.getComicsType() != null) {
+            jsonGenerator.writeStringField("comicsType", comics.getComicsType().name());
+            jsonGenerator.writeStringField("comicsTypeDisplay", comics.getComicsType().getDisplayName());
+        }
+
+
         // Серіалізуємо зображення
         if (comics.getCoverImage() != null) {
             jsonGenerator.writeStringField("coverImageBase64",
@@ -44,6 +51,10 @@ public class ComicsSerializer extends JsonSerializer<Comics> {
         // Додаткові поля
         jsonGenerator.writeNumberField("viewCount", comics.getViewCount());
         jsonGenerator.writeNumberField("popularityRating", comics.getPopularityRating());
+
+        // Додаємо середній рейтинг
+        double averageRating = comics.getAverageRating();
+        jsonGenerator.writeNumberField("averageRating", averageRating);
 
         jsonGenerator.writeEndObject();
     }

@@ -64,15 +64,15 @@ public class ComicsService {
     }
 
     public List<Comics> getComicsSortedBy(String sortBy) {
-        List<Comics> comicsList = comicsRepository.findAll();
-
-        if ("rating".equals(sortBy)) {
-            comicsList.sort((c1, c2) -> Double.compare(c2.getAverageRating(), c1.getAverageRating()));
-        } else if ("views".equals(sortBy)) {
-            comicsList.sort(Comparator.comparingInt(Comics::getViewCount).reversed());
+        List<Comics> comics = comicsRepository.findAll();
+        if ("views".equals(sortBy)) {
+            comics.sort((c1, c2) -> Integer.compare(c2.getViewCount(), c1.getViewCount()));
+        } else {
+            comics.sort((c1, c2) -> Double.compare(c2.getAverageRating(), c1.getAverageRating()));
         }
-        return comicsList;
+        return comics;
     }
+
     private double calculateAverageRating(Comics comics) {
         List<Rating> ratings = comics.getRatings();
         return ratings.isEmpty() ? 0 : ratings.stream().mapToInt(Rating::getRating).average().orElse(0);
@@ -147,4 +147,11 @@ public class ComicsService {
     public List<Comics> findComicsByPersonId(int id) {
         return comicsRepository.findAllByPersonId(id);
     }
+    @Transactional
+    public Page<Comics> searchComics(String search, String sortBy, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy.equals("views") ? "viewCount" : "popularityRating").descending());
+        return comicsRepository.findByTitleContainingIgnoreCase(search, pageable);
+    }
+
+
 }

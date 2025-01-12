@@ -87,6 +87,17 @@ public class Comics {
     @JsonIgnore
     @OneToMany(mappedBy = "comics", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Rating> ratings;
+    @Column(name = "comics_type")
+    @Enumerated(EnumType.STRING)
+    private ComicsType comicsType;
+
+    public ComicsType getComicsType() {
+        return comicsType;
+    }
+
+    public void setComicsType(ComicsType comicsType) {
+        this.comicsType = comicsType;
+    }
 
     // Метод для обчислення середньої оцінки
     public double getAverageRating() {
