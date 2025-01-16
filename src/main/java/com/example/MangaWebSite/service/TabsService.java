@@ -1,6 +1,7 @@
 package com.example.MangaWebSite.service;
 
 import com.example.MangaWebSite.models.Comics;
+import com.example.MangaWebSite.models.Person;
 import com.example.MangaWebSite.models.Tabs;
 import com.example.MangaWebSite.repository.TabsRepository;
 import com.example.MangaWebSite.security.PersonDetails;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -55,5 +57,14 @@ public class TabsService {
 
     public List<Tabs> findTabsByPersonId(int id) {
         return tabsRepository.findAllByPersonId(id);
+    }
+
+    public List<Integer> getBookmarkedComicsIds(Person person) {
+        List<Tabs> userTabs = tabsRepository.findByPerson(person);
+        return userTabs.stream()
+                .flatMap(tab -> tab.getComics().stream())
+                .map(Comics::getId)
+                .distinct()
+                .collect(Collectors.toList());
     }
 }

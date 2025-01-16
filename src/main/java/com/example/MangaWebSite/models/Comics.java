@@ -73,6 +73,7 @@ public class Comics {
     private List<ReadingProgress> readingProgress;
 
     @JsonIgnore
+    @JsonIgnoreProperties({"person"}) // щоб уникнути циклічних посилань
     @ManyToMany(mappedBy = "comics")
     private List<Tabs> tabs;  // Комікси можуть бути в багатьох закладках
     @Column(name = "view_count", nullable = false)

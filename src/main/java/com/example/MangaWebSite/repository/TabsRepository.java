@@ -12,4 +12,5 @@ import java.util.List;
 public interface TabsRepository extends JpaRepository<Tabs, Integer> {
     List<Tabs> findAllByPersonId(int person_id);
 
+    List<Tabs> findByPerson(Person person);
 }

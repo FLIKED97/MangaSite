@@ -154,6 +154,4 @@ public class ComicsService {
         Pageable pageable = PageRequest.of(page, size);
         return comicsRepository.findByTitleContainingIgnoreCaseAndSort(search, sortBy, pageable);
     }
-
-
 }
