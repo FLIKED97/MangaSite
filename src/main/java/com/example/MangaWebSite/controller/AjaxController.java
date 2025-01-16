@@ -21,9 +21,7 @@ import java.util.List;
 @RequestMapping("/comics/api")
 @AllArgsConstructor
 public class AjaxController {
-
     private final ComicsService comicsService;
-    private final ComicsRepository comicsRepository;
 
     @GetMapping("/search")
     @ResponseBody
@@ -35,6 +33,4 @@ public class AjaxController {
     ) {
         return comicsService.searchComics(search, sortBy, page, size);
     }
-
-
 }

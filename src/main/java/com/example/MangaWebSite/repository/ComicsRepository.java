@@ -49,8 +49,15 @@ public interface ComicsRepository extends JpaRepository<Comics, Integer> {
             "WHERE t.person.id = :personId")
     List<Comics> findAllByPersonId(@Param("personId") int personId);
 
-    @Query("SELECT c FROM Comics c WHERE LOWER(c.title) LIKE LOWER(CONCAT('%', :search, '%'))")
-    Page<Comics> findByTitleContainingIgnoreCase(@Param("search") String search, Pageable pageable);
-
-
+    @Query("SELECT c FROM Comics c LEFT JOIN c.ratings r " +
+            "WHERE LOWER(c.title) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "GROUP BY c " +
+            "ORDER BY CASE WHEN :sortBy = 'rating' THEN AVG(COALESCE(r.rating, 0)) " +
+            "WHEN :sortBy = 'views' THEN c.viewCount " +
+            "ELSE c.popularityRating END DESC")
+    Page<Comics> findByTitleContainingIgnoreCaseAndSort(
+            @Param("search") String search,
+            @Param("sortBy") String sortBy,
+            Pageable pageable
+    );
 }

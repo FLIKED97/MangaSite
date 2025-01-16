@@ -6,6 +6,7 @@ import com.example.MangaWebSite.repository.GenreRepository;
 import com.example.MangaWebSite.repository.ReadingProgressRepository;
 import lombok.AllArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,7 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 @Transactional
+@Slf4j
 public class ComicsService {
 
     private final ComicsRepository comicsRepository;
@@ -147,10 +149,10 @@ public class ComicsService {
     public List<Comics> findComicsByPersonId(int id) {
         return comicsRepository.findAllByPersonId(id);
     }
-    @Transactional
+    @Transactional(readOnly = true)
     public Page<Comics> searchComics(String search, String sortBy, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy.equals("views") ? "viewCount" : "popularityRating").descending());
-        return comicsRepository.findByTitleContainingIgnoreCase(search, pageable);
+        Pageable pageable = PageRequest.of(page, size);
+        return comicsRepository.findByTitleContainingIgnoreCaseAndSort(search, sortBy, pageable);
     }
 
 

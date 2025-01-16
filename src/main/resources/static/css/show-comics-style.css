@@ -74,6 +74,14 @@ padding: 8px !important;
     border: 1px solid #2C2C30 !important; /* Створює рамку з заданим кольором */
     color: #BFBFBF !important; /* Колір тексту */
 }
+
+.ct_bt:hover,
+.ct_bt:active,
+.ct_bt:focus {
+    border: 1px solid #2C2C30 !important; /* Той самий колір рамки для всіх станів */
+    outline: none; /* Видаляє стандартний контур при фокусі */
+}
+
 .st-wr {
     position: relative;
     display: inline-flex;
