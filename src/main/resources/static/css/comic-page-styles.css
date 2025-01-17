@@ -1,0 +1,239 @@
+/* Main container styles */
+.mn_sec {
+    display: flex;
+    flex-direction: column;
+    width: 902px;
+    margin: 20px auto;
+    background-color: #1c1c1c;
+    border-radius: 16px !important;
+    padding: 20px;
+}
+
+/* Comic title section */
+.comic-title {
+    font-size: 24px;
+    color: #BFBFBF;
+    margin-bottom: 20px;
+}
+
+/* Comic image container */
+.comic-image {
+    width: 100%;
+    margin-bottom: 24px;
+}
+
+.comic-image img {
+    width: 100%;
+    border-radius: 8px;
+}
+
+/* Rating section */
+.rating-section {
+    margin-bottom: 24px;
+}
+
+.star {
+    font-size: 2rem;
+    color: #ccc;
+    cursor: pointer;
+    transition: color 0.2s ease-in-out;
+}
+
+.star.selected,
+.star:hover {
+    color: #ffc107;
+}
+
+/* Bookmarks section */
+.bookmarks-section {
+    margin-bottom: 24px;
+}
+
+.bookmarks-section select {
+    width: 100%;
+    padding: 8px 12px;
+    background-color: #2C2C30;
+    border: none;
+    border-radius: 6px;
+    color: #BFBFBF;
+}
+
+/* Tabs section */
+.custom-tabs {
+    border-bottom: 1px solid #2C2C30;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 16px;
+}
+
+.custom-btn {
+    background: none;
+    border: none;
+    color: #BFBFBF;
+    position: relative;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 5px 15px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.custom-btn:hover {
+    color: #cdcdd4;
+    text-decoration: none;
+}
+
+.custom-btn:focus {
+    outline: none;
+    color: #cdcdd4;
+}
+
+.custom-btn:after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    width: 0;
+    height: 3px;
+    background-color: #ffc107;
+    border-radius: 2px;
+    transition: width 0.3s ease, left 0.3s ease;
+}
+
+.custom-btn:hover:after,
+.custom-btn:focus:after,
+.custom-btn.active:after {
+    width: 100%;
+    left: 0;
+}
+
+.custom-btn.active {
+    color: #cdcdd4;
+}
+
+/* Tab content */
+.tab-content {
+    background-color: #1c1c1c;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+/* Information tab */
+.info-section strong {
+    color: #cdcdd4;
+}
+
+.genre-list a {
+    display: block;
+    padding: 8px 12px;
+    background-color: #2C2C30;
+    border-radius: 6px;
+    color: #BFBFBF;
+    margin-bottom: 8px;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.genre-list a:hover {
+    background-color: #363639;
+}
+
+/* Chapters tab */
+.chapters-list {
+    list-style: none;
+    padding: 0;
+}
+
+.chapters-list li {
+    margin-bottom: 8px;
+}
+
+.chapters-list a {
+    display: block;
+    padding: 12px;
+    background-color: #2C2C30;
+    border-radius: 6px;
+    color: #BFBFBF;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.chapters-list a:hover {
+    background-color: #363639;
+}
+
+.add-chapter-btn {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #2C2C30;
+    color: #BFBFBF;
+    border-radius: 6px;
+    text-decoration: none;
+    margin-top: 20px;
+    transition: background-color 0.2s;
+}
+
+.add-chapter-btn:hover {
+    background-color: #363639;
+}
+
+/* Comments tab */
+.comment-form textarea {
+    width: 100%;
+    padding: 12px;
+    background-color: #2C2C30;
+    border: none;
+    border-radius: 6px;
+    color: #BFBFBF;
+    margin-bottom: 12px;
+    min-height: 100px;
+    resize: vertical;
+}
+
+.comment-form button {
+    padding: 8px 16px;
+    background-color: #2C2C30;
+    color: #BFBFBF;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.comment-form button:hover {
+    background-color: #363639;
+}
+
+.comments-list {
+    margin-top: 24px;
+}
+
+.comment-item {
+    background-color: #2C2C30;
+    border-radius: 6px;
+    padding: 16px;
+    margin-bottom: 12px;
+}
+
+.comment-author {
+    font-weight: 500;
+    color: #cdcdd4;
+    margin-bottom: 8px;
+}
+
+.comment-text {
+    margin-bottom: 8px;
+}
+
+.comment-date {
+    font-size: 12px;
+    color: #808080;
+}
