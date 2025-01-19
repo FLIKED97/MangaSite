@@ -1,239 +1,232 @@
-/* Main container styles */
+/* Основний контейнер */
 .mn_sec {
     display: flex;
     flex-direction: column;
     width: 902px;
     margin: 20px auto;
     background-color: #1c1c1c;
-    border-radius: 16px !important;
-    padding: 20px;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+}
+body{
+    background: #0A0A0A !important;
+    color: #BFBFBF !important;
+}
+/* Верхня секція з зображенням та інформацією */
+.top-section {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 32px;
+    margin-bottom: 32px;
 }
 
-/* Comic title section */
-.comic-title {
+/* Заголовок */
+.tt_cm {
     font-size: 24px;
-    color: #BFBFBF;
-    margin-bottom: 20px;
-}
-
-/* Comic image container */
-.comic-image {
-    width: 100%;
+    line-height: 1.2;
+    font-weight: 600;
     margin-bottom: 24px;
+    color: #FFFFFF;
 }
 
-.comic-image img {
+/* Контейнер зображення */
+.fr_cm {
     width: 100%;
-    border-radius: 8px;
+    max-width: 260px;
+    height: 364px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease;
 }
 
-/* Rating section */
+.fr_cm:hover {
+    transform: translateY(-4px);
+}
+.fr_cm img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Секція рейтингу */
 .rating-section {
+    background-color: #242424;
+    padding: 16px;
+    border-radius: 12px;
     margin-bottom: 24px;
 }
 
 .star {
-    font-size: 2rem;
-    color: #ccc;
+    font-size: 24px;
     cursor: pointer;
-    transition: color 0.2s ease-in-out;
+    transition: color 0.2s ease;
+    color: #4a4a4a;
+    margin-right: 4px;
 }
 
-.star.selected,
-.star:hover {
-    color: #ffc107;
+.star:hover,
+.star.active {
+    color: #ffd700;
 }
 
-/* Bookmarks section */
-.bookmarks-section {
+/* Секція закладок */
+.mn_sec .tab-pane {
+    background-color: #242424;
+    padding: 16px;
+    border-radius: 12px;
     margin-bottom: 24px;
 }
 
-.bookmarks-section select {
+.form-select {
     width: 100%;
-    padding: 8px 12px;
+    padding: 12px;
     background-color: #2C2C30;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     color: #BFBFBF;
-}
-
-/* Tabs section */
-.custom-tabs {
-    border-bottom: 1px solid #2C2C30;
-    margin-bottom: 20px;
-    display: flex;
-    gap: 16px;
-}
-
-.custom-btn {
-    background: none;
-    border: none;
-    color: #BFBFBF;
-    position: relative;
-    font-size: 16px;
-    font-weight: 500;
-    padding: 5px 15px;
     cursor: pointer;
-    transition: color 0.2s;
+    transition: background-color 0.2s ease;
 }
 
-.custom-btn:hover {
-    color: #cdcdd4;
-    text-decoration: none;
+.form-select:hover {
+    background-color: #363639;
 }
 
-.custom-btn:focus {
-    outline: none;
-    color: #cdcdd4;
+/* Навігаційні вкладки */
+.nav-tabs {
+    display: flex;
+    gap: 8px;
+    border-bottom: solid 1px rgba(84, 84, 88, 0.65) !important;
+    padding-bottom: 2px;
+    margin-bottom: 24px;
 }
 
-.custom-btn:after {
+.nav-link.custom-btn {
+    color: #BFBFBF;
+    background: transparent;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px 8px 0 0;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.nav-link.custom-btn:hover {
+    background-color: #2C2C30;
+}
+
+.nav-link.custom-btn.active {
+    background-color: #2C2C30;
+}
+
+.nav-link.custom-btn.active::after {
     content: '';
     position: absolute;
     bottom: -2px;
-    left: 50%;
-    width: 0;
+    left: 0;
+    width: 100%;
     height: 3px;
     background-color: #ffc107;
     border-radius: 2px;
-    transition: width 0.3s ease, left 0.3s ease;
+}
+.nav-tabs .nav-item.show .nav-link,
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-link:hover {
+    color: #BFBFBF !important;
+    background-color: transparent !important;
+    border-color: #1c1c1c !important;
+}
+/* Контент вкладок */
+.mn_sec .tab-content {
+    background-color: #242424;
+    border-radius: 12px;
+    padding: 24px;
 }
 
-.custom-btn:hover:after,
-.custom-btn:focus:after,
-.custom-btn.active:after {
-    width: 100%;
-    left: 0;
-}
-
-.custom-btn.active {
-    color: #cdcdd4;
-}
-
-/* Tab content */
-.tab-content {
-    background-color: #1c1c1c;
-    border-radius: 8px;
-    padding: 20px;
-}
-
-.tab-pane {
-    display: none;
-}
-
-.tab-pane.active {
-    display: block;
-}
-
-/* Information tab */
-.info-section strong {
-    color: #cdcdd4;
-}
-
-.genre-list a {
-    display: block;
-    padding: 8px 12px;
+/* Список глав */
+.list-group-item {
     background-color: #2C2C30;
-    border-radius: 6px;
-    color: #BFBFBF;
+    border: none;
     margin-bottom: 8px;
-    text-decoration: none;
-    transition: background-color 0.2s;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
 }
 
-.genre-list a:hover {
+.list-group-item:hover {
     background-color: #363639;
 }
 
-/* Chapters tab */
-.chapters-list {
-    list-style: none;
+.list-group-item a {
+    color: #BFBFBF;
+    text-decoration: none;
+    display: block;
+    padding: 12px 16px;
+}
+
+/* Секція коментарів */
+.form-control {
+    background-color: #2C2C30;
+    border: none;
+    color: #BFBFBF;
+    border-radius: 8px;
+    padding: 12px;
+    transition: background-color 0.2s ease;
+}
+
+/*.form-control:focus {*/
+/*    background-color: #363639;*/
+/*    outline: none;*/
+/*    box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.2);*/
+/*}*/
+
+.btn-pr {
+    background-color: #4a9eff;
+    border: none;
+    padding: 12px 24px !important;
+    border-radius: 8px;
+    color: white;
+    transition: background-color 0.2s ease;
+}
+
+.btn-pr:hover {
+    background-color: #3b8be6;
+}
+/*.navs-it{*/
+/*    padding: 0 !important;*/
+/*}*/
+#comicTabs .nav-item {
     padding: 0;
 }
+/* Адаптивний дизайн */
+@media (max-width: 992px) {
+    .mn_sec {
+        width: 95%;
+        padding: 24px;
+    }
 
-.chapters-list li {
-    margin-bottom: 8px;
+    .top-section {
+        grid-template-columns: 1fr;
+    }
+
+    .fr_cm {
+        margin: 0 auto;
+    }
 }
 
-.chapters-list a {
-    display: block;
-    padding: 12px;
-    background-color: #2C2C30;
-    border-radius: 6px;
-    color: #BFBFBF;
-    text-decoration: none;
-    transition: background-color 0.2s;
-}
+@media (max-width: 576px) {
+    .mn_sec {
+        padding: 16px;
+    }
 
-.chapters-list a:hover {
-    background-color: #363639;
-}
+    .nav-link.custom-btn {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
 
-.add-chapter-btn {
-    display: inline-block;
-    padding: 8px 16px;
-    background-color: #2C2C30;
-    color: #BFBFBF;
-    border-radius: 6px;
-    text-decoration: none;
-    margin-top: 20px;
-    transition: background-color 0.2s;
-}
-
-.add-chapter-btn:hover {
-    background-color: #363639;
-}
-
-/* Comments tab */
-.comment-form textarea {
-    width: 100%;
-    padding: 12px;
-    background-color: #2C2C30;
-    border: none;
-    border-radius: 6px;
-    color: #BFBFBF;
-    margin-bottom: 12px;
-    min-height: 100px;
-    resize: vertical;
-}
-
-.comment-form button {
-    padding: 8px 16px;
-    background-color: #2C2C30;
-    color: #BFBFBF;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.comment-form button:hover {
-    background-color: #363639;
-}
-
-.comments-list {
-    margin-top: 24px;
-}
-
-.comment-item {
-    background-color: #2C2C30;
-    border-radius: 6px;
-    padding: 16px;
-    margin-bottom: 12px;
-}
-
-.comment-author {
-    font-weight: 500;
-    color: #cdcdd4;
-    margin-bottom: 8px;
-}
-
-.comment-text {
-    margin-bottom: 8px;
-}
-
-.comment-date {
-    font-size: 12px;
-    color: #808080;
+    .tt_cm {
+        font-size: 24px;
+    }
 }
