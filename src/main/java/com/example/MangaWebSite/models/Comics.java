@@ -10,6 +10,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
@@ -28,6 +29,9 @@ public class Comics {
 
     @Column(name = "title", nullable = false)
     private String title;
+
+    @Column(name = "original_title")
+    private String originalTitle;
 
     @Column(name = "author", nullable = false)
     private String author;
@@ -58,6 +62,10 @@ public class Comics {
     @Column(name = "created_at", nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private LocalDateTime createdAt;
+
+    @Column(name = "published_at")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate publishedAt;
 
 
     @JsonIgnoreProperties({"comics", "comicPages"})
@@ -127,5 +135,8 @@ public class Comics {
 
     public int getTotalPagesForChapter(Chapter chapter) {
         return chapter.getComicPages().size();
+    }
+    public LocalDate getPublishedAt() {
+        return publishedAt;
     }
 }

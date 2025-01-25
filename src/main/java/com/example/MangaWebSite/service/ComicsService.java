@@ -15,8 +15,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -153,5 +156,16 @@ public class ComicsService {
     public Page<Comics> searchComics(String search, String sortBy, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return comicsRepository.findByTitleContainingIgnoreCaseAndSort(search, sortBy, pageable);
+    }
+    public List<Comics> findSimilarComics(Comics comic, int limit) {
+        return comicsRepository.findAll().stream()
+                .filter(Objects::nonNull)
+                .map(c -> (Comics) c)
+                .filter(c -> c.getId() != comic.getId())
+                .filter(c -> !Collections.disjoint(c.getGenres(), comic.getGenres()))
+                .filter(c -> c.getComicsType() == comic.getComicsType())
+                .sorted(Comparator.comparing(Comics::getPopularityRating, Comparator.reverseOrder()))
+                .limit(limit)
+                .collect(Collectors.toList());
     }
 }

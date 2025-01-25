@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -63,6 +64,7 @@ public class ComicsController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
         Comics comic = comicsService.getComicById(comicId);
+        List<Comics> similarComics = comicsService.findSimilarComics(comic, 5);
         if (comic == null) {
             return "error/404";
         }
@@ -80,6 +82,8 @@ public class ComicsController {
             session.setAttribute(sessionKey, currentTime);
         }
 
+
+        model.addAttribute("similarComics", similarComics);
         model.addAttribute("comic", comic);
         model.addAttribute("genres", genreService.findByComicsId(comicId));
         model.addAttribute("tabs", tabsService.findByPersonId(personDetails.getPerson().getId()));
@@ -104,25 +108,29 @@ public class ComicsController {
     @PostMapping("/create")
     public String addComic(@ModelAttribute("comic") Comics comic,
                            @RequestParam("imageByte") MultipartFile file,
-                           @RequestParam("genreIds") List<Integer> genreIds) {
+                           @RequestParam("genreIds") List<Integer> genreIds,
+                           @RequestParam(value = "publishedAt", required = false) LocalDate publishedAt) {
 
-        // Обробка зображення (обкладинки)
+        // Existing image processing logic
         if (file != null && !file.isEmpty()) {
             try {
-                comic.setCoverImage(file.getBytes()); //TODO Можливо Переробити
+                comic.setCoverImage(file.getBytes());
                 comic.setImageType(file.getContentType());
             } catch (IOException e) {
-                System.out.println("Помилка при завантаженні файлу: " + e.getMessage());
+                // Error handling
             }
         }
 
-        // Спочатку зберігаємо комікс без жанрів
-        Comics savedComic = comicsService.saveComic(comic);
+        // Set published date if provided
+        if (publishedAt != null) {
+            comic.setPublishedAt(publishedAt);
+        }
 
-        // Після того як комікс збережений, додаємо жанри
+        // Save comic and add genres
+        Comics savedComic = comicsService.saveComic(comic);
         comicsService.addGenresToComic(savedComic, genreIds);
 
-        return "redirect:/comics";
+        return "redirect:/comics/" + comic.getId();
     }
 
     @PostMapping("/addComicToTab")

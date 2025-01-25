@@ -5,12 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Додати комікс</title>
     <style>
-        /* Стиль для плаваючого списку з чекбоксами */
         .dropdown {
             position: relative;
             display: inline-block;
         }
-
         .dropdown-content {
             display: none;
             position: absolute;
@@ -21,11 +19,9 @@
             overflow-y: auto;
             width: 300px;
         }
-
         .dropdown:hover .dropdown-content {
             display: block;
         }
-
         .dropdown-content label {
             display: block;
             padding: 10px;
@@ -33,12 +29,14 @@
     </style>
 </head>
 <body>
-
 <h1>Додати новий комікс</h1>
 
 <form th:action="@{/comics/create}" method="post" enctype="multipart/form-data">
     <label for="title">Назва коміксу:</label>
     <input type="text" id="title" name="title" required><br><br>
+
+    <label for="originalTitle">Оригінальна назва:</label>
+    <input type="text" id="originalTitle" name="originalTitle"><br><br>
 
     <label for="author">Автор:</label>
     <input type="text" id="author" name="author" required><br><br>
@@ -52,6 +50,17 @@
         <option value="Завершено">Завершено</option>
         <option value="Призупинено">Призупинено</option>
     </select><br><br>
+
+    <label for="comicsType">Тип коміксу:</label>
+    <select id="comicsType" name="comicsType" required>
+        <option th:each="type : ${T(com.example.MangaWebSite.models.ComicsType).values()}"
+                th:value="${type}"
+                th:text="${type.displayName}">
+        </option>
+    </select><br><br>
+
+    <label for="publishedAt">Дата публікації:</label>
+    <input type="date" id="publishedAt" name="publishedAt"><br><br>
 
     <label th:for="genres">Жанри:</label>
     <div class="dropdown">
@@ -68,12 +77,11 @@
     <br><br>
 
     <div>
-        <label for="imageByte">Обкладинка</label>
-        <input type="file" id="imageByte" name="imageByte" required />
+        <label for="imageByte">Обкладинка:</label>
+        <input type="file" id="imageByte" name="imageByte" required /><br><br>
     </div>
 
     <button type="submit">Додати комікс</button>
 </form>
-
 </body>
 </html>
