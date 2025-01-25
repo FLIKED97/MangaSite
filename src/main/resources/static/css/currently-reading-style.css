@@ -203,10 +203,15 @@ h3 {
     color: #BFBFBF;
     font-size: 14px;
     margin: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
     padding: 6px 0 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-word;
+    hyphens: auto;
+    line-height: 18px;
+    font-weight: 600;
 }
 
 @media (max-width: 768px) {
