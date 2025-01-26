@@ -45,10 +45,13 @@
                     <select name="tabId" class="form-select" onchange="this.form.submit()">
                         <option value="">
                             <!-- Якщо комікс не в жодній закладці -->
-                            <span th:if="${#lists.isEmpty(comic.tabs)}">Додати в закладку</span>
+                            <span th:if="${#lists.isEmpty(comic.tabs)}">
+                                <svg class="svg-inline--fa fa-bookmark fa-fw fa-sm" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="bookmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" style="color: rgb(191,191,191);"><path class="" fill="currentColor" d="M0 48V487.7C0 501.1 10.9 512 24.3 512c5 0 9.9-1.5 14-4.4L192 400 345.7 507.6c4.1 2.9 9 4.4 14 4.4c13.4 0 24.3-10.9 24.3-24.3V48c0-26.5-21.5-48-48-48H48C21.5 0 0 21.5 0 48z"></path></svg>
+                                Додати в закладку</span>
 
                             <!-- Якщо комікс вже в якійсь закладці -->
                             <span th:unless="${#lists.isEmpty(comic.tabs)}">
+                                <svg class="svg-inline--fa fa-bookmark fa-fw fa-sm" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="bookmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" style="color: rgb(191,191,191);"><path class="" fill="currentColor" d="M0 48V487.7C0 501.1 10.9 512 24.3 512c5 0 9.9-1.5 14-4.4L192 400 345.7 507.6c4.1 2.9 9 4.4 14 4.4c13.4 0 24.3-10.9 24.3-24.3V48c0-26.5-21.5-48-48-48H48C21.5 0 0 21.5 0 48z"></path></svg>
                         В закладці:
                         <th:block th:text="${comic.tabs[0].name}"></th:block>
                     </span>
@@ -115,19 +118,25 @@
                     <p><strong>Опис:</strong></p>
                     <p th:text="${comic.description}">Опис коміксу</p>
                     <p><strong>Жанр:</strong></p>
+                    <div class="ws_b">
                     <div th:each="genre : ${genres}">
-                        <a th:href="@{/genre/{id}(id=${genre.id})}" class="list-group-item list-group-item-action">
+                        <a th:href="@{/genre/{id}(id=${genre.id})}" class=" tb list-group-item list-group-item-action">
                             <h5 th:text="${genre.name}"></h5>
                         </a>
+                    </div>
                     </div>
                     <h3 class="mt-3 tt_cl">Похожі комікси:</h3>
                     <div class="similar-comics-container">
                         <div th:each="similarComic : ${similarComics}" class="similar-comic-item">
                             <a th:href="@{/comics/{id}(id=${similarComic.id})}" class="text-decoration-none">
-                                <div class="similar-comic-status" th:text="${similarComic.status}">Статус</div>
-                                <img th:src="@{/comics/image/{id}(id=${similarComic.id})}" alt="Обкладинка коміксу">
-                                <div class="similar-comic-title" th:text="${similarComic.title}">Назва похожого коміксу</div>
-                                <div class="similar-comic-type" th:text="${similarComic.comicsType.displayName}">Тип коміксу</div>
+                                <div class="similar-comic-content">
+                                    <img th:src="@{/comics/image/{id}(id=${similarComic.id})}" alt="Обкладинка коміксу">
+                                    <div class="similar-comic-info">
+                                        <div class="similar-comic-status" th:text="${similarComic.status}">Статус</div>
+                                        <div class="similar-comic-title" th:text="${similarComic.title}">Назва похожого коміксу</div>
+                                        <div class="similar-comic-type" th:text="${similarComic.comicsType.displayName}">Тип коміксу</div>
+                                    </div>
+                                </div>
                             </a>
                         </div>
                     </div>
