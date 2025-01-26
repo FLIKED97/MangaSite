@@ -2,12 +2,18 @@
 .mn_sec {
     display: flex;
     flex-direction: column;
-    width: 1270px;
-    margin: 20px auto;
+    width: 900px;
     background-color: #1c1c1c;
     border-radius: 16px;
     padding: 16px;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+    /*box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);*/
+}
+.cr {
+    display: flex;
+    gap: 15px;
+    margin: 20px auto;
+    align-items: stretch;
+    justify-content: center; /* Додайте цей рядок */
 }
 body{
     background: #0A0A0A !important;
@@ -18,8 +24,8 @@ body{
 /* Верхня секція з зображенням та інформацією */
 .top-section {
     display: grid;
-    grid-template-columns: 260px 1fr;
-    gap: 32px;
+    /*grid-template-columns: 260px 1fr;*/
+    /*gap: 32px;*/
     margin-bottom: 32px;
 }
 
@@ -55,11 +61,13 @@ body{
     flex-direction: column;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    /*box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);*/
+    background: #1c1c1c;
     transition: transform 0.2s ease;
     padding: 10px;
     height: 100%;
     max-height: max-content;
+    /*margin-bottom: 30px;*/
 }
 
 .fr_cm:hover {
@@ -183,7 +191,7 @@ body{
 .mn_sec .tab-content {
     /*background-color: #242424;*/
     border-radius: 12px;
-    /*padding: 16px;*/
+    padding: 10px;
 }
 
 /* Список глав */
