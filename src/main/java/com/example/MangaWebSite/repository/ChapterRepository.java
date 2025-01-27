@@ -33,4 +33,5 @@ public interface ChapterRepository extends JpaRepository<Chapter, Integer> {
             "WHERE t.person.id = :personId ")
     Page<Chapter> findNewChaptersInTabs(@Param("personId") int personId, Pageable pageable);
 
+    Optional<Chapter> findFirstByComicsIdOrderByChapterNumberAsc(int comicsId);
 }

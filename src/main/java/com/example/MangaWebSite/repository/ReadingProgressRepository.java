@@ -46,4 +46,16 @@ public interface ReadingProgressRepository extends JpaRepository<ReadingProgress
     ORDER BY COUNT(rp.person.id) DESC, c.popularityRating DESC
     """)
     Page<Comics> findCurrentlyPopularReading(@Param("cutoffTime") LocalDateTime cutoffTime, Pageable topFive);
+
+    @Query("SELECT rp FROM ReadingProgress rp " +
+            "JOIN FETCH rp.comics c " +
+            "JOIN FETCH rp.chapter ch " +
+            "WHERE rp.comics.id = :comicsId " +
+            "AND rp.person.id = :personId " +
+            "ORDER BY rp.updatedAt DESC")
+    Optional<ReadingProgress> findLatestByComicsIdAndPersonId(
+            @Param("comicsId") int comicsId,
+            @Param("personId") int personId
+    );
+
 }

@@ -35,34 +35,65 @@
 <div class="cr">
 <div class="fr_cm">
     <img th:src="@{/comics/image/{id}(id=${comic.id})}" alt="Обкладинка коміксу"/>
+    <!-- Кнопка читання -->
+    <div class="reading-button-container mt-2 mb-2">
+        <div th:if="${comic != null}">
+            <!-- Перевіряємо наявність прогресу читання -->
+            <div th:with="readingProgress=${@readingProgressService.getReadingProgress(comic.id, #authentication.principal.person.id)}">
+                <!-- Якщо є прогрес читання -->
+                <a th:if="${readingProgress != null}"
+                   th:href="@{/chapters/{id}(id=${readingProgress.chapter.id})}"
+                   class="btn btn-primary">
+                    <svg class="svg-inline--fa fa-book-open fa-fw" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="book-open" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path class="" fill="currentColor" d="M249.6 471.5c10.8 3.8 22.4-4.1 22.4-15.5l0-377.4c0-4.2-1.6-8.4-5-11C247.4 52 202.4 32 144 32C93.5 32 46.3 45.3 18.1 56.1C6.8 60.5 0 71.7 0 83.8L0 454.1c0 11.9 12.8 20.2 24.1 16.5C55.6 460.1 105.5 448 144 448c33.9 0 79 14 105.6 23.5zm76.8 0C353 462 398.1 448 432 448c38.5 0 88.4 12.1 119.9 22.6c11.3 3.8 24.1-4.6 24.1-16.5l0-370.3c0-12.1-6.8-23.3-18.1-27.6C529.7 45.3 482.5 32 432 32c-58.4 0-103.4 20-123 35.6c-3.3 2.6-5 6.8-5 11L304 456c0 11.4 11.7 19.3 22.4 15.5z"></path></svg>
+                    <span>Продовжити читати</span>
+<!--                    <small class="d-block" th:text="'Глава ' + ${readingProgress.chapter.chapterNumber} + ' — Сторінка ' + ${readingProgress.lastPage}"></small>-->
+                </a>
+                <!-- Якщо прогресу немає - показуємо кнопку "Почати читати" -->
+                <a th:unless="${readingProgress != null}"
+                   th:href="@{/chapters/{id}(id=${@chapterService.getFirstChapter(comic.id).id})}"
+                   class="btn btn-primary">
+                    <svg class="svg-inline--fa fa-book-open fa-fw" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="book-open" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path class="" fill="currentColor" d="M249.6 471.5c10.8 3.8 22.4-4.1 22.4-15.5l0-377.4c0-4.2-1.6-8.4-5-11C247.4 52 202.4 32 144 32C93.5 32 46.3 45.3 18.1 56.1C6.8 60.5 0 71.7 0 83.8L0 454.1c0 11.9 12.8 20.2 24.1 16.5C55.6 460.1 105.5 448 144 448c33.9 0 79 14 105.6 23.5zm76.8 0C353 462 398.1 448 432 448c38.5 0 88.4 12.1 119.9 22.6c11.3 3.8 24.1-4.6 24.1-16.5l0-370.3c0-12.1-6.8-23.3-18.1-27.6C529.7 45.3 482.5 32 432 32c-58.4 0-103.4 20-123 35.6c-3.3 2.6-5 6.8-5 11L304 456c0 11.4 11.7 19.3 22.4 15.5z"></path></svg>
+                    Почати читати
+                </a>
+            </div>
+        </div>
+    </div>
     <!-- Вибір закладки для додавання коміксу -->
-    <div class="mt-3 tab-pane">
-        <!--        <h3>Закладки:</h3>-->
-        <form th:action="@{/comics/addComicToTab}" method="post">
-            <input type="hidden" name="comicId" th:value="${comic.id}"/>
-            <select name="tabId" class="form-select" onchange="this.form.submit()">
-                <option value="">
-                    <!-- Якщо комікс не в жодній закладці -->
-                    <span th:if="${#lists.isEmpty(comic.tabs)}">
-                                <svg class="svg-inline--fa fa-bookmark fa-fw fa-sm" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="bookmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" style="color: rgb(191,191,191);"><path class="" fill="currentColor" d="M0 48V487.7C0 501.1 10.9 512 24.3 512c5 0 9.9-1.5 14-4.4L192 400 345.7 507.6c4.1 2.9 9 4.4 14 4.4c13.4 0 24.3-10.9 24.3-24.3V48c0-26.5-21.5-48-48-48H48C21.5 0 0 21.5 0 48z"></path></svg>
-                                Додати в закладку</span>
-
-                    <!-- Якщо комікс вже в якійсь закладці -->
-                    <span th:unless="${#lists.isEmpty(comic.tabs)}">
-                                <svg class="svg-inline--fa fa-bookmark fa-fw fa-sm" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="bookmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" style="color: rgb(191,191,191);"><path class="" fill="currentColor" d="M0 48V487.7C0 501.1 10.9 512 24.3 512c5 0 9.9-1.5 14-4.4L192 400 345.7 507.6c4.1 2.9 9 4.4 14 4.4c13.4 0 24.3-10.9 24.3-24.3V48c0-26.5-21.5-48-48-48H48C21.5 0 0 21.5 0 48z"></path></svg>
-                        В закладці:
-                        <th:block th:text="${comic.tabs[0].name}"></th:block>
-                    </span>
-                </option>
-
-                <!-- Список доступних закладок -->
-                <option th:each="tab : ${tabs}"
-                        th:value="${tab.id}"
-                        th:text="${tab.name}"
-                        th:unless="${#lists.contains(comic.tabs, tab)}">
-                </option>
-            </select>
-        </form>
+    <div class="mt-2 mb-2 tab-pane">
+        <div class="bookmark-container">
+            <form th:action="@{/comics/addComicToTab}" method="post" class="position-relative">
+                <svg class="bookmark-icon position-absolute"
+                     style="left: 12px; top: 50%; transform: translateY(-50%); width: 12px; height: 15px;"
+                     aria-hidden="true"
+                     focusable="false"
+                     data-prefix="fas"
+                     data-icon="bookmark"
+                     role="img"
+                     xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 384 512">
+                    <path fill="currentColor" d="M0 48V487.7C0 501.1 10.9 512 24.3 512c5 0 9.9-1.5 14-4.4L192 400 345.7 507.6c4.1 2.9 9 4.4 14 4.4c13.4 0 24.3-10.9 24.3-24.3V48c0-26.5-21.5-48-48-48H48C21.5 0 0 21.5 0 48z"></path>
+                </svg>
+                <input type="hidden" name="comicId" th:value="${comic.id}"/>
+                <select name="tabId"
+                        class="form-select"
+                        style="padding-left: 32px;"
+                        onchange="this.form.submit()">
+                    <option value="">
+                        <th:block th:if="${#lists.isEmpty(comic.tabs)}">
+                            Додати в закладку
+                        </th:block>
+                        <th:block th:unless="${#lists.isEmpty(comic.tabs)}">
+                            [[${comic.tabs[0].name}]]
+                        </th:block>
+                    </option>
+                    <option th:each="tab : ${tabs}"
+                            th:value="${tab.id}"
+                            th:text="${tab.name}"
+                            th:unless="${#lists.contains(comic.tabs, tab)}">
+                    </option>
+                </select>
+            </form>
+        </div>
     </div>
     <div class="info-details dt_cm">
         <div class="detail-row">

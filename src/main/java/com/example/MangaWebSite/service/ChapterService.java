@@ -12,11 +12,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -131,5 +133,8 @@ public class ChapterService {
         LocalDateTime oneMonthAgo = LocalDateTime.now().minusDays(70);
         return chapterRepository.findAllNewChapters(oneMonthAgo, pageable);
     }
-
+    public Chapter getFirstChapter(int comicsId) {
+        return chapterRepository.findFirstByComicsIdOrderByChapterNumberAsc(comicsId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Перша глава не знайдена"));
+    }
 }

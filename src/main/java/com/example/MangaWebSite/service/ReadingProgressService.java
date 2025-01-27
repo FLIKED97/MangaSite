@@ -50,6 +50,10 @@ public class ReadingProgressService {
 
         return readingProgressRepository.findRecentlyReadByPersonId(id, topFive);
     }
+    public ReadingProgress getReadingProgress(int comicsId, int personId) {
+        return readingProgressRepository.findLatestByComicsIdAndPersonId(comicsId, personId)
+                .orElse(null);
+    }
 
     public List<Comics> getCurrentlyReading(int page, int pageSize) {
         Pageable pageable = PageRequest.of(page, pageSize);

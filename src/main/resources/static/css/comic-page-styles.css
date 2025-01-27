@@ -130,19 +130,36 @@ body{
 }
 .form-select {
     width: 100%;
-    padding: 12px;
+    padding: 0px 10px;
     background-color: #2C2C30;
     border: none;
     border-radius: 8px;
     color: #BFBFBF;
     cursor: pointer;
     transition: background-color 0.2s ease;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    height: 30px;
 }
 
 .form-select:hover {
     background-color: #363639;
 }
 
+.bookmark-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #BFBFBF;
+    height: 32px;
+}
+
+.bookmark-icon {
+    width: 15.31px;
+    height: 12.25px;
+    fill: currentColor;
+}
 /* Навігаційні вкладки */
 .nav-tabs {
     display: flex;
@@ -409,4 +426,39 @@ body{
     margin: 0 !important;
     font-size: 12px;
     font-weight: 400 !important;
+}
+.reading-button-container{
+    background: #ef6c00;
+    color: #FFFFFF !important;
+    border-radius: 8px;
+    height: 32px;
+}
+.reading-button-container .btn-primary{
+    color: #FFFFFF !important;
+}
+.bookmark-container {
+    width: 100%;
+}
+
+.bookmark-container .form-select {
+    width: 100%;
+    padding-left: 35px;  /* Місце для іконки */
+    appearance: auto !important;    /* Зберігає стандартну стрілку селекта */
+    background-image: none !important;  /* Прибираємо стрілку від Bootstrap */
+    outline: none !important;  /* Прибираємо стандартний outline */
+    box-shadow: none !important;  /* Прибираємо тінь при фокусі */
+}
+/*.bookmark-container .form-select:focus {*/
+/*    border-color: #ced4da;  !* Залишаємо той самий колір рамки що й у звичайному стані *!*/
+/*}*/
+.bookmark-icon {
+    color: #BFBFBF;  /* Сірий колір іконки */
+    pointer-events: none;  /* Клік проходить крізь іконку */
+    height: 15.31px !important;
+    width: 12.25px !important;
+}
+
+/* Стилі при наведенні */
+.bookmark-container:hover .bookmark-icon {
+    color: #BFBFBF;
 }
