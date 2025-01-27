@@ -27,8 +27,10 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ChapterService {
@@ -90,7 +92,10 @@ public class ChapterService {
     }
 
     public List<Chapter> findAllChapterByComicsId(int comicId) {
-        return chapterRepository.findAllByComicsId(comicId);
+        return chapterRepository.findAllByComicsId(comicId)
+                .stream()
+                .sorted(Comparator.comparing(Chapter::getChapterNumber).reversed())
+                .collect(Collectors.toList());
     }
 
     public Chapter findById(int id) {

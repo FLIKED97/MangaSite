@@ -175,11 +175,12 @@
 
                 <!-- Глави -->
                 <div class="tab-pane fade" id="chapters" role="tabpanel" aria-labelledby="chapters-tab">
-                    <h3>Список глав:</h3>
                     <ul class="list-group">
                         <li th:each="chapter : ${chapters}" class="list-group-item">
-                            <a th:href="@{/chapters/{id}(id=${chapter.id})}" th:text="'Глава ' + ${chapter.chapterNumber} + ': ' + ${chapter.title}"></a>
-                            <span th:text="' (' + ${chapter.pagesCount} + ' сторінок)'"></span>
+                            <a th:href="@{/chapters/{id}(id=${chapter.id})}">
+                                <span class="cl__item-num" th:text="'Глава ' + ${chapter.chapterNumber}"></span>
+                                <span th:text="${chapter.title}"></span>
+                            </a>
                         </li>
                     </ul>
                     <div class="mt-4">

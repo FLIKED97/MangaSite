@@ -120,6 +120,18 @@ body{
     border-radius: 4px;
     margin-bottom: 24px;
 }
+.tab-pane .list-group{
+    background: rgba(116, 116, 128, .1) !important;
+    gap: 0 !important;
+}
+.tab-pane .list-group-item a{
+    padding: 0;
+}
+.tab-pane .list-group-item{
+    background: transparent !important;
+    border: none !important;
+    margin: 0px !important;
+}
 .tab-pane p{
     word-wrap: break-word;
     overflow-wrap: break-word;
@@ -461,4 +473,14 @@ body{
 /* Стилі при наведенні */
 .bookmark-container:hover .bookmark-icon {
     color: #BFBFBF;
+}
+.cl__item-num {
+    display: inline-block;
+    border-radius: 4px;
+    line-height: 32px;
+    height: 32px;
+    padding: 0 7px;
+    font-size: 14px;
+    background-color: #121212;
+    margin-right: 15px;
 }
