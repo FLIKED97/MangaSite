@@ -39,6 +39,9 @@ public class Chapter {
     @Column(name = "pages_count", nullable = false)
     private int pagesCount;
 
+    @Column(name = "volume") // Додано поле для тому
+    private int volume;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "release_date")
     private LocalDateTime releaseDate;

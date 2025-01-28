@@ -175,13 +175,20 @@
 
                 <!-- Глави -->
                 <div class="tab-pane fade" id="chapters" role="tabpanel" aria-labelledby="chapters-tab">
-                    <ul class="list-group">
-                        <li th:each="chapter : ${chapters}" class="list-group-item">
-                            <a th:href="@{/chapters/{id}(id=${chapter.id})}">
-                                <span class="cl__item-num" th:text="'Глава ' + ${chapter.chapterNumber}"></span>
-                                <span th:text="${chapter.title}"></span>
+                    <ul class="list-group chap">
+                        <div class="mt-2">
+                        <li th:each="chapter : ${chapters}" class="chapter-item">
+                            <a th:href="@{/chapters/{id}(id=${chapter.id})}" class="chapter-link">
+                                <div class="chapter-content">
+                                    <div class="chapter-main">
+                                        <span class="cl__item-num" th:text="'Глава ' + ${chapter.chapterNumber}"></span>
+                                        <span class="chapter-title" th:text="${chapter.volume} + ' - ' + ${chapter.title}"></span>
+                                    </div>
+                                    <span class="chapter-date" th:text="${#temporals.format(chapter.releaseDate, 'yyyy-MM-dd')}"></span>
+                                </div>
                             </a>
                         </li>
+                        </div>
                     </ul>
                     <div class="mt-4">
                         <a th:href="@{/chapters/add(comicId=${comic.id})}" class="btn btn-outline-primary">Додати нову главу</a>
