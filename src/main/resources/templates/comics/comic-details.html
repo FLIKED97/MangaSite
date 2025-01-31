@@ -175,23 +175,76 @@
 
                 <!-- Глави -->
                 <div class="tab-pane fade" id="chapters" role="tabpanel" aria-labelledby="chapters-tab">
+                    <!-- Верхній блок з кнопкою додавання та пагінацією -->
+                    <div class="position-relative mb-3">
+                        <!-- Кнопка "Додати главу" (тільки для Role_Publisher) -->
+                        <div th:if="${#authorization.expression('hasRole(''ROLE_PUBLISHER'')')}" class="position-absolute start-0">
+                            <a th:href="@{/chapters/add(comicId=${comic.id})}" class="btn btn-outline-primary">Додати нову главу</a>
+                        </div>
+                        <!-- Пагінація (центрується відносно tab-pane) -->
+                        <div th:if="${totalPages != null and totalPages > 1}" class="pagination-container d-flex justify-content-center">
+                            <a th:href="@{'/comics/' + ${comic.id} + '?page=' + ${currentPage != null and currentPage > 0 ? currentPage - 1 : 0}}"
+                               th:class="${currentPage == null or currentPage == 0} ? 'btn-page disabled' : 'btn-page'"
+                               th:disabled="${currentPage == null or currentPage == 0}">
+                                <span>←</span>
+                            </a>
+                            <div class="page-numbers d-flex gap-1">
+                                <a th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
+                                   th:href="@{'/comics/' + ${comic.id} + '?page=' + ${pageNum}}"
+                                   th:class="${pageNum == (currentPage != null ? currentPage : 0)} ? 'page-number active' : 'page-number'"
+                                   th:text="${pageNum + 1}">
+                                </a>
+                            </div>
+                            <a th:href="@{'/comics/' + ${comic.id} + '?page=' + ${currentPage != null and currentPage < totalPages - 1 ? currentPage + 1 : totalPages - 1}}"
+                               th:class="${currentPage == null or currentPage == totalPages - 1} ? 'btn-page disabled' : 'btn-page'"
+                               th:disabled="${currentPage == null or currentPage == totalPages - 1}">
+                                <span>→</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Список глав -->
                     <ul class="list-group chap">
                         <div class="mt-2">
-                        <li th:each="chapter : ${chapters}" class="chapter-item">
-                            <a th:href="@{/chapters/{id}(id=${chapter.id})}" class="chapter-link">
-                                <div class="chapter-content">
-                                    <div class="chapter-main">
-                                        <span class="cl__item-num" th:text="'Глава ' + ${chapter.chapterNumber}"></span>
-                                        <span class="chapter-title" th:text="${chapter.volume} + ' - ' + ${chapter.title}"></span>
+                            <li th:each="chapter : ${chapters}" class="chapter-item">
+                                <a th:href="@{/chapters/{id}(id=${chapter.id})}" class="chapter-link">
+                                    <div class="chapter-content">
+                                        <div class="chapter-main">
+                                            <span class="cl__item-num" th:text="'Глава ' + ${chapter.chapterNumber}"></span>
+                                            <span class="chapter-title" th:text="${chapter.volume} + ' - ' + ${chapter.title}"></span>
+                                        </div>
+                                        <span class="chapter-date" th:text="${#temporals.format(chapter.releaseDate, 'yyyy-MM-dd')}"></span>
                                     </div>
-                                    <span class="chapter-date" th:text="${#temporals.format(chapter.releaseDate, 'yyyy-MM-dd')}"></span>
-                                </div>
-                            </a>
-                        </li>
+                                </a>
+                            </li>
                         </div>
                     </ul>
-                    <div class="mt-4">
-                        <a th:href="@{/chapters/add(comicId=${comic.id})}" class="btn btn-outline-primary">Додати нову главу</a>
+
+                    <!-- Нижній блок з кнопкою додавання та пагінацією -->
+                    <div class="position-relative mt-3">
+                        <!-- Те саме, що й зверху -->
+                        <div th:if="${#authorization.expression('hasRole(''ROLE_PUBLISHER'')')}" class="position-absolute start-0">
+                            <a th:href="@{/chapters/add(comicId=${comic.id})}" class="btn btn-outline-primary">Додати нову главу</a>
+                        </div>
+                        <div th:if="${totalPages != null and totalPages > 1}" class="pagination-container d-flex justify-content-center">
+                            <a th:href="@{'/comics/' + ${comic.id} + '?page=' + ${currentPage != null and currentPage > 0 ? currentPage - 1 : 0}}"
+                               th:class="${currentPage == null or currentPage == 0} ? 'btn-page disabled' : 'btn-page'"
+                               th:disabled="${currentPage == null or currentPage == 0}">
+                                <span>←</span>
+                            </a>
+                            <div class="page-numbers d-flex gap-1">
+                                <a th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
+                                   th:href="@{'/comics/' + ${comic.id} + '?page=' + ${pageNum}}"
+                                   th:class="${pageNum == (currentPage != null ? currentPage : 0)} ? 'page-number active' : 'page-number'"
+                                   th:text="${pageNum + 1}">
+                                </a>
+                            </div>
+                            <a th:href="@{'/comics/' + ${comic.id} + '?page=' + ${currentPage != null and currentPage < totalPages - 1 ? currentPage + 1 : totalPages - 1}}"
+                               th:class="${currentPage == null or currentPage == totalPages - 1} ? 'btn-page disabled' : 'btn-page'"
+                               th:disabled="${currentPage == null or currentPage == totalPages - 1}">
+                                <span>→</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
 
@@ -284,6 +337,118 @@
         const bookmarkList = document.getElementById('bookmarkList');
         bookmarkList.style.display = bookmarkList.style.display === 'none' ? 'block' : 'none';
     }
+    function loadChapters(page) {
+        const comicId = /*[[${comic.id}]]*/ null; // Thymeleaf вставить реальний ID
+
+        fetch(`/comics/${comicId}/chapters?page=${page}`, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Received data:', data); // Додайте логування
+                // Оновлення списку глав
+                const chaptersList = document.querySelector('.list-group.chap');
+                chaptersList.innerHTML = ''; // Очистити поточний список
+
+                data.chapters.forEach(chapter => {
+                    const chapterItem = `
+                <li class="chapter-item">
+                    <a href="/chapters/${chapter.id}" class="chapter-link">
+                        <div class="chapter-content">
+                            <div class="chapter-main">
+                                <span class="cl__item-num">Глава ${chapter.chapterNumber}</span>
+                                <span class="chapter-title">${chapter.volume} - ${chapter.title}</span>
+                            </div>
+                            <span class="chapter-date">${formatDate(chapter.releaseDate)}</span>
+                        </div>
+                    </a>
+                </li>
+            `;
+                    chaptersList.innerHTML += chapterItem;
+                });
+
+                // Оновлення пагінації
+                updatePagination(data.currentPage, data.totalPages);
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toISOString().split('T')[0]; // Форматування дати як yyyy-MM-dd
+    }
+
+    function updatePagination(currentPage, totalPages) {
+        const paginationContainers = document.querySelectorAll('.pagination-container');
+
+        paginationContainers.forEach(container => {
+            container.innerHTML = ''; // Очистити поточну пагінацію
+
+            // Кнопка "Попередня"
+            const prevButton = document.createElement('a');
+            prevButton.href = '#';
+            prevButton.className = `btn-page ${currentPage === 0 ? 'disabled' : ''}`;
+            prevButton.innerHTML = '<span>←</span>';
+            prevButton.onclick = (e) => {
+                e.preventDefault();
+                if (currentPage > 0) loadChapters(currentPage - 1);
+            };
+            container.appendChild(prevButton);
+
+            // Номери сторінок
+            const pageNumbers = document.createElement('div');
+            pageNumbers.className = 'page-numbers d-flex gap-1';
+
+            for (let i = 0; i < totalPages; i++) {
+                const pageButton = document.createElement('a');
+                pageButton.href = '#';
+                pageButton.className = `page-number ${i === currentPage ? 'active' : ''}`;
+                pageButton.textContent = i + 1;
+                pageButton.onclick = (e) => {
+                    e.preventDefault();
+                    loadChapters(i);
+                };
+                pageNumbers.appendChild(pageButton);
+            }
+            container.appendChild(pageNumbers);
+
+            // Кнопка "Наступна"
+            const nextButton = document.createElement('a');
+            nextButton.href = '#';
+            nextButton.className = `btn-page ${currentPage === totalPages - 1 ? 'disabled' : ''}`;
+            nextButton.innerHTML = '<span>→</span>';
+            nextButton.onclick = (e) => {
+                e.preventDefault();
+                if (currentPage < totalPages - 1) loadChapters(currentPage + 1);
+            };
+            container.appendChild(nextButton);
+        });
+    }
+
+    // Ініціалізація при завантаженні сторінки
+    document.addEventListener('DOMContentLoaded', () => {
+        // Додати обробники подій до існуючої пагінації
+        const initialPaginationContainers = document.querySelectorAll('.pagination-container');
+        initialPaginationContainers.forEach(container => {
+            const buttons = container.querySelectorAll('a');
+            buttons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const page = parseInt(button.textContent) - 1;
+                    loadChapters(page);
+                });
+            });
+        });
+    });
 </script>
 </body>
 </html>

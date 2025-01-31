@@ -22,6 +22,7 @@ public interface ChapterRepository extends JpaRepository<Chapter, Integer> {
     Optional<Chapter> findLatestChapterByComicId(@Param("comicId") int comicId);
 
     List<Chapter> findAllByComicsId(int comicId);
+    Page<Chapter> findByComicsId(int comicId, Pageable pageable);
 
     Chapter findFirstByComicsAndChapterNumberGreaterThanOrderByChapterNumberAsc(Comics comics, int chapterNumber);
     @Query("SELECT ch FROM Chapter ch JOIN FETCH ch.comics c WHERE ch.releaseDate > :oneMonthAgo ORDER BY ch.releaseDate DESC")

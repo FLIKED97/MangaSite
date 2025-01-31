@@ -524,3 +524,67 @@ body{
     color: inherit;
     font-size: 14px;
 }
+
+.bt-p {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+}
+
+.btn-page {
+    background-color: transparent;
+    border: none;
+    color: #BFBFBF;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-page:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: #fff;
+    color: #fff;
+}
+
+.btn-page span {
+    font-size: 14px;
+}
+
+.page-numbers {
+    display: flex;
+    gap: 8px;
+}
+
+.page-number {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    border: 1px solid #BFBFBF;
+    color: #BFBFBF;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.page-number:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: #fff;
+    color: #fff;
+}
+
+.page-number.active {
+    background-color: #BFBFBF;
+    color: #121212;
+    border-color: #BFBFBF;
+}
+
+.page-number.active:hover {
+    background-color: #fff;
+    border-color: #fff;
+}

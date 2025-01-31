@@ -1,13 +1,14 @@
 package com.example.MangaWebSite.controller;
 
-import com.example.MangaWebSite.models.Comics;
-import com.example.MangaWebSite.models.Genre;
-import com.example.MangaWebSite.models.Person;
-import com.example.MangaWebSite.models.Tabs;
+import com.example.MangaWebSite.models.*;
+import com.example.MangaWebSite.repository.ComicsRepository;
 import com.example.MangaWebSite.security.PersonDetails;
 import com.example.MangaWebSite.service.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -43,6 +44,8 @@ public class ComicsController {
     private final RatingService ratingService;
 
     private final CommentService commentService;
+
+    private static final Logger logger = LoggerFactory.getLogger(ComicsController.class);
 
 //    @GetMapping()
 //    public String showAllComics(Model model){
@@ -87,11 +90,32 @@ public class ComicsController {
         model.addAttribute("comic", comic);
         model.addAttribute("genres", genreService.findByComicsId(comicId));
         model.addAttribute("tabs", tabsService.findByPersonId(personDetails.getPerson().getId()));
-        model.addAttribute("chapters", chapterService.findAllChapterByComicsId(comicId));
+//        model.addAttribute("chapters", chapterService.findAllChapterByComicsId(comicId));
         model.addAttribute("userRating", ratingService.getUserRating(comicId, personDetails.getPerson().getId()));
         model.addAttribute("comments", commentService.getCommentsByComicsId(comicId));
         return "comics/comic-details";
     }
+    @GetMapping("/{id}/chapters")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getChaptersForComic(
+            @PathVariable("id") int comicId,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
+
+        logger.debug("Fetching chapters for comic ID: {}, page: {}, size: {}", comicId, page, size);
+
+        Page<Chapter> chapters = chapterService.findChaptersByComicIdPage(comicId, page, size);
+
+        logger.debug("Found {} chapters", chapters.getNumberOfElements());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("chapters", chapters.getContent());
+        response.put("totalPages", chapters.getTotalPages());
+        response.put("currentPage", page);
+
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/image/{id}")
     @ResponseBody
     public ResponseEntity<byte[]> getComicCoverImage(@PathVariable("id") int id) {

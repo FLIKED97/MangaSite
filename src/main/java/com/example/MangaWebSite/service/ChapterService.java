@@ -97,6 +97,10 @@ public class ChapterService {
                 .sorted(Comparator.comparing(Chapter::getChapterNumber).reversed())
                 .collect(Collectors.toList());
     }
+    public Page<Chapter> findChaptersByComicIdPage(int comicId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("releaseDate").descending());
+        return chapterRepository.findByComicsId(comicId, pageable);
+    }
 
     public Chapter findById(int id) {
     return chapterRepository.findById(id).orElse(null);

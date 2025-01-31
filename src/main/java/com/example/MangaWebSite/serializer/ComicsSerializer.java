@@ -27,19 +27,31 @@ public class ComicsSerializer extends JsonSerializer<Comics> {
             jsonGenerator.writeStringField("comicsTypeDisplay", comics.getComicsType().getDisplayName());
         }
 
-
-        // Серіалізуємо зображення
-        if (comics.getCoverImage() != null) {
-            jsonGenerator.writeStringField("coverImageBase64",
-                    Base64.getEncoder().encodeToString(comics.getCoverImage()));
+        // Безпечна серіалізація зображення
+        try {
+            if (comics.getCoverImage() != null && comics.getCoverImage().length > 0) {
+                jsonGenerator.writeStringField("coverImageBase64",
+                        Base64.getEncoder().encodeToString(comics.getCoverImage()));
+            } else {
+                jsonGenerator.writeNullField("coverImageBase64");
+            }
+        } catch (Exception e) {
+            // Логування помилки або writeNullField
+            jsonGenerator.writeNullField("coverImageBase64");
+            // Додати логування: logger.error("Error serializing cover image", e);
         }
 
         // Серіалізуємо жанри
-        if (comics.getGenres() != null) {
+        if (comics.getGenres() != null && !comics.getGenres().isEmpty()) {
             jsonGenerator.writeArrayFieldStart("genres");
             for (Genre genre : comics.getGenres()) {
-                jsonGenerator.writeString(genre.getName());
+                if (genre != null) {
+                    jsonGenerator.writeString(genre.getName());
+                }
             }
+            jsonGenerator.writeEndArray();
+        } else {
+            jsonGenerator.writeArrayFieldStart("genres");
             jsonGenerator.writeEndArray();
         }
 
@@ -49,8 +61,12 @@ public class ComicsSerializer extends JsonSerializer<Comics> {
         }
 
         // Додаткові поля
-        jsonGenerator.writeNumberField("viewCount", comics.getViewCount());
-        jsonGenerator.writeNumberField("popularityRating", comics.getPopularityRating());
+        jsonGenerator.writeNumberField("viewCount",
+                comics.getViewCount());
+
+        jsonGenerator.writeNumberField("popularityRating",
+                comics.getPopularityRating());
+
 
         // Додаємо середній рейтинг
         double averageRating = comics.getAverageRating();

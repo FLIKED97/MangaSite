@@ -39,7 +39,7 @@ public class Comics {
     @Lob // (BLOB)
     @JsonIgnore // Додаємо цю анотацію
     @Basic(fetch = FetchType.LAZY)
-    @Column(name = "cover_image", nullable = true)
+    @Column(name = "cover_image", nullable = true, length = 100000)
     private byte[] coverImage;
 
     @Column(name = "image_type", nullable = true)
@@ -138,5 +138,8 @@ public class Comics {
     }
     public LocalDate getPublishedAt() {
         return publishedAt;
+    }
+    public byte[] getSafeCoverImage() {
+        return (coverImage != null && coverImage.length > 0) ? coverImage : null;
     }
 }
