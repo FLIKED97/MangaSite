@@ -8,13 +8,13 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 
 import java.io.IOException;
 import java.util.Base64;
+import java.util.Optional;
 
 public class ComicsSerializer extends JsonSerializer<Comics> {
     @Override
     public void serialize(Comics comics, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeStartObject();
 
-        // Серіалізуємо базові поля
         jsonGenerator.writeNumberField("id", comics.getId());
         jsonGenerator.writeStringField("title", comics.getTitle());
         jsonGenerator.writeStringField("author", comics.getAuthor());
@@ -28,18 +28,11 @@ public class ComicsSerializer extends JsonSerializer<Comics> {
         }
 
         // Безпечна серіалізація зображення
-        try {
-            if (comics.getCoverImage() != null && comics.getCoverImage().length > 0) {
-                jsonGenerator.writeStringField("coverImageBase64",
-                        Base64.getEncoder().encodeToString(comics.getCoverImage()));
-            } else {
-                jsonGenerator.writeNullField("coverImageBase64");
-            }
-        } catch (Exception e) {
-            // Логування помилки або writeNullField
-            jsonGenerator.writeNullField("coverImageBase64");
-            // Додати логування: logger.error("Error serializing cover image", e);
-        }
+        jsonGenerator.writeStringField("coverImageBase64",
+                Optional.ofNullable(comics.getSafeCoverImage())
+                        .map(image -> Base64.getEncoder().encodeToString(image))
+                        .orElse(null)
+        );
 
         // Серіалізуємо жанри
         if (comics.getGenres() != null && !comics.getGenres().isEmpty()) {

@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -95,26 +97,17 @@ public class ComicsController {
         model.addAttribute("comments", commentService.getCommentsByComicsId(comicId));
         return "comics/comic-details";
     }
-    @GetMapping("/{id}/chapters")
+    @GetMapping("/{comicId}/chapters")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> getChaptersForComic(
-            @PathVariable("id") int comicId,
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size) {
+    public Page<Chapter> getChaptersByComicId(
+            @PathVariable("comicId") int comicId, // Змініть на "comicId"
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
 
-        logger.debug("Fetching chapters for comic ID: {}, page: {}, size: {}", comicId, page, size);
-
-        Page<Chapter> chapters = chapterService.findChaptersByComicIdPage(comicId, page, size);
-
-        logger.debug("Found {} chapters", chapters.getNumberOfElements());
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("chapters", chapters.getContent());
-        response.put("totalPages", chapters.getTotalPages());
-        response.put("currentPage", page);
-
-        return ResponseEntity.ok(response);
+        Pageable pageable = PageRequest.of(page, size);
+        return chapterService.findChaptersByComicId(comicId, pageable);
     }
+
 
     @GetMapping("/image/{id}")
     @ResponseBody

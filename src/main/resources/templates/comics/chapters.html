@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="chapters-container">
+    <ul class="list-group chap" id="chapters-list">
+        <li th:each="chapter : ${chapters}" class="chapter-item">
+            <a th:href="@{/chapters/{id}(id=${chapter.id})}" class="chapter-link">
+                <div class="chapter-content">
+                    <div class="chapter-main">
+                        <span class="cl__item-num" th:text="'Глава ' + ${chapter.chapterNumber}"></span>
+                        <span class="chapter-title" th:text="${chapter.volume} + ' - ' + ${chapter.title}"></span>
+                    </div>
+                    <span class="chapter-date" th:text="${#temporals.format(chapter.releaseDate, 'yyyy-MM-dd')}"></span>
+                </div>
+            </a>
+        </li>
+    </ul>
+
+    <!-- Пагінація -->
+    <div class="d-flex justify-content-center mt-3">
+        <button th:each="i : ${#numbers.sequence(1, totalPages)}"
+                th:classappend="${i == currentPage} ? 'active' : ''"
+                th:data-page="${i}"
+                class="btn-page page-number">
+            <span th:text="${i}">1</span>
+        </button>
+    </div>
+</div>
+
+</body>
+</html>

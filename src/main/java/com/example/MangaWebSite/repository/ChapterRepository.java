@@ -35,4 +35,8 @@ public interface ChapterRepository extends JpaRepository<Chapter, Integer> {
     Page<Chapter> findNewChaptersInTabs(@Param("personId") int personId, Pageable pageable);
 
     Optional<Chapter> findFirstByComicsIdOrderByChapterNumberAsc(int comicsId);
+
+    Page<Chapter> findByComicsIdOrderByReleaseDateDesc(int comicId, Pageable pageable);
+
+    Page<Chapter> findByComics_IdOrderByReleaseDateDesc(int comicId, Pageable pageable);
 }

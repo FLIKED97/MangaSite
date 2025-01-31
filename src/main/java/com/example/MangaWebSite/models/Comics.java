@@ -20,6 +20,7 @@ import java.util.List;
 @Entity
 @Table(name = "comics")
 @JsonSerialize(using = ComicsSerializer.class)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Comics {
 
     @Id

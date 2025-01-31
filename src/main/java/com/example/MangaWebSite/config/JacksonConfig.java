@@ -39,4 +39,5 @@ public class JacksonConfig {
         builder.serializationInclusion(JsonInclude.Include.NON_NULL);
         return builder;
     }
+
 }

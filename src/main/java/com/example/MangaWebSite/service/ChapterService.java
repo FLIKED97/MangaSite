@@ -146,4 +146,12 @@ public class ChapterService {
         return chapterRepository.findFirstByComicsIdOrderByChapterNumberAsc(comicsId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Перша глава не знайдена"));
     }
+
+    @Transactional
+    public Page<Chapter> findChaptersByComicId(int comicId, Pageable pageable) {
+        // Додайте логування
+        Page<Chapter> chapters = chapterRepository.findByComics_IdOrderByReleaseDateDesc(comicId, pageable);
+        System.out.println("Chapters found: " + chapters.getContent().size());
+        return chapters;
+    }
 }

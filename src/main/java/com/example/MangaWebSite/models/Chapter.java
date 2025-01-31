@@ -56,14 +56,4 @@ public class Chapter {
         comicPages.add(comicPage);
         comicPage.setChapter(this); // Встановлюємо зв'язок сторінки з главою
     }
-//    @OneToMany(mappedBy = "chapter", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<ComicPage> comicPages = new ArrayList<>();
-
-//    public void addPage(ComicPage page) {
-//        if (comicPages == null) {
-//            comicPages = new ArrayList<>();
-//        }
-//        comicPages.add(page);
-//        page.setChapter(this); // Встановлюємо зворотне посилання на главу
-//    }
 }

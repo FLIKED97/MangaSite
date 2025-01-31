@@ -337,117 +337,128 @@
         const bookmarkList = document.getElementById('bookmarkList');
         bookmarkList.style.display = bookmarkList.style.display === 'none' ? 'block' : 'none';
     }
-    function loadChapters(page) {
-        const comicId = /*[[${comic.id}]]*/ null; // Thymeleaf вставить реальний ID
+    document.addEventListener('DOMContentLoaded', function() {
+        const chaptersTab = document.getElementById('chapters-tab');
+        const comicId = [[${comic.id}]];
+        let currentPage = 0;
 
-        fetch(`/comics/${comicId}/chapters?page=${page}`, {
-            method: 'GET',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'Accept': 'application/json'
-            }
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Received data:', data); // Додайте логування
-                // Оновлення списку глав
-                const chaptersList = document.querySelector('.list-group.chap');
-                chaptersList.innerHTML = ''; // Очистити поточний список
-
-                data.chapters.forEach(chapter => {
-                    const chapterItem = `
-                <li class="chapter-item">
-                    <a href="/chapters/${chapter.id}" class="chapter-link">
-                        <div class="chapter-content">
-                            <div class="chapter-main">
-                                <span class="cl__item-num">Глава ${chapter.chapterNumber}</span>
-                                <span class="chapter-title">${chapter.volume} - ${chapter.title}</span>
-                            </div>
-                            <span class="chapter-date">${formatDate(chapter.releaseDate)}</span>
-                        </div>
-                    </a>
-                </li>
-            `;
-                    chaptersList.innerHTML += chapterItem;
-                });
-
-                // Оновлення пагінації
-                updatePagination(data.currentPage, data.totalPages);
-            })
-            .catch(error => console.error('Error:', error));
-    }
-
-    function formatDate(dateString) {
-        const date = new Date(dateString);
-        return date.toISOString().split('T')[0]; // Форматування дати як yyyy-MM-dd
-    }
-
-    function updatePagination(currentPage, totalPages) {
-        const paginationContainers = document.querySelectorAll('.pagination-container');
-
-        paginationContainers.forEach(container => {
-            container.innerHTML = ''; // Очистити поточну пагінацію
-
-            // Кнопка "Попередня"
-            const prevButton = document.createElement('a');
-            prevButton.href = '#';
-            prevButton.className = `btn-page ${currentPage === 0 ? 'disabled' : ''}`;
-            prevButton.innerHTML = '<span>←</span>';
-            prevButton.onclick = (e) => {
-                e.preventDefault();
-                if (currentPage > 0) loadChapters(currentPage - 1);
-            };
-            container.appendChild(prevButton);
-
-            // Номери сторінок
-            const pageNumbers = document.createElement('div');
-            pageNumbers.className = 'page-numbers d-flex gap-1';
-
-            for (let i = 0; i < totalPages; i++) {
-                const pageButton = document.createElement('a');
-                pageButton.href = '#';
-                pageButton.className = `page-number ${i === currentPage ? 'active' : ''}`;
-                pageButton.textContent = i + 1;
-                pageButton.onclick = (e) => {
-                    e.preventDefault();
-                    loadChapters(i);
-                };
-                pageNumbers.appendChild(pageButton);
-            }
-            container.appendChild(pageNumbers);
-
-            // Кнопка "Наступна"
-            const nextButton = document.createElement('a');
-            nextButton.href = '#';
-            nextButton.className = `btn-page ${currentPage === totalPages - 1 ? 'disabled' : ''}`;
-            nextButton.innerHTML = '<span>→</span>';
-            nextButton.onclick = (e) => {
-                e.preventDefault();
-                if (currentPage < totalPages - 1) loadChapters(currentPage + 1);
-            };
-            container.appendChild(nextButton);
+        chaptersTab.addEventListener('shown.bs.tab', function() {
+            fetchChapters(currentPage);
         });
-    }
 
-    // Ініціалізація при завантаженні сторінки
-    document.addEventListener('DOMContentLoaded', () => {
-        // Додати обробники подій до існуючої пагінації
-        const initialPaginationContainers = document.querySelectorAll('.pagination-container');
-        initialPaginationContainers.forEach(container => {
-            const buttons = container.querySelectorAll('a');
-            buttons.forEach(button => {
-                button.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const page = parseInt(button.textContent) - 1;
-                    loadChapters(page);
+        function fetchChapters(page) {
+            fetch(`/chapters/comic/${comicId}?page=${page}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Full Page Object:', data); // Detailed logging
+                    console.log('Content:', data.content);
+                    console.log('Total Pages:', data.totalPages);
+                    console.log('Current Page:', data.number);
+
+                    updateChaptersList(data.content);
+                    updatePagination(data);
+                })
+                .catch(error => {
+                    console.error('Fetch Error:', error);
                 });
+        }
+
+        function updateChaptersList(chapters) {
+            const chaptersList = document.querySelector('.list-group.chap');
+            chaptersList.innerHTML = '';
+
+            if (!chapters || chapters.length === 0) {
+                chaptersList.innerHTML = '<li class="chapter-item">Глав не знайдено</li>';
+                return;
+            }
+
+            chapters.forEach(chapter => {
+                const li = document.createElement('li');
+                li.classList.add('chapter-item');
+                li.innerHTML = `
+<a href="/chapters/${chapter.id}" class="chapter-link">
+    <div class="chapter-content">
+        <div class="chapter-main">
+            <span class="cl__item-num">Глава ${chapter.chapterNumber}</span>
+            <span class="chapter-title">${chapter.volume} - ${chapter.title}</span>
+        </div>
+        <span class="chapter-date">${formatDate(chapter.releaseDate)}</span>
+    </div>
+</a>
+`;
+                chaptersList.appendChild(li);
             });
-        });
+        }
+
+        function updatePagination(pageData) {
+            const paginationContainer = document.querySelector('.pagination-container');
+            if (!paginationContainer) return;
+
+// Clear existing pagination
+            paginationContainer.innerHTML = '';
+
+// Only create pagination if more than one page
+            if (pageData.totalPages <= 1) return;
+
+// Previous button
+            const prevButton = createPaginationButton('←',
+                pageData.first ? 'disabled' : '',
+                () => {
+                    if (!pageData.first) {
+                        currentPage--;
+                        fetchChapters(currentPage);
+                    }
+                }
+            );
+            paginationContainer.appendChild(prevButton);
+
+// Page numbers
+            const pageNumbersContainer = document.createElement('div');
+            pageNumbersContainer.classList.add('page-numbers', 'd-flex', 'gap-1');
+
+            for (let i = 0; i < pageData.totalPages; i++) {
+                const pageNumber = createPageNumberButton(i, pageData.number === i, () => {
+                    currentPage = i;
+                    fetchChapters(currentPage);
+                });
+                pageNumbersContainer.appendChild(pageNumber);
+            }
+            paginationContainer.appendChild(pageNumbersContainer);
+
+// Next button
+            const nextButton = createPaginationButton('→',
+                pageData.last ? 'disabled' : '',
+                () => {
+                    if (!pageData.last) {
+                        currentPage++;
+                        fetchChapters(currentPage);
+                    }
+                }
+            );
+            paginationContainer.appendChild(nextButton);
+        }
+
+        function createPaginationButton(text, additionalClass, clickHandler) {
+            const button = document.createElement('a');
+            button.classList.add('btn-page', ...additionalClass.split(' '));
+            button.innerHTML = `<span>${text}</span>`;
+            button.addEventListener('click', clickHandler);
+            return button;
+        }
+
+        function createPageNumberButton(pageNumber, isActive, clickHandler) {
+            const button = document.createElement('a');
+            button.classList.add('page-number');
+            if (isActive) button.classList.add('active');
+            button.textContent = pageNumber + 1;
+            button.addEventListener('click', clickHandler);
+            return button;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toISOString().split('T')[0];
+        }
     });
 </script>
 </body>
