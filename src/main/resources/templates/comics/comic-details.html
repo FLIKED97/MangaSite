@@ -338,23 +338,37 @@
         bookmarkList.style.display = bookmarkList.style.display === 'none' ? 'block' : 'none';
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const chaptersTab = document.getElementById('chapters-tab');
+    document.addEventListener('DOMContentLoaded', function () {
         const comicId = [[${comic.id}]];
         let currentPage = 0;
 
-        chaptersTab.addEventListener('shown.bs.tab', function() {
-            loadChapters(`/comics/${comicId}?page=${currentPage}`);
+        // Відновлення активної вкладки при завантаженні сторінки
+        const savedTab = sessionStorage.getItem('activeTab');
+        if (savedTab) {
+            const activeTab = document.querySelector(`[data-bs-target="${savedTab}"]`);
+            if (activeTab) activeTab.click();
+        }
+
+        // Слухаємо зміну вкладок і зберігаємо вибір
+        document.querySelectorAll('.nav-link').forEach(tab => {
+            tab.addEventListener('shown.bs.tab', function (event) {
+                sessionStorage.setItem('activeTab', event.target.dataset.bsTarget);
+            });
         });
 
-        function loadChapters(url) {
-            fetch(url)
+        const chaptersTab = document.getElementById('chapters-tab');
+        chaptersTab.addEventListener('shown.bs.tab', function () {
+            loadChapters(currentPage);
+        });
+
+        function loadChapters(page) {
+            fetch(`/comics/${comicId}?page=${page}`)
                 .then(response => response.json())
                 .then(data => {
                     updateChaptersList(data.content);
                     updatePagination(data);
-
-                    history.pushState({}, '', url);
+                    currentPage = page;
+                    history.pushState({ page: page }, '', `?page=${page}`);
                 })
                 .catch(error => console.error('Помилка завантаження сторінки:', error));
         }
@@ -393,9 +407,9 @@
                 container.innerHTML = '';
 
                 // Previous button
-                const prevButton = createPaginationButton('←', pageData.first ? 'disabled' : '', () => {
+                const prevButton = createPaginationButton('←', pageData.first, () => {
                     if (!pageData.first) {
-                        loadChapters(`/comics/${comicId}?page=${pageData.number - 1}`);
+                        loadChapters(pageData.number - 1);
                     }
                 });
                 container.appendChild(prevButton);
@@ -406,36 +420,43 @@
 
                 for (let i = 0; i < pageData.totalPages; i++) {
                     const pageNumber = createPageNumberButton(i, pageData.number === i, () => {
-                        loadChapters(`/comics/${comicId}?page=${i}`);
+                        loadChapters(i);
                     });
                     pageNumbersContainer.appendChild(pageNumber);
                 }
                 container.appendChild(pageNumbersContainer);
 
                 // Next button
-                const nextButton = createPaginationButton('→', pageData.last ? 'disabled' : '', () => {
+                const nextButton = createPaginationButton('→', pageData.last, () => {
                     if (!pageData.last) {
-                        loadChapters(`/comics/${comicId}?page=${pageData.number + 1}`);
+                        loadChapters(pageData.number + 1);
                     }
                 });
                 container.appendChild(nextButton);
             });
         }
 
-        function createPaginationButton(text, additionalClass, clickHandler) {
-            const button = document.createElement('a');
-            button.classList.add('btn-page', ...additionalClass.split(' '));
+        function createPaginationButton(text, isDisabled, clickHandler) {
+            const button = document.createElement('button');
+            button.classList.add('btn-page');
+            if (isDisabled) button.classList.add('disabled');
             button.innerHTML = `<span>${text}</span>`;
-            button.addEventListener('click', clickHandler);
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+                if (!isDisabled) clickHandler();
+            });
             return button;
         }
 
         function createPageNumberButton(pageNumber, isActive, clickHandler) {
-            const button = document.createElement('a');
+            const button = document.createElement('button');
             button.classList.add('page-number');
             if (isActive) button.classList.add('active');
             button.textContent = pageNumber + 1;
-            button.addEventListener('click', clickHandler);
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+                clickHandler();
+            });
             return button;
         }
 
@@ -444,9 +465,11 @@
             return date.toISOString().split('T')[0];
         }
 
+        // Відновлення пагінації при навігації назад/вперед
         window.addEventListener('popstate', event => {
-            const url = window.location.href;
-            loadChapters(url);
+            if (event.state && event.state.page !== undefined) {
+                loadChapters(event.state.page);
+            }
         });
     });
 </script>
