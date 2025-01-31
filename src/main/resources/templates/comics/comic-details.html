@@ -339,30 +339,24 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        console.log(document.querySelector('.pagination-container'));
         const chaptersTab = document.getElementById('chapters-tab');
         const comicId = [[${comic.id}]];
         let currentPage = 0;
 
         chaptersTab.addEventListener('shown.bs.tab', function() {
-            fetchChapters(currentPage);
+            loadChapters(`/comics/${comicId}?page=${currentPage}`);
         });
 
-        function fetchChapters(page) {
-            fetch(`/chapters/comic/${comicId}?page=${page}`)
+        function loadChapters(url) {
+            fetch(url)
                 .then(response => response.json())
                 .then(data => {
-                    console.log('Full Page Object:', data); // Detailed logging
-                    console.log('Content:', data.content);
-                    console.log('Total Pages:', data.totalPages);
-                    console.log('Current Page:', data.number);
-
                     updateChaptersList(data.content);
                     updatePagination(data);
+
+                    history.pushState({}, '', url);
                 })
-                .catch(error => {
-                    console.error('Fetch Error:', error);
-                });
+                .catch(error => console.error('Помилка завантаження сторінки:', error));
         }
 
         function updateChaptersList(chapters) {
@@ -379,13 +373,13 @@
                 li.classList.add('chapter-item');
                 li.innerHTML = `
 <a href="/chapters/${chapter.id}" class="chapter-link">
-    <div class="chapter-content">
-        <div class="chapter-main">
-            <span class="cl__item-num">Глава ${chapter.chapterNumber}</span>
-            <span class="chapter-title">${chapter.volume} - ${chapter.title}</span>
-        </div>
-        <span class="chapter-date">${formatDate(chapter.releaseDate)}</span>
+  <div class="chapter-content">
+    <div class="chapter-main">
+      <span class="cl__item-num">Глава ${chapter.chapterNumber}</span>
+      <span class="chapter-title">${chapter.volume} - ${chapter.title}</span>
     </div>
+    <span class="chapter-date">${formatDate(chapter.releaseDate)}</span>
+  </div>
 </a>
 `;
                 chaptersList.appendChild(li);
@@ -393,51 +387,39 @@
         }
 
         function updatePagination(pageData) {
-            const paginationContainer = document.querySelector('.pagination-container');
-            if (!paginationContainer) return;
+            const paginationContainers = document.querySelectorAll('.pagination-container');
 
-// Clear existing pagination
-            paginationContainer.innerHTML = '';
+            paginationContainers.forEach(container => {
+                container.innerHTML = '';
 
-            if (pageData.totalPages > 1) {
-
-// Previous button
-                const prevButton = createPaginationButton('←',
-                    pageData.first ? 'disabled' : '',
-                    () => {
-                        if (!pageData.first) {
-                            currentPage--;
-                            fetchChapters(currentPage);
-                        }
+                // Previous button
+                const prevButton = createPaginationButton('←', pageData.first ? 'disabled' : '', () => {
+                    if (!pageData.first) {
+                        loadChapters(`/comics/${comicId}?page=${pageData.number - 1}`);
                     }
-                );
-                paginationContainer.appendChild(prevButton);
+                });
+                container.appendChild(prevButton);
 
-// Page numbers
+                // Page numbers
                 const pageNumbersContainer = document.createElement('div');
                 pageNumbersContainer.classList.add('page-numbers', 'd-flex', 'gap-1');
 
                 for (let i = 0; i < pageData.totalPages; i++) {
                     const pageNumber = createPageNumberButton(i, pageData.number === i, () => {
-                        currentPage = i;
-                        fetchChapters(currentPage);
+                        loadChapters(`/comics/${comicId}?page=${i}`);
                     });
                     pageNumbersContainer.appendChild(pageNumber);
                 }
-                paginationContainer.appendChild(pageNumbersContainer);
+                container.appendChild(pageNumbersContainer);
 
-// Next button
-                const nextButton = createPaginationButton('→',
-                    pageData.last ? 'disabled' : '',
-                    () => {
-                        if (!pageData.last) {
-                            currentPage++;
-                            fetchChapters(currentPage);
-                        }
+                // Next button
+                const nextButton = createPaginationButton('→', pageData.last ? 'disabled' : '', () => {
+                    if (!pageData.last) {
+                        loadChapters(`/comics/${comicId}?page=${pageData.number + 1}`);
                     }
-                );
-                paginationContainer.appendChild(nextButton);
-            }
+                });
+                container.appendChild(nextButton);
+            });
         }
 
         function createPaginationButton(text, additionalClass, clickHandler) {
@@ -461,6 +443,11 @@
             const date = new Date(dateString);
             return date.toISOString().split('T')[0];
         }
+
+        window.addEventListener('popstate', event => {
+            const url = window.location.href;
+            loadChapters(url);
+        });
     });
 </script>
 </body>
