@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -65,6 +66,8 @@ public class ComicsController {
     @GetMapping("/{id}")
     public String getComicById(@PathVariable("id") int comicId,
                                Model model,
+                               @RequestParam(defaultValue = "0") int page,
+                               @RequestParam(defaultValue = "2") int size,
                                HttpSession session) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
@@ -92,22 +95,17 @@ public class ComicsController {
         model.addAttribute("comic", comic);
         model.addAttribute("genres", genreService.findByComicsId(comicId));
         model.addAttribute("tabs", tabsService.findByPersonId(personDetails.getPerson().getId()));
-//        model.addAttribute("chapters", chapterService.findAllChapterByComicsId(comicId));
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("releaseDate").descending());
+        Page<Chapter> chapters = chapterService.findChaptersByComicId(comicId, pageable);
+
+        model.addAttribute("chapters", chapters.getContent());
+        model.addAttribute("totalPages", chapters.getTotalPages());
+        model.addAttribute("currentPage", page);
         model.addAttribute("userRating", ratingService.getUserRating(comicId, personDetails.getPerson().getId()));
         model.addAttribute("comments", commentService.getCommentsByComicsId(comicId));
         return "comics/comic-details";
     }
-    @GetMapping("/{comicId}/chapters")
-    @ResponseBody
-    public Page<Chapter> getChaptersByComicId(
-            @PathVariable("comicId") int comicId, // Змініть на "comicId"
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-
-        Pageable pageable = PageRequest.of(page, size);
-        return chapterService.findChaptersByComicId(comicId, pageable);
-    }
-
 
     @GetMapping("/image/{id}")
     @ResponseBody

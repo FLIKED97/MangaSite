@@ -138,15 +138,24 @@ public class ChapterController {
     public Page<Chapter> getChaptersByComicId(
             @PathVariable int comicId,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "2") int size) {
+            @RequestParam(defaultValue = "2") int size, Model model) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("releaseDate").descending());
         Page<Chapter> chapters = chapterService.findChaptersByComicId(comicId, pageable);
 
         // Force initialization of associated Comic if needed
         chapters.forEach(chapter -> Hibernate.initialize(chapter.getComics()));
-
         return chapters;
     }
 
+    @GetMapping("/comics/{comicId}")
+    public String getComicDetails(@PathVariable int comicId,
+                                  @RequestParam(defaultValue = "0") int page,
+                                  @RequestParam(defaultValue = "2") int size,
+                                  Model model) {
+
+
+        // Інші атрибути, які вам потрібні
+        return "comics/comic-details";
+    }
 }

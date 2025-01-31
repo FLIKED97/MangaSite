@@ -181,8 +181,8 @@
                         <div th:if="${#authorization.expression('hasRole(''ROLE_PUBLISHER'')')}" class="position-absolute start-0">
                             <a th:href="@{/chapters/add(comicId=${comic.id})}" class="btn btn-outline-primary">Додати нову главу</a>
                         </div>
-                        <!-- Пагінація (центрується відносно tab-pane) -->
-                        <div th:if="${totalPages != null and totalPages > 1}" class="pagination-container d-flex justify-content-center">
+<!--                         Пагінація (центрується відносно tab-pane) -->
+                        <div class="pagination-container d-flex justify-content-center">
                             <a th:href="@{'/comics/' + ${comic.id} + '?page=' + ${currentPage != null and currentPage > 0 ? currentPage - 1 : 0}}"
                                th:class="${currentPage == null or currentPage == 0} ? 'btn-page disabled' : 'btn-page'"
                                th:disabled="${currentPage == null or currentPage == 0}">
@@ -226,7 +226,7 @@
                         <div th:if="${#authorization.expression('hasRole(''ROLE_PUBLISHER'')')}" class="position-absolute start-0">
                             <a th:href="@{/chapters/add(comicId=${comic.id})}" class="btn btn-outline-primary">Додати нову главу</a>
                         </div>
-                        <div th:if="${totalPages != null and totalPages > 1}" class="pagination-container d-flex justify-content-center">
+                        <div class="pagination-container d-flex justify-content-center">
                             <a th:href="@{'/comics/' + ${comic.id} + '?page=' + ${currentPage != null and currentPage > 0 ? currentPage - 1 : 0}}"
                                th:class="${currentPage == null or currentPage == 0} ? 'btn-page disabled' : 'btn-page'"
                                th:disabled="${currentPage == null or currentPage == 0}">
@@ -337,7 +337,9 @@
         const bookmarkList = document.getElementById('bookmarkList');
         bookmarkList.style.display = bookmarkList.style.display === 'none' ? 'block' : 'none';
     }
+
     document.addEventListener('DOMContentLoaded', function() {
+        console.log(document.querySelector('.pagination-container'));
         const chaptersTab = document.getElementById('chapters-tab');
         const comicId = [[${comic.id}]];
         let currentPage = 0;
@@ -397,45 +399,45 @@
 // Clear existing pagination
             paginationContainer.innerHTML = '';
 
-// Only create pagination if more than one page
-            if (pageData.totalPages <= 1) return;
+            if (pageData.totalPages > 1) {
 
 // Previous button
-            const prevButton = createPaginationButton('←',
-                pageData.first ? 'disabled' : '',
-                () => {
-                    if (!pageData.first) {
-                        currentPage--;
-                        fetchChapters(currentPage);
+                const prevButton = createPaginationButton('←',
+                    pageData.first ? 'disabled' : '',
+                    () => {
+                        if (!pageData.first) {
+                            currentPage--;
+                            fetchChapters(currentPage);
+                        }
                     }
-                }
-            );
-            paginationContainer.appendChild(prevButton);
+                );
+                paginationContainer.appendChild(prevButton);
 
 // Page numbers
-            const pageNumbersContainer = document.createElement('div');
-            pageNumbersContainer.classList.add('page-numbers', 'd-flex', 'gap-1');
+                const pageNumbersContainer = document.createElement('div');
+                pageNumbersContainer.classList.add('page-numbers', 'd-flex', 'gap-1');
 
-            for (let i = 0; i < pageData.totalPages; i++) {
-                const pageNumber = createPageNumberButton(i, pageData.number === i, () => {
-                    currentPage = i;
-                    fetchChapters(currentPage);
-                });
-                pageNumbersContainer.appendChild(pageNumber);
-            }
-            paginationContainer.appendChild(pageNumbersContainer);
+                for (let i = 0; i < pageData.totalPages; i++) {
+                    const pageNumber = createPageNumberButton(i, pageData.number === i, () => {
+                        currentPage = i;
+                        fetchChapters(currentPage);
+                    });
+                    pageNumbersContainer.appendChild(pageNumber);
+                }
+                paginationContainer.appendChild(pageNumbersContainer);
 
 // Next button
-            const nextButton = createPaginationButton('→',
-                pageData.last ? 'disabled' : '',
-                () => {
-                    if (!pageData.last) {
-                        currentPage++;
-                        fetchChapters(currentPage);
+                const nextButton = createPaginationButton('→',
+                    pageData.last ? 'disabled' : '',
+                    () => {
+                        if (!pageData.last) {
+                            currentPage++;
+                            fetchChapters(currentPage);
+                        }
                     }
-                }
-            );
-            paginationContainer.appendChild(nextButton);
+                );
+                paginationContainer.appendChild(nextButton);
+            }
         }
 
         function createPaginationButton(text, additionalClass, clickHandler) {
