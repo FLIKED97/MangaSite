@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -50,11 +51,6 @@ public class ComicsController {
 
     private static final Logger logger = LoggerFactory.getLogger(ComicsController.class);
 
-//    @GetMapping()
-//    public String showAllComics(Model model){
-//        model.addAttribute("comics", comicsService.showAll());
-//        return "comics/show";
-//    }
 
     @GetMapping("/create")
     public String createComics(Model model){
@@ -73,10 +69,13 @@ public class ComicsController {
         PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
         Comics comic = comicsService.getComicById(comicId);
         List<Comics> similarComics = comicsService.findSimilarComics(comic, 5);
+//        if (comic == null) {
+//            return "error/404";
+//        }
         if (comic == null) {
-            return "error/404";
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Comic not found");
         }
-
+        System.out.println(comic.getId());
         // Унікальний ключ для сесії з прив'язкою до користувача
         String sessionKey = "viewed_comic_" + personDetails.getPerson().getId() + "_" + comicId;
 
@@ -90,6 +89,8 @@ public class ComicsController {
             session.setAttribute(sessionKey, currentTime);
         }
 
+        Chapter firstChapter = chapterService.getFirstChapter(comicId);
+        model.addAttribute("firstChapter", firstChapter);
 
         model.addAttribute("similarComics", similarComics);
         model.addAttribute("comic", comic);

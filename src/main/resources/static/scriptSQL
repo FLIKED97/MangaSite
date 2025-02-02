@@ -1,0 +1,51 @@
+
+CREATE OR REPLACE FUNCTION create_default_tabs()
+    RETURNS TRIGGER AS $$
+BEGIN
+    -- Створення стандартних закладок для нового користувача
+    INSERT INTO tabs (name, person_id, added_at) VALUES ('Читаю', NEW.id, NOW());
+    INSERT INTO tabs (name, person_id, added_at) VALUES ('Відклав', NEW.id, NOW());
+    INSERT INTO tabs (name, person_id, added_at) VALUES ('Прочитано', NEW.id, NOW());
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER after_person_insert
+    AFTER INSERT ON person
+    FOR EACH ROW
+EXECUTE FUNCTION create_default_tabs();
+
+INSERT INTO genres (name) VALUES
+                              ('Екшн'),
+                              ('Пригоди'),
+                              ('Комедія'),
+                              ('Драма'),
+                              ('Фентезі'),
+                              ('Хоррор'),
+                              ('Містика'),
+                              ('Романтика'),
+                              ('Наукова фантастика'),
+                              ('Повсякденність');
+
+
+SELECT * FROM tabs_comics WHERE tabs_id = 1;
+
+SELECT conname
+FROM pg_constraint
+WHERE conrelid = 'person'::regclass AND conname = 'person_role_check';
+
+SELECT c.id, c.author, c.cover_image, c.created_at, c.description,
+       c.image_type, c.popularity_rating, c.status, c.title, c.view_count
+FROM comics c
+         JOIN chapters ch ON c.id = ch.comic_id
+WHERE c.popularity_rating > 0.0
+  AND ch.release_date > '2024-10-12';
+SELECT * FROM pages WHERE chapter_id = 16 LIMIT 5 OFFSET 0;
+
+
+SELECT * FROM reading_progress WHERE comic_id = 12 and person_id = 2;
+
+
+SELECT column_name, data_type
+FROM information_schema.columns
+WHERE table_name = 'person' AND column_name = 'avatar';

@@ -142,9 +142,13 @@ public class ChapterService {
         LocalDateTime oneMonthAgo = LocalDateTime.now().minusDays(70);
         return chapterRepository.findAllNewChapters(oneMonthAgo, pageable);
     }
+//    public Chapter getFirstChapter(int comicsId) {
+//        return chapterRepository.findFirstByComicsIdOrderByChapterNumberAsc(comicsId)
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Перша глава не знайдена"));
+//    }
     public Chapter getFirstChapter(int comicsId) {
         return chapterRepository.findFirstByComicsIdOrderByChapterNumberAsc(comicsId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Перша глава не знайдена"));
+                .orElse(null); // Якщо глави немає, повертаємо null
     }
 
     @Transactional

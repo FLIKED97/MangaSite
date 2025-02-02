@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -86,14 +87,14 @@ public class Person {
             publisher.addPerson(this);
         }
     }
+    @Lob
+    @JsonIgnore
+    @Basic(fetch = FetchType.LAZY)
+    @Column(name = "avatar", nullable = true, length = 100000)
+    private byte[] avatar;
 
-//    public void setPublisher(Publisher publisher) {
-//        this.publisher = publisher;
-//        if (!publisher.getPersons().contains(this)) {
-//            publisher.getPersons().add(this);
-//        }
-//    }
-
+    @Column(name = "avatar_type", nullable = true)
+    private String avatarType;
 
 }
 

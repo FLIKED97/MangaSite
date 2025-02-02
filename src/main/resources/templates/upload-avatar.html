@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Завантаження аватарки</title>
+    <style>
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .avatar-preview {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 20px 0;
+            border: 2px solid #ddd;
+        }
+        .message { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Завантаження аватарки</h1>
+
+    <div th:if="${message}" class="message">
+        <p th:text="${message}"></p>
+    </div>
+    <div th:if="${error}" class="error">
+        <p th:text="${error}"></p>
+    </div>
+
+    <!-- Поточна аватарка -->
+    <div>
+        <h2>Поточна аватарка:</h2>
+        <img th:if="${person.avatar != null}"
+             th:src="@{'/person/avatar/display/' + ${person.id}}"
+             alt="Аватарка користувача"
+             class="avatar-preview">
+        <p th:if="${person.avatar == null}">Аватарка відсутня</p>
+    </div>
+
+    <!-- Форма завантаження -->
+    <form th:action="@{/person/avatar}"
+          method="post"
+          enctype="multipart/form-data">
+        <input type="file"
+               id="avatar"
+               name="avatar"
+               accept="image/*"
+               required>
+        <button type="submit">Завантажити</button>
+    </form>
+</div>
+</body>
+</html>
