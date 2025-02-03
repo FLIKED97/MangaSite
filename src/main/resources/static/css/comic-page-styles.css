@@ -21,6 +21,10 @@ body{
     line-height: 1.4 !important;
     font-family: -apple-system, BlinkMacSystemFont, Open Sans, Roboto, Helvetica Neue, Helvetica, sans-serif !important;
 }
+.btn.disabled, .btn:disabled {
+    opacity: 1 !important;
+}
+
 /* Верхня секція з зображенням та інформацією */
 .top-section {
     display: grid;
