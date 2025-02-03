@@ -16,66 +16,56 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 
 @Controller
 @RequestMapping("/person")
 @AllArgsConstructor
 public class PersonController {
 
-    private PersonService personService;
+    private final PersonService personService;
 
-        @GetMapping("/avatar")
-        public String showAvatarPage(Model model, @AuthenticationPrincipal PersonDetails user) {
-            Person person = personService.findById(user.getPerson().getId());
-            model.addAttribute("person", person);
-            return "upload-avatar";
+    @GetMapping("/avatar")
+    public String showAvatarPage(Model model, @AuthenticationPrincipal PersonDetails user) {
+        Person person = personService.findById(user.getPerson().getId());
+        model.addAttribute("person", person);
+        return "upload-avatar"; // HTML-шаблон для завантаження аватарки
+    }
+
+    @PostMapping("/avatar")
+    public String uploadAvatar(@RequestParam("avatar") MultipartFile file,
+                               RedirectAttributes redirectAttributes,
+                               @AuthenticationPrincipal PersonDetails user) {
+        try {
+            personService.uploadAvatar(file, user);
+            redirectAttributes.addFlashAttribute("message", "Avatar uploaded successfully!");
+        } catch (IllegalArgumentException | IOException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
 
-        @PostMapping("/avatar")
-        @Transactional
-        public String uploadAvatar(@RequestParam("avatar") MultipartFile file,
-                                   RedirectAttributes redirectAttributes,
-                                   @AuthenticationPrincipal PersonDetails user) {
+        return "redirect:/person/avatar";
+    }
+
+    // Ендпоінт для віддачі аватарки
+    @GetMapping("/avatar/display/{id}")
+    @ResponseBody
+    public ResponseEntity<byte[]> getAvatar(@PathVariable int id) {
+        Person person = personService.findById(id);
+        if (person != null && person.getAvatarPath() != null) {
             try {
-                if (file.isEmpty()) {
-                    redirectAttributes.addFlashAttribute("error", "Будь ласка, виберіть файл");
-                    return "redirect:/person/avatar";
-                }
-
-                if (file.getSize() > 5 * 1024 * 1024) { // 5MB
-                    redirectAttributes.addFlashAttribute("error", "Файл завеликий. Максимальний розмір - 5MB");
-                    return "redirect:/person/avatar";
-                }
-
-                if (!file.getContentType().startsWith("image/")) {
-                    redirectAttributes.addFlashAttribute("error", "Будь ласка, завантажте зображення");
-                    return "redirect:/person/avatar";
-                }
-
-                Person person = personService.findById(user.getPerson().getId());
-                person.setAvatar(file.getBytes());
-                person.setAvatarType(file.getContentType());
-                personService.save(person);
-
-                redirectAttributes.addFlashAttribute("message", "Аватар успішно завантажено!");
-            } catch (Exception e) {
-                redirectAttributes.addFlashAttribute("error", "Помилка при завантаженні файлу: " + e.getMessage());
-            }
-
-            return "redirect:/person/avatar";
-        }
-
-        @GetMapping("/avatar/display/{id}")
-        @ResponseBody
-        public ResponseEntity<byte[]> getAvatar(@PathVariable int id) {
-            Person person = personService.findById(id);
-
-            if (person != null && person.getAvatar() != null) {
+                Path filePath = Paths.get(person.getAvatarPath());
+                byte[] imageBytes = Files.readAllBytes(filePath);
                 HttpHeaders headers = new HttpHeaders();
-                headers.setContentType(MediaType.parseMediaType(person.getAvatarType()));
-                return new ResponseEntity<>(person.getAvatar(), headers, HttpStatus.OK);
+                headers.setContentType(MediaType.IMAGE_JPEG);
+                return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
+            } catch (IOException e) {
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
-
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 }

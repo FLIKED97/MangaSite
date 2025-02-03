@@ -68,6 +68,7 @@ public class ComicsService {
         return comicsRepository.findAllByTabsId(tabId);
     }
 
+    @Transactional
     public List<Comics> getComicsSortedBy(String sortBy) {
         List<Comics> comics = comicsRepository.findAll();
         if ("views".equals(sortBy)) {

@@ -1,12 +1,9 @@
 package com.example.MangaWebSite.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Type;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -87,14 +84,12 @@ public class Person {
             publisher.addPerson(this);
         }
     }
-    @Lob
-    @JsonIgnore
-    @Basic(fetch = FetchType.LAZY)
-    @Column(name = "avatar", nullable = true, length = 100000)
-    private byte[] avatar;
+    // Поле для зберігання шляху до аватарки
+    @Column(name = "avatar_path", nullable = true)
+    private String avatarPath;
 
+    // Поле для зберігання MIME-типу аватарки
     @Column(name = "avatar_type", nullable = true)
     private String avatarType;
-
 }
 

@@ -21,37 +21,28 @@
     </style>
 </head>
 <body>
-<div class="container">
-    <h1>Завантаження аватарки</h1>
+<h1>Завантажити аватарку</h1>
 
-    <div th:if="${message}" class="message">
-        <p th:text="${message}"></p>
-    </div>
-    <div th:if="${error}" class="error">
-        <p th:text="${error}"></p>
-    </div>
+<div th:if="${error}" style="color: red;">
+    <p th:text="${error}"></p>
+</div>
+<div th:if="${message}" style="color: green;">
+    <p th:text="${message}"></p>
+</div>
 
-    <!-- Поточна аватарка -->
-    <div>
-        <h2>Поточна аватарка:</h2>
-        <img th:if="${person.avatar != null}"
-             th:src="@{'/person/avatar/display/' + ${person.id}}"
-             alt="Аватарка користувача"
-             class="avatar-preview">
-        <p th:if="${person.avatar == null}">Аватарка відсутня</p>
-    </div>
+<form th:action="@{/person/avatar}" method="post" enctype="multipart/form-data">
+    <input type="file" name="avatar" accept="image/*" required />
+    <button type="submit">Завантажити</button>
+</form>
 
-    <!-- Форма завантаження -->
-    <form th:action="@{/person/avatar}"
-          method="post"
-          enctype="multipart/form-data">
-        <input type="file"
-               id="avatar"
-               name="avatar"
-               accept="image/*"
-               required>
-        <button type="submit">Завантажити</button>
-    </form>
+<div>
+    <h2>Поточна аватарка:</h2>
+    <div th:if="${person.avatarPath != null}">
+        <img th:src="@{'/person/avatar/display/' + ${person.id}}" alt="Avatar" style="width: 150px; height: 150px; border-radius: 50%;">
+    </div>
+    <div th:if="${person.avatarPath == null}">
+        <p>Аватар не завантажено.</p>
+    </div>
 </div>
 </body>
 </html>

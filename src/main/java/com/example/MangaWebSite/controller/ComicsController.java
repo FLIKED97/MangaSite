@@ -6,6 +6,7 @@ import com.example.MangaWebSite.security.PersonDetails;
 import com.example.MangaWebSite.service.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -174,16 +175,17 @@ public class ComicsController {
 
         return "redirect:/comics/" + comicId;
     }
-@GetMapping("/newShow")
-public String listComics(@RequestParam(name = "sortBy", required = false, defaultValue = "rating") String sortBy,
-                         Model model) {
-    List<Comics> comics = comicsService.getComicsSortedBy(sortBy);
+    @GetMapping("/newShow")
+    public String listComics(@RequestParam(name = "sortBy", required = false, defaultValue = "rating") String sortBy,
+                             Model model,
+                             @AuthenticationPrincipal PersonDetails user) {
+        List<Comics> comics = comicsService.getComicsSortedBy(sortBy);
 
-    model.addAttribute("comics", comics);
-    model.addAttribute("sortBy", sortBy);
+        model.addAttribute("comics", comics);
+        model.addAttribute("sortBy", sortBy);
 
-    return "comics/newShow";
-}
+        return "comics/newShow";
+    }
 
     @GetMapping("/sections")
     public String getComicsBySection(
