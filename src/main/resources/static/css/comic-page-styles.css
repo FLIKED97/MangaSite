@@ -592,3 +592,135 @@ body{
     background-color: #fff;
     border-color: #fff;
 }
+/*---------------------------------КОМЕНТАРІ----------------------------------------*/
+/* Контейнер форми */
+.lt_cm_form {
+    background-color: #2c2c2c;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+/* Контейнер поля вводу */
+.lt_cm_input_container {
+    position: relative;
+}
+
+/* Поле вводу (textarea) */
+.lt_cm_textarea {
+    width: 100%;
+    font-size: 14px;
+    color: #DFDFDF;
+    background-color: #1e1e1e;
+    border: 1px solid #444;
+    border-radius: 4px;
+    padding-bottom: 40px; /* Збільшуємо нижній відступ, щоб кнопки не перекривали текст */
+}
+.lt_cm_textarea:focus {
+    background-color: #1e1e1e !important; /* такий самий фон */
+    color: #DFDFDF !important;           /* текст залишається того ж кольору */
+    border-color: #444;       /* межа залишається тієї ж */
+    outline: none;            /* вимикаємо стандартне обведення */
+}
+/* Блок з кнопками форматування */
+.lt_cm_format_buttons {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    display: flex;
+    gap: 5px;
+}
+
+/* Кнопки форматування */
+.lt_cm_btn {
+    background-color: #444;
+    color: #DFDFDF !important;
+    border: none;
+    padding: 5px 8px;
+    font-size: 14px;
+    border-radius: 3px;
+}
+.lt_cm_btn:hover {
+    background-color: #555;
+}
+
+/* Кнопка надсилання */
+.lt_cm_submit {
+    background-color: #007bff;
+    border: none;
+    font-size: 14px;
+    color: #fff;
+    padding: 7px 15px;
+    border-radius: 4px;
+}
+
+/* Загальні стилі для списку коментарів */
+.lt_cm_comments_list {
+    margin-top: 20px;
+}
+.lt_cm_no_comments {
+    font-size: 14px;
+    color: #DFDFDF;
+}
+
+/* Список коментарів */
+.lt_cm_comments_ul {
+    list-style: none;
+    padding: 0;
+}
+
+/* Елемент коментаря */
+.lt_cm_comment_item {
+    border-bottom: 1px solid #444;
+    padding: 10px 0;
+}
+
+/* Заголовок коментаря */
+.lt_cm_comment_header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+}
+.lt_cm_avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.lt_cm_author {
+    font-weight: bold;
+    color: #DFDFDF;
+}
+.lt_cm_date {
+    color: #aaa;
+    font-size: 12px;
+}
+.lt_cm_pin_icon {
+    margin-left: auto;
+    color: gold;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* Тіло коментаря */
+.lt_cm_comment_body {
+    margin-top: 5px;
+}
+.lt_cm_comment_text {
+    font-size: 14px;
+    color: #DFDFDF;
+}
+
+/* Футер коментаря: лайки та дизлайки */
+.lt_cm_comment_footer {
+    margin-top: 5px;
+}
+.lt_cm_like, .lt_cm_dislike {
+    margin-right: 15px;
+    font-size: 14px;
+    color: #DFDFDF;
+    cursor: pointer;
+}
+.lt_cm_like i, .lt_cm_dislike i {
+    margin-right: 5px;
+}
