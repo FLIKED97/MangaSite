@@ -35,7 +35,7 @@ body{
 .profile-info h4 {
     margin: 0 0 5px;
     /* За бажанням можна задати інший розмір для заголовка */
-    font-size: 18px;
+    font-size: 16px;
 }
 .profile-info p {
     margin: 0;
@@ -44,13 +44,20 @@ body{
 
 /* Navigation Section */
 .nav-section {
-    margin-top: 15px;
+    margin-top: 5px;
     border-top: solid 1px rgba(84, 84, 88, .65);
+    gap: 16px !important;
+    display: flex;
+    padding: 0 16px;
 }
 .nav-section button {
-    margin-right: 10px;
-}
 
+}
+.nav-section .custom-btn{
+    font-size: 14px !important;
+    color: #BFBFBF !important;
+    padding: 10px 0;
+}
 /* Якщо потрібно додатково стилізувати текст, який має клас .text-muted,
    можна перекрити стандартні Bootstrap-стилі, наприклад: */
 .text-muted {

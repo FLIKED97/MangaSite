@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Data
@@ -91,5 +92,9 @@ public class Person {
     // Поле для зберігання MIME-типу аватарки
     @Column(name = "avatar_type", nullable = true)
     private String avatarType;
+
+    public long getDaysInApp() {
+        return ChronoUnit.DAYS.between(createdAt, LocalDateTime.now());
+    }
 }
 

@@ -38,15 +38,15 @@
 
         <div class="profile-info">
           <h4 class="mb-1" th:text="${person.username}">User Name</h4>
-          <p class="text-muted">In app for <span id="days-in-app">X</span> days</p>
+          <p class="text-muted">У додатку <span th:text="${person.daysInApp}">X</span> дня</p>
         </div>
       </div>
-      <button class="btn btn-primary">Settings</button>
+      <button class="btn btn-primary">Налаштування</button>
     </div>
 
 
     <!-- Navigation Section -->
-    <div class="nav-section mt-3">
+    <div class="nav-section ">
       <button class="custom-btn" onclick="loadSection('bookmarks')">Закладки</button>
       <button class="custom-btn" onclick="loadSection('comments')">Коментарі</button>
       <button class="custom-btn" onclick="loadSection('friends')">Друзі</button>
@@ -71,12 +71,6 @@
   document.addEventListener('DOMContentLoaded', function() {
     loadSection('bookmarks'); // Автоматичне відкриття закладок при завантаженні сторінки
   });
-
-  // Simulate days since account creation
-  const createdAt = new Date('2024-01-01'); // Replace with actual date from backend
-  const today = new Date();
-  const daysInApp = Math.floor((today - createdAt) / (1000 * 60 * 60 * 24));
-  document.getElementById('days-in-app').textContent = daysInApp;
 
     // Load section content
   function loadSection(section) {
