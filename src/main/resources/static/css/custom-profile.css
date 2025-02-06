@@ -63,3 +63,99 @@ body{
 .text-muted {
     color: #dfdfdf !important;
 }
+.col-md-3{
+    background-color: #1c1c1c;
+    color: #dfdfdf;
+    font-size: 14px;
+    padding: 2px;
+    border-radius: 10px;
+}
+.col-md-9{
+    background-color: #1c1c1c;
+    color: #dfdfdf;
+    font-size: 14px;
+    padding: 2px;
+    border-radius: 10px;
+}
+.row{
+    margin-right: 0 !important;
+    gap: 16px;
+}
+@media (min-width: 768px) {
+    .col-md-3 {
+        -ms-flex: 0 0 20% !important;
+        flex: 0 0 20% !important;
+        max-width: 20% !important;
+    }
+    .col-md-9 {
+        -ms-flex: 0 0 80% !important;
+        flex: 0 0 80% !important;
+        max-width: 80% !important;
+    }
+}
+/* Контейнер заголовку з позиціюванням для псевдоелемента */
+.custom-heading-wrapper {
+    position: relative;
+}
+
+/* Вміст заголовку: текст і іконка */
+.custom-heading-content {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* або, наприклад, space-between, залежно від потрібного розташування */
+    position: relative;
+    z-index: 1; /* вміст повинен бути поверх лінії */
+}
+
+/* Стиль для заголовку (текст) */
+.custom-heading {
+    font-size: 14px;
+    margin: 0;
+}
+
+/* Стиль для іконки */
+.custom-heading-content svg {
+    width: 10.5px;
+    height: 10.5px;
+    flex-shrink: 0;
+    margin-left: 8px; /* відступ від тексту */
+}
+
+/* Псевдоелемент для горизонтальної лінії */
+.divider.is-text:before {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right,
+    #e5e5e5 0%,
+    #e5e5e5 calc(50% - 50px),
+    transparent calc(50% - 50px),
+    transparent calc(50% + 50px),
+    #e5e5e5 calc(50% + 50px),
+    #e5e5e5 100%
+    );
+    position: absolute;
+    top: 50%;
+    left: 0;
+    z-index: 0;
+    transform: translateY(-50%);
+}
+.col-md-3 .list-group{
+    gap: 0;
+}
+
+.col-md-3 .list-group .list-group-item {
+    background-color: transparent !important;
+    margin-top: 8px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: start;
+    border: none !important;
+}
+
+.col-md-3 .list-group .list-group-item:hover {
+    background-color: rgba(116, 116, 128, .1) !important; /* Darker shade on hover */
+}
