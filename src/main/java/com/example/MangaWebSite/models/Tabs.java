@@ -2,6 +2,7 @@ package com.example.MangaWebSite.models;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -35,6 +36,10 @@ public class Tabs {
 
     @Column(name = "added_at", nullable = false)
     private LocalDateTime addedAt;
+    @Transactional(readOnly = true)
+    public int getComicsCount() {
+        return comics != null ? comics.size() : 0;
+    }
 }
 
 

@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Transactional(readOnly = true)
 public class TabsService {
     private final TabsRepository tabsRepository;
 
@@ -32,6 +33,7 @@ public class TabsService {
         return tabsRepository.findById(tabId).orElse(null);
     }
 
+    @Transactional
     public int saveWithRedirect(Tabs tab) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
@@ -66,5 +68,9 @@ public class TabsService {
                 .map(Comics::getId)
                 .distinct()
                 .collect(Collectors.toList());
+    }
+
+    public List<Tabs> getTabsWithComicsCount(int personId) {
+        return tabsRepository.findByPersonIdWithComics(personId);
     }
 }

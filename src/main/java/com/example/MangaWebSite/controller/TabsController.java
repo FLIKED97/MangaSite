@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -24,8 +25,12 @@ public class TabsController {
 
     private final ComicsService comicsService;
     @GetMapping("/person/{personId}")
+    @Transactional(readOnly = true)
     public String showTabs(@PathVariable("personId") int personId, Model model) {
-        model.addAttribute("tabs", tabsService.findByPersonId(personId));
+        List<Tabs> tabs = tabsService.getTabsWithComicsCount(personId);
+        model.addAttribute("tabs", tabs);
+        model.addAttribute("personId", personId);
+//        model.addAttribute("tabs", tabsService.findByPersonId(personId));
         return "tabs/show";
     }
 
@@ -42,7 +47,7 @@ public class TabsController {
     @PostMapping("/create")
     public String createTab(@ModelAttribute("tab") Tabs tab) {
         int personId = tabsService.saveWithRedirect(tab);  //TODO Можливо переробити, не дуже подобається варіант
-        return "redirect:/profile/" + personId;
+        return "redirect:/profile/personal/" + personId;
     }
     @PostMapping("/delete/{id}")
     @ResponseBody
