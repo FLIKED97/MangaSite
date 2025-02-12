@@ -2,6 +2,7 @@ package com.example.MangaWebSite.controller;
 
 import com.example.MangaWebSite.models.Comics;
 import com.example.MangaWebSite.models.Tabs;
+import com.example.MangaWebSite.service.ChapterService;
 import com.example.MangaWebSite.service.ComicsService;
 import com.example.MangaWebSite.service.TabsService;
 import lombok.AllArgsConstructor;
@@ -13,7 +14,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -22,8 +25,8 @@ import java.util.List;
 public class TabsController {
 
     private final TabsService tabsService;
-
     private final ComicsService comicsService;
+    private final ChapterService chapterService;
     @GetMapping("/person/{personId}")
     @Transactional(readOnly = true)
     public String showTabs(@PathVariable("personId") int personId, Model model) {
@@ -36,7 +39,19 @@ public class TabsController {
 
     @GetMapping("/person/{personId}/tab/{tabId}")
     public String getComicsByTab(@PathVariable("personId") int personId, @PathVariable("tabId") int tabId, Model model) {
-        model.addAttribute("comics", comicsService.getComicsByTabId(tabId));
+        List<Comics> comicsInTabs =  comicsService.getComicsByTabId(tabId);
+        model.addAttribute("comics", comicsInTabs);
+        Map<Integer, String> latestChapters = new HashMap<>();
+        for (Comics comic : comicsInTabs) {
+            latestChapters.put(comic.getId(), chapterService.getLatestChapterTitle(comic.getId()));
+        }
+        model.addAttribute("latestChapters", latestChapters);
+        Map<Integer, Integer> totalChapters = new HashMap<>();
+        for (Comics comic : comicsInTabs){
+            totalChapters.put(comic.getId(), chapterService.findAllChapterByComicsId(comic.getId()).size());
+        }
+        model.addAttribute("totalChapter", totalChapters);
+        model.addAttribute("firstChapter", 1);
         return "tabs/comicsList :: comics-fragment";  // Повертаємо фрагмент для оновлення через AJAX
     }
     @GetMapping("/create")

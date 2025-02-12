@@ -5,20 +5,34 @@
   <title>Comics</title>
 </head>
 <body>
+<!--================================================================================-->
 <div th:fragment="comics-fragment">
-  <div th:if="${#lists.isEmpty(comics)}">
-    <p>No comics found for this tab.</p>
+  <div th:if="${#lists.isEmpty(comics)}" class="alert alert-info mt-4">
+    <i class="fas fa-info-circle me-2"></i>
+    Для цієї вкладки не знайдено коміксів.
   </div>
-  <div th:each="comic : ${comics}">
-    <div class="card mb-3">
-      <div class="row g-0">
-        <div class="col-md-4">
-          <img th:src="@{/comics/image/{id}(id=${comic.id})}" class="img-fluid rounded-start" alt="Comic Cover">
+
+  <div class="row g-3">
+    <div th:each="comic : ${comics}" class="col-12">
+      <div class="comic-card d-flex align-items-center">
+        <div class="comic-image-wrapper flex-shrink-0" style="width: 80px; height: 100%;">
+          <img th:src="@{/comics/image/{id}(id=${comic.id})}"
+               class="comic-image"
+               alt="Comic Cover"
+               loading="lazy">
         </div>
-        <div class="col-md-8">
-          <div class="card-body">
-            <h5 class="card-title" th:text="${comic.title}">Comic Title</h5>
-            <p class="card-text" th:text="${comic.description}">Description of the comic.</p>
+        <div class="comic-content flex-grow-1">
+          <h5 class="comic-title" th:text="${comic.title}">Comic Title</h5>
+          <p class="comic-description" th:text="${comic.description}">Description of the comic.</p>
+          <div class="comic-meta">
+            <span class="comic-badge">
+              <i class="fas fa-book-open me-1"></i>
+              <span th:text="'Розділ ' + ${firstChapter} + ' / ' + ${totalChapter[comic.id]}"></span>
+            </span>
+<!--            <button class="comic-btn">-->
+<!--              <i class="fas fa-book-reader me-1"></i>-->
+<!--              Читати-->
+<!--            </button>-->
           </div>
         </div>
       </div>
