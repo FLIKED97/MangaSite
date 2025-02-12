@@ -12,9 +12,10 @@
     Для цієї вкладки не знайдено коміксів.
   </div>
 
-  <div class="row g-3">
-    <div th:each="comic : ${comics}" class="col-12">
-      <div class="comic-card d-flex align-items-center">
+<!--  <div class="row g-3">-->
+<!--    <div th:each="comic : ${comics}" class="col-12">-->
+      <div th:each="comic : ${comics}">
+  <div class="comic-card d-flex align-items-center" th:data-date="${comic.createdAt}">
         <div class="comic-image-wrapper flex-shrink-0" style="width: 80px; height: 100%;">
           <img th:src="@{/comics/image/{id}(id=${comic.id})}"
                class="comic-image"
@@ -33,7 +34,7 @@
         </div>
       </div>
     </div>
-  </div>
+<!--  </div>-->
 </div>
 </body>
 </html>
