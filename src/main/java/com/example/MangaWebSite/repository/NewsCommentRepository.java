@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface NewsCommentRepository extends JpaRepository<NewsComment, Integer> {
     List<NewsComment> findAllByNewsId(int id);
+
+    List<NewsComment> findAllByPersonId(int personId);
 }

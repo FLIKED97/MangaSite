@@ -29,4 +29,8 @@ public class NewsCommentService {
         newsComment.setText(content);
         newsCommentRepository.save(newsComment);
     }
+
+    public List<NewsComment> getAllNewsCommentsByPersonId(int personId) {
+        return newsCommentRepository.findAllByPersonId(personId);
+    }
 }

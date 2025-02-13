@@ -7,6 +7,7 @@ class ProfileManager {
         this.comicsCache = new Map(); // Кешування коміксів для кожної закладки
         this.currentTabId = null; // Поточна активна закладка
 
+
         this.init();
     }
 
@@ -46,10 +47,31 @@ class ProfileManager {
             if (!response.ok) throw new Error('Network response was not ok');
 
             const html = await response.text();
+
+            // Якщо це секція коментарів, зберігаємо поточні фільтри
+            let currentFilters = null;
+            if (section === 'comments') {
+                const filtersSection = document.querySelector('.col-md-3');
+                if (filtersSection) {
+                    currentFilters = filtersSection.cloneNode(true);
+                }
+            }
+
             this.contentElement.innerHTML = html;
+
+            // Відновлюємо фільтри, якщо вони були
+            if (currentFilters && section === 'comments') {
+                const newFiltersSection = document.querySelector('.col-md-3');
+                if (newFiltersSection) {
+                    newFiltersSection.replaceWith(currentFilters);
+                }
+            }
 
             if (section === 'bookmarks') {
                 this.initBookmarksHandlers();
+            } else if (section === 'comments') {
+                // Ініціалізуємо CommentManager після завантаження секції коментарів
+                new CommentManager();
             }
         } catch (error) {
             this.showError(`Failed to load ${section}`);
