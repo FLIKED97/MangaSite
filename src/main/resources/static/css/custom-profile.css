@@ -172,3 +172,134 @@ body{
     opacity: .7;
     font-size: 11px;
 }
+.search-wrapper {
+    position: relative;
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #BFBFBF;
+    z-index: 2;
+}
+
+.search-wrapper input {
+    background: #2C2C30;
+    border: none;
+    color: #BFBFBF;
+    padding: 10px 15px 10px 40px;
+    border-radius: 6px !important;
+}
+
+.search-wrapper input::placeholder {
+    color: #BFBFBF;
+}
+
+.search-wrapper input:focus {
+    background: #2C2C30;
+    color: #BFBFBF;
+    box-shadow: none;
+    border: 1px solid #4a4a4f;
+}
+
+.st-wr {
+    position: relative;
+    min-width: 200px;
+}
+
+.sort-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #BFBFBF;
+    z-index: 2;
+}
+.st-wr select {
+    position: relative;
+    color: #BFBFBF;
+    padding: 10px 15px 10px 40px;
+    background: #2C2C30;
+    border: none;
+    border-radius: 6px !important;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    background-image: none !important;
+    width: 100%;
+}
+/* Прибираємо стандартну стрілку */
+.st-wr select.form-select {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    background-image: none !important;
+}
+.st-wr select::-ms-expand {
+    display: none !important;
+}
+
+.st-wr select:focus {
+    box-shadow: none;
+    background: #2C2C30;
+    color: #BFBFBF;
+    outline: none;
+}
+.st-wr select::-ms-expand {
+    display: none;
+}
+.st-wr::after {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #BFBFBF;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* При наведенні миші */
+.st-wr select:hover {
+    background: #363639;
+}
+
+/* Для мобільних пристроїв */
+@media (max-width: 576px) {
+    .d-flex {
+        flex-direction: column;
+    }
+
+    .search-wrapper,
+    .st-wr {
+        width: 100%;
+    }
+
+    .st-wr {
+        min-width: 100%;
+    }
+}
+
+/* Прибираємо білий фон при автозаповненні в Chrome */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #2C2C30 inset !important;
+    -webkit-text-fill-color: #BFBFBF !important;
+}
+
+/* Прибираємо білий фон при фокусі для селекта */
+.st-wr select:focus-visible {
+    outline: none;
+}
+.mg{
+    gap: 15px;
+}

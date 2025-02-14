@@ -34,14 +34,18 @@
         <!-- Центральна панель -->
         <div class="col-md-9">
 <!--            <h3>Елементи закладки</h3>-->
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <div>
-                    <input type="text" id="search-input" class="form-control d-inline w-75" placeholder="Пошук за назвою">
+            <div class="d-flex justify-content-between align-items-center mb-3 mt-3 mg">
+                <div class="search-wrapper position-relative flex-grow-1">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="search-input" class="form-control ps-5" placeholder="Пошук за назвою">
                 </div>
-                <select id="sort-comics" class="form-select w-25">
-                    <option value="name">Сортувати за назвою</option>
-                    <option value="date">Сортувати за датою</option>
-                </select>
+                <div class="st-wr">
+                    <i class="fas fa-sort sort-icon"></i>
+                    <select id="sort-comics" class="form-select ps-5">
+                        <option value="name">Сортувати за назвою</option>
+                        <option value="date">Сортувати за датою</option>
+                    </select>
+                </div>
             </div>
             <div id="comics-container">
                 <!-- Тут будуть підвантажуватись комікси -->
