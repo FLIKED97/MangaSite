@@ -17,74 +17,100 @@
                 </div>
 
                 <!-- Список фільтрів -->
-                <div class="list-group">
+                <div class="list-group lt-gp">
                     <!-- Фільтр за типом -->
                     <div class="list-group-item">
-                        <h6>Тип коментарів</h6>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="commentType" id="allComments" value="all" checked>
                             <label class="form-check-label" for="allComments">Всі</label>
                         </div>
+                    </div>
+                    <div class="list-group-item">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="commentType" id="comicsComments" value="comics">
                             <label class="form-check-label" for="comicsComments">Комікси</label>
                         </div>
+                    </div>
+                    <div class="list-group-item">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="commentType" id="newsComments" value="news">
                             <label class="form-check-label" for="newsComments">Новини</label>
                         </div>
                     </div>
+                </div>
 
+                <div class="custom-heading-wrapper divider is-text">
+                    <div class="custom-heading-content">
+                        <h3 class="custom-heading">Сортування</h3>
+                    </div>
+                </div>
+
+                <div class="list-group lt-gp">
                     <!-- Фільтр за датою -->
                     <div class="list-group-item">
-                        <h6>Сортування за датою</h6>
-                        <select id="dateSort" class="form-select">
-                            <option value="newest">Найновіші</option>
-                            <option value="oldest">Найстаріші</option>
-                        </select>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="dateSort" id="newest" value="newest" checked>
+                            <label class="form-check-label" for="newest">Найновіші</label>
+                        </div>
                     </div>
-
-                    <!-- Пошук за текстом -->
                     <div class="list-group-item">
-                        <h6>Пошук</h6>
-                        <input type="text" id="commentSearch" class="form-control" placeholder="Пошук за текстом">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="dateSort" id="oldest" value="oldest">
+                            <label class="form-check-label" for="oldest">Найстаріші</label>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="col-md-9">
+                <!-- Пошук за текстом -->
+                <div class="search-wrapper position-relative flex-grow-1 mb-3 mt-3" >
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="commentSearch" class="form-control" placeholder="Пошук за текстом">
+                </div>
                 <div th:if="${#lists.isEmpty(comicsComments) && #lists.isEmpty(newsComments)}">
                     <p>Немає доступних коментарів.</p>
                 </div>
-                <ul th:if="${!#lists.isEmpty(comicsComments) || !#lists.isEmpty(newsComments)}" class="list-group">
+                <ul th:if="${!#lists.isEmpty(comicsComments) || !#lists.isEmpty(newsComments)}" class="list-group comments-list">
                     <!-- Коментарі до коміксів -->
-                    <li th:each="c : ${comicsComments}" class="list-group-item"
+                    <li th:each="c : ${comicsComments}" class="list-group-item comment-item"
                         th:data-date="${c.createdAt}"
                         th:data-type="comics"
                         th:data-comics-id="${c.comics.id}">
-                        <strong>
-                            <a th:href="@{/comics/{id}(id=${c.comics.id})}" th:text="${c.comics.title}">Name comics</a>
-                        </strong>
-                        <p th:text="${c.text}">Текст коментаря</p>
-                        <small>
-                            <img th:src="@{/comics/image/{id}(id=${c.comics.id})}" class="img-fluid rounded-start" alt="Comic Cover">
-                        </small>
-                        <div class="comment-meta">
-                            <small class="text-muted" th:text="${#temporals.format(c.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</small>
+                        <div class="comment-header">
+                            <strong>
+                                <a th:href="@{/comics/{id}(id=${c.comics.id})}" th:text="${'Тайтл: ' + c.comics.title}">Тайтл: Name comics</a>
+                            </strong>
                         </div>
+                        <div class="comment-info">
+                            <div class="user-info">
+                                <img src="/images/default-avatar.png" alt="User Avatar" class="user-avatar">
+                                <span class="username">Username</span>
+                                <small class="comment-date" th:text="${#temporals.format(c.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</small>
+                            </div>
+                        </div>
+                        <p class="comment-text" th:text="${c.text}">Текст коментаря</p>
+                        <button class="delete-btn">Видалити</button>
                     </li>
 
                     <!-- Коментарі до новин -->
-                    <li th:each="c : ${newsComments}" class="list-group-item"
+                    <li th:each="c : ${newsComments}" class="list-group-item comment-item"
                         th:data-date="${c.createdAt}"
                         th:data-type="news"
                         th:data-news-id="${c.news.id}">
-                        <strong>
-                            <a th:href="@{/news/{id}(id=${c.news.id})}" th:text="${c.news.title}">Name news</a>
-                        </strong>
-                        <p th:text="${c.text}">Текст коментаря</p>
-                        <div class="comment-meta">
-                            <small class="text-muted" th:text="${#temporals.format(c.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</small>
+                        <div class="comment-header">
+                            <strong>
+                                <a th:href="@{/news/{id}(id=${c.news.id})}" th:text="${'Новина: ' + c.news.title}">Новина: Name news</a>
+                            </strong>
                         </div>
+                        <div class="comment-info">
+                            <div class="user-info">
+                                <img src="/images/default-avatar.png" alt="User Avatar" class="user-avatar">
+                                <span class="username">Username</span>
+                                <small class="comment-date" th:text="${#temporals.format(c.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</small>
+                            </div>
+                        </div>
+                        <p class="comment-text" th:text="${c.text}">Текст коментаря</p>
+                        <button class="delete-btn">Видалити</button>
                     </li>
                 </ul>
             </div>

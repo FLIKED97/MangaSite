@@ -9,18 +9,21 @@ class CommentManager {
     }
 
     initFilters() {
-        const radioButtons = document.querySelectorAll('input[name="commentType"]');
-        const dateSortSelect = document.getElementById('dateSort');
+        // Отримуємо всі radio buttons (і для типу коментарів, і для сортування)
+        const typeRadioButtons = document.querySelectorAll('input[name="commentType"]');
+        const sortRadioButtons = document.querySelectorAll('input[name="dateSort"]');
         const searchInput = document.getElementById('commentSearch');
 
-        if (radioButtons) {
-            radioButtons.forEach(radio => {
+        if (typeRadioButtons) {
+            typeRadioButtons.forEach(radio => {
                 radio.addEventListener('change', () => this.applyFilters());
             });
         }
 
-        if (dateSortSelect) {
-            dateSortSelect.addEventListener('change', () => this.applyFilters());
+        if (sortRadioButtons) {
+            sortRadioButtons.forEach(radio => {
+                radio.addEventListener('change', () => this.applyFilters());
+            });
         }
 
         if (searchInput) {
@@ -34,7 +37,7 @@ class CommentManager {
             return;
         }
         const commentType = document.querySelector('input[name="commentType"]:checked')?.value || 'all';
-        const dateSort = document.getElementById('dateSort')?.value || 'newest';
+        const dateSort = document.querySelector('input[name="dateSort"]:checked')?.value || 'newest';
         const searchText = document.getElementById('commentSearch')?.value.toLowerCase() || '';
 
         // Важливо: тепер шукаємо коментарі тільки в контейнері коментарів

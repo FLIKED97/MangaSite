@@ -303,3 +303,66 @@ input:-webkit-autofill:active {
 .mg{
     gap: 15px;
 }
+.lt-gp{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+/* Стилізація радіо кнопки */
+
+.form-check {
+    display: flex !important;
+    align-items: center !important;
+}
+
+.form-check-input[type="radio"] {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #BFBFBF;
+    cursor: pointer;
+    margin-top: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 50%;
+    background-color: #1c1c1c;
+}
+
+/* Стилізація активної радіо кнопки */
+.form-check-input[type="radio"]:checked {
+    border-color: #ffc107;
+}
+
+/* Створюємо внутрішнє коло коли радіо вибрано */
+.form-check-input[type="radio"]:checked::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffc107;
+    border-radius: 50%;
+}
+
+/* Стилі при наведенні */
+.form-check-input[type="radio"]:hover {
+    border-color: #ffc107;
+}
+
+/* Стилі при фокусі - прибираємо жовтий квадрат */
+.form-check-input[type="radio"]:focus {
+    outline: none;
+    box-shadow: none;
+    border-color: #ffc107;
+}
+
+.form-check-label {
+    margin-bottom: 0;
+    margin-left: 10px;
+}
+.lt-gp .list-group-item > div {
+    flex-direction: row !important;
+}
