@@ -72,20 +72,35 @@
                 </div>
                 <ul th:if="${!#lists.isEmpty(comicsComments) || !#lists.isEmpty(newsComments)}" class="list-group comments-list">
                     <!-- Коментарі до коміксів -->
-                    <li th:each="c : ${comicsComments}" class="list-group-item comment-item"
+                    <li style="display: block;" th:each="c : ${comicsComments}" class="list-group-item comment-item"
                         th:data-date="${c.createdAt}"
                         th:data-type="comics"
                         th:data-comics-id="${c.comics.id}">
+<!--                        todo Виправити фон для всіх секцій(закладки, коментарі і тд), зробити одинаковим-->
                         <div class="comment-header">
                             <strong>
-                                <a th:href="@{/comics/{id}(id=${c.comics.id})}" th:text="${'Тайтл: ' + c.comics.title}">Тайтл: Name comics</a>
+                                <a th:href="@{/comics/{id}(id=${c.comics.id})}">
+                                    <span class="news-label">Тайтл: </span>
+                                    <span class="news-title" th:text="${c.comics.title}">Name comics</span>
+                                </a>
                             </strong>
                         </div>
                         <div class="comment-info">
-                            <div class="user-info">
-                                <img src="/images/default-avatar.png" alt="User Avatar" class="user-avatar">
-                                <span class="username">Username</span>
-                                <small class="comment-date" th:text="${#temporals.format(c.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</small>
+                            <div style="flex-direction: unset" class="user-info">
+                                <!-- Відображається лише один елемент аватара (залежно від умови) -->
+                                <div class="user-avatar"
+                                     th:if="${c.person.avatarPath != null}"
+                                     th:style="'background-image: url(/person/avatar/display/' + ${c.person.id} + ');'">
+                                </div>
+                                <div class="user-avatar"
+                                     th:if="${c.person.avatarPath == null}"
+                                     style="background-image: url('/placeholder-avatar.png');">
+                                </div>
+                                <!-- Новий блок для текстової інформації -->
+                                <div class="user-details">
+                                    <span class="username" th:text="${c.person.username}">Username</span>
+                                    <small class="comment-date" th:text="${#temporals.format(c.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</small>
+                                </div>
                             </div>
                         </div>
                         <p class="comment-text" th:text="${c.text}">Текст коментаря</p>
@@ -93,19 +108,31 @@
                     </li>
 
                     <!-- Коментарі до новин -->
-                    <li th:each="c : ${newsComments}" class="list-group-item comment-item"
+                    <li style="display: block;" th:each="c : ${newsComments}" class="list-group-item comment-item"
                         th:data-date="${c.createdAt}"
                         th:data-type="news"
                         th:data-news-id="${c.news.id}">
                         <div class="comment-header">
                             <strong>
-                                <a th:href="@{/news/{id}(id=${c.news.id})}" th:text="${'Новина: ' + c.news.title}">Новина: Name news</a>
+                                <a th:href="@{/news/{id}(id=${c.news.id})}">
+                                    <span class="news-label">Новина: </span>
+                                    <span class="news-title" th:text="${c.news.title}">Name news</span>
+                                </a>
                             </strong>
                         </div>
-                        <div class="comment-info">
-                            <div class="user-info">
-                                <img src="/images/default-avatar.png" alt="User Avatar" class="user-avatar">
-                                <span class="username">Username</span>
+                        <div style="flex-direction: unset" class="user-info">
+                            <!-- Відображається лише один елемент аватара (залежно від умови) -->
+                            <div class="user-avatar"
+                                 th:if="${c.person.avatarPath != null}"
+                                 th:style="'background-image: url(/person/avatar/display/' + ${c.person.id} + ');'">
+                            </div>
+                            <div class="user-avatar"
+                                 th:if="${c.person.avatarPath == null}"
+                                 style="background-image: url('/placeholder-avatar.png');">
+                            </div>
+                            <!-- Новий блок для текстової інформації -->
+                            <div class="user-details">
+                                <span class="username" th:text="${c.person.username}">Username</span>
                                 <small class="comment-date" th:text="${#temporals.format(c.createdAt, 'dd.MM.yyyy HH:mm')}">Дата</small>
                             </div>
                         </div>

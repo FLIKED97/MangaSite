@@ -366,3 +366,102 @@ input:-webkit-autofill:active {
 .lt-gp .list-group-item > div {
     flex-direction: row !important;
 }
+/*---------------------------------------------------------------------------*/
+.comments-list {
+    padding: 0;
+}
+
+.comment-item {
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.comment-item .list-group-item {
+    background-color: #1c1c1c !important;
+}
+.comments-list .list-group {
+    gap: 0 !important;
+}
+.comment-header {
+    margin-bottom: 10px;
+}
+.comment-header a {
+    text-decoration: none !important;
+}
+
+.comment-header a:hover,
+.comment-header a:focus {
+    text-decoration: none !important;
+}
+.comment-header a {
+    color: #333;
+    text-decoration: none !important;
+}
+
+.comment-info {
+    margin-bottom: 10px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* відстань між аватаром і текстовою інформацією */
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.user-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.username {
+    font-weight: 500;
+    color: #BFBFBF;
+}
+
+.comment-date {
+    color: rgba(235, 235, 245, 0.5) !important;
+    font-size: 12px !important;
+}
+
+.comment-text {
+    margin: 10px 0;
+    color: #BFBFBF;
+    line-height: 1.5;
+}
+.delete-btn {
+    background-color: transparent;
+    color: #ffc107; /* оранжевий */
+    border: none;
+    padding: 0 !important;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.delete-btn:hover {
+    color: #e0a800;
+}
+
+
+.list-group-item {
+    border: 1px solid #ddd;
+    background-color: #fff;
+}
+.news-label {
+    color: rgba(235, 235, 245, 0.5);
+}
+
+.news-title {
+    color: #BFBFBF;
+}
