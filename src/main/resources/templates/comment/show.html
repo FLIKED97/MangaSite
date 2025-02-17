@@ -70,9 +70,9 @@
                 <div th:if="${#lists.isEmpty(comicsComments) && #lists.isEmpty(newsComments)}">
                     <p>Немає доступних коментарів.</p>
                 </div>
-                <ul th:if="${!#lists.isEmpty(comicsComments) || !#lists.isEmpty(newsComments)}" class="list-group comments-list">
+                <ul th:if="${!#lists.isEmpty(comicsComments) || !#lists.isEmpty(newsComments)}" style="gap: unset;" class="list-group comments-list">
                     <!-- Коментарі до коміксів -->
-                    <li style="display: block;" th:each="c : ${comicsComments}" class="list-group-item comment-item"
+                    <li style="display: block; margin-top: 0px;" th:each="c : ${comicsComments}" class="list-group-item comment-item"
                         th:data-date="${c.createdAt}"
                         th:data-type="comics"
                         th:data-comics-id="${c.comics.id}">
@@ -108,7 +108,7 @@
                     </li>
 
                     <!-- Коментарі до новин -->
-                    <li style="display: block;" th:each="c : ${newsComments}" class="list-group-item comment-item"
+                    <li style="display: block; margin-top: 0px;" th:each="c : ${newsComments}" class="list-group-item comment-item"
                         th:data-date="${c.createdAt}"
                         th:data-type="news"
                         th:data-news-id="${c.news.id}">
