@@ -28,13 +28,22 @@ public class FriendshipController {
     // Сторінка зі списком друзів
     @GetMapping("/{userId}")
     public String getFriends(@PathVariable int userId, Model model) {
+        // Отримуємо поточного користувача
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
+
+        // Завантажуємо всі необхідні дані
         List<Person> friends = friendshipService.getFriends(userId);
+        List<Friendship> receivedRequests = friendshipService.getReceivedFriendRequests(personDetails.getPerson().getId());
+        List<Friendship> sentRequests = friendshipService.getSentFriendRequests(personDetails.getPerson().getId());
 
+        // Додаємо всі дані в модель
         model.addAttribute("friends", friends);
+        model.addAttribute("receivedRequests", receivedRequests);
+        model.addAttribute("sentRequests", sentRequests);
 
-        return "friends/list"; // Повертає представлення friends/list.html
+        return "friends/list";
     }
-
 
     @GetMapping("/requests")
     public String viewFriendRequests(Model model) {
@@ -44,13 +53,21 @@ public class FriendshipController {
         // Запити, які отримав користувач
         List<Friendship> receivedRequests = friendshipService.getReceivedFriendRequests(personDetails.getPerson().getId());
 
+        model.addAttribute("receivedRequests", receivedRequests);
+
+        return "friends/requests"; // Перехід на сторінку friends/requests.html
+    }
+    @GetMapping("/sentrequests")
+    public String viewSentRequests(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
+
         // Запити, які користувач надіслав
         List<Friendship> sentRequests = friendshipService.getSentFriendRequests(personDetails.getPerson().getId());
 
-        model.addAttribute("receivedRequests", receivedRequests);
         model.addAttribute("sentRequests", sentRequests);
 
-        return "friends/requests"; // Перехід на сторінку friends/requests.html
+        return "friends/sentRequests";
     }
 
     // Відправити запит на дружбу

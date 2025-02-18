@@ -1,25 +1,163 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Friends</title>
+  <style>
+    .tab-buttons {
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .tab-buttons button {
+      padding: 10px 20px;
+      background-color: #333;
+      color: #BFBFBF;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .tab-buttons button:hover {
+      background-color: #444;
+    }
+
+    .tab-buttons button.active {
+      background-color: #1c1c1c;
+      color: #fff;
+    }
+
+    .tab-content {
+      display: none;
+      padding: 20px;
+      background: #1c1c1c;
+      border-radius: 5px;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .tab-content ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .tab-content li {
+      padding: 10px;
+      margin-bottom: 10px;
+      background: #333;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .tab-content li .empty-message {
+      color: #888;
+      text-align: center;
+      padding: 20px;
+      font-style: italic;
+    }
+
+    .tab-content form {
+      display: inline-flex;
+      gap: 10px;
+    }
+
+    .tab-content button {
+      padding: 5px 15px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .tab-content button[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .tab-content button[type="submit"]:hover {
+      background-color: #45a049;
+    }
+
+    .tab-content button[value="decline"] {
+      background-color: #f44336;
+      color: white;
+    }
+
+    .tab-content button[value="decline"]:hover {
+      background-color: #da190b;
+    }
+  </style>
 </head>
 <body>
-<h1>Список друзів</h1>
-
-<!-- Повідомлення -->
 <div>
-  <p th:if="${message}" th:text="${message}" class="alert alert-success"></p>
-  <p th:if="${error}" th:text="${error}" class="alert alert-danger"></p>
+  <div style="padding-right: 0;" class="container mt-4">
+    <div class="row flex-nowrap">
+      <div class="col-md-9 full-width-col">
+        <!-- Кнопки для перемикання -->
+        <div class="tab-buttons">
+          <button data-tab="friends" class="tab-button active">Мої друзі</button>
+          <button data-tab="received" class="tab-button">Отримані запити</button>
+          <button data-tab="sent" class="tab-button">Надіслані запити</button>
+        </div>
+
+        <!-- Повідомлення -->
+        <div>
+          <p th:if="${message}" th:text="${message}" class="alert alert-success"></p>
+          <p th:if="${error}" th:text="${error}" class="alert alert-danger"></p>
+        </div>
+
+        <!-- Таб зі списком друзів -->
+        <div id="friends" class="tab-content active">
+          <h1>Список друзів</h1>
+          <ul>
+            <li th:each="friend : ${friends}">
+              <span th:text="${friend.username}">Friend Name</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Таб з отриманими запитами -->
+        <div id="received" class="tab-content">
+          <h2>Отримані запити:</h2>
+          <ul>
+            <li th:if="${receivedRequests.isEmpty()}">Немає отриманих запитів.</li>
+            <li th:each="request : ${receivedRequests}">
+              <span th:text="${request.person.username}"></span>
+              <form th:action="@{/friends/accept}" method="post" style="display: inline;">
+                <input type="hidden" name="requestId" th:value="${request.id}">
+                <input type="hidden" name="userId" th:value="${request.friend.id}">
+                <button type="submit">Прийняти</button>
+              </form>
+              <form th:action="@{/friends/decline}" method="post" style="display: inline;">
+                <input type="hidden" name="requestId" th:value="${request.id}">
+                <input type="hidden" name="userId" th:value="${request.friend.id}">
+                <button type="submit">Відхилити</button>
+              </form>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Таб з надісланими запитами -->
+        <div id="sent" class="tab-content">
+          <h2>Надіслані запити:</h2>
+          <ul>
+            <li th:if="${sentRequests.isEmpty()}">Немає надісланих запитів.</li>
+            <li th:each="request : ${sentRequests}">
+              <span th:text="${request.friend.username}"></span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-
-<!-- Список друзів -->
-<ul>
-  <li th:each="friend : ${friends}">
-    <span th:text="${friend.username}">Friend Name</span>
-  </li>
-</ul>
-
 </body>
 </html>

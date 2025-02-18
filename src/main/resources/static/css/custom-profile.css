@@ -473,3 +473,11 @@ input:-webkit-autofill:active {
 .news-title {
     color: #BFBFBF;
 }
+/*-------------------------------------------------------------------------------------------*/
+.full-width-col {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+}

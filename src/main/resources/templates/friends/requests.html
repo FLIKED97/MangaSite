@@ -5,8 +5,6 @@
     <title>Запити на дружбу</title>
 </head>
 <body>
-<h1>Ваші запити на дружбу</h1>
-
 <h2>Отримані запити:</h2>
 <ul>
     <li th:if="${receivedRequests.isEmpty()}">Немає отриманих запитів.</li>
@@ -25,15 +23,6 @@
             <input type="hidden" name="userId" th:value="${request.friend.id}">
             <button type="submit">Відхилити</button>
         </form>
-    </li>
-</ul>
-
-<h2>Надіслані запити:</h2>
-<ul>
-    <li th:if="${sentRequests.isEmpty()}">Немає надісланих запитів.</li>
-    <li th:each="request : ${sentRequests}">
-        <!-- Ім'я отримувача запиту -->
-        <span th:text="${request.friend.username}"></span>
     </li>
 </ul>
 </body>

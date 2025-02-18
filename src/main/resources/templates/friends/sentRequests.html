@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<h2>Надіслані запити:</h2>
+<ul>
+    <li th:if="${sentRequests.isEmpty()}">Немає надісланих запитів.</li>
+    <li th:each="request : ${sentRequests}">
+        <!-- Ім'я отримувача запиту -->
+        <span th:text="${request.friend.username}"></span>
+    </li>
+</ul>
+</body>
+</html>

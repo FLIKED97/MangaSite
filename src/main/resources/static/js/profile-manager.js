@@ -4,10 +4,8 @@ class ProfileManager {
         this.contentElement = document.getElementById('content');
         this.personId = document.body.getAttribute('data-person-id');
         this.currentSection = 'bookmarks';
-        this.comicsCache = new Map(); // Кешування коміксів для кожної закладки
-        this.currentTabId = null; // Поточна активна закладка
-
-
+        this.comicsCache = new Map();
+        this.currentTabId = null;
         this.init();
     }
 
@@ -17,7 +15,6 @@ class ProfileManager {
     }
 
     initEventListeners() {
-        // Обробник для кнопок навігації
         document.querySelectorAll('.custom-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const section = e.target.getAttribute('data-section');
@@ -25,7 +22,6 @@ class ProfileManager {
             });
         });
 
-        // Обробник для модального вікна редагування
         document.addEventListener('click', (e) => {
             if (e.target.closest('#heading-clickable')) {
                 this.showEditModal();
@@ -48,7 +44,6 @@ class ProfileManager {
 
             const html = await response.text();
 
-            // Якщо це секція коментарів, зберігаємо поточні фільтри
             let currentFilters = null;
             if (section === 'comments') {
                 const filtersSection = document.querySelector('.col-md-3');
@@ -59,7 +54,6 @@ class ProfileManager {
 
             this.contentElement.innerHTML = html;
 
-            // Відновлюємо фільтри, якщо вони були
             if (currentFilters && section === 'comments') {
                 const newFiltersSection = document.querySelector('.col-md-3');
                 if (newFiltersSection) {
@@ -70,12 +64,45 @@ class ProfileManager {
             if (section === 'bookmarks') {
                 this.initBookmarksHandlers();
             } else if (section === 'comments') {
-                // Ініціалізуємо CommentManager після завантаження секції коментарів
                 new CommentManager();
+            } else if (section === 'friends') {
+                this.initFriendsHandlers();
             }
         } catch (error) {
             this.showError(`Failed to load ${section}`);
         }
+    }
+
+    initFriendsHandlers() {
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        // Перевіряємо наявність контенту в кожній вкладці
+        tabContents.forEach(content => {
+            const list = content.querySelector('ul');
+            if (list && list.children.length === 0) {
+                list.innerHTML = '<li class="empty-message">У вас тут пусто...</li>';
+            }
+        });
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tabId = button.getAttribute('data-tab');
+
+                // Оновлюємо активну кнопку
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                // Оновлюємо активний контент
+                tabContents.forEach(content => {
+                    if (content.id === tabId) {
+                        content.classList.add('active');
+                    } else {
+                        content.classList.remove('active');
+                    }
+                });
+            });
+        });
     }
 
     initBookmarksHandlers() {
