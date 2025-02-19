@@ -25,11 +25,13 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class PersonService {
 
     private final PersonRepository personRepository;
     private final AuthenticationManager authenticationManager;
     private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
     private static final String UPLOAD_DIR = "uploads/persons/";
 
     public void save(Person person){
@@ -60,26 +62,17 @@ public class PersonService {
         return personRepository.findByUsername(name);
     }
 
-    public void uploadAvatar(MultipartFile file, PersonDetails userDetails) throws IOException {
+
+    @Transactional
+    public void storeAvatarInDb(MultipartFile file, Person person) throws IOException {
         // Validate file
         validateFile(file);
 
-        // Find person
-        Person person = personRepository.findById(userDetails.getPerson().getId())
-                .orElseThrow(() -> new RuntimeException("Person not found"));
+        // Update person entity
+        person.setAvatar(file.getBytes());
+        person.setAvatarContentType(file.getContentType());
 
-        // Create upload directory
-        Path personPath = createPersonUploadDirectory(person.getId());
-
-        // Generate unique filename
-        String fileName = "avatar_" + System.currentTimeMillis() + ".jpg";
-        Path filePath = personPath.resolve(fileName);
-
-        // Save file
-        Files.copy(file.getInputStream(), filePath);
-
-        // Update person's avatar path
-        person.setAvatarPath(filePath.toString());
+        // Save changes to database
         personRepository.save(person);
     }
 

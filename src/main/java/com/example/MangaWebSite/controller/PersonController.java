@@ -41,7 +41,7 @@ public class PersonController {
                                RedirectAttributes redirectAttributes,
                                @AuthenticationPrincipal PersonDetails user) {
         try {
-            personService.uploadAvatar(file, user);
+            personService.storeAvatarInDb(file, user.getPerson());
             redirectAttributes.addFlashAttribute("message", "Avatar uploaded successfully!");
         } catch (IllegalArgumentException | IOException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
@@ -52,20 +52,16 @@ public class PersonController {
 
     // Ендпоінт для віддачі аватарки
     @GetMapping("/avatar/display/{id}")
-    @ResponseBody
-    public ResponseEntity<byte[]> getAvatar(@PathVariable int id) {
+    @Transactional
+    public ResponseEntity<byte[]> getAvatar(@PathVariable Integer id) {
         Person person = personService.findById(id);
-        if (person != null && person.getAvatarPath() != null) {
-            try {
-                Path filePath = Paths.get(person.getAvatarPath());
-                byte[] imageBytes = Files.readAllBytes(filePath);
-                HttpHeaders headers = new HttpHeaders();
-                headers.setContentType(MediaType.IMAGE_JPEG);
-                return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
-            } catch (IOException e) {
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+
+        if (person == null || person.getAvatar() == null) {
+            return ResponseEntity.notFound().build();
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(person.getAvatarContentType()))
+                .body(person.getAvatar());
     }
 }

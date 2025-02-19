@@ -85,16 +85,20 @@ public class Person {
             publisher.addPerson(this);
         }
     }
-    // Поле для зберігання шляху до аватарки
-    @Column(name = "avatar_path", nullable = true)
-    private String avatarPath;
+    @Lob
+    @JsonIgnore
+    @Basic(fetch = FetchType.LAZY)
+    @Column(name = "avatar")
+    private byte[] avatar;
 
-    // Поле для зберігання MIME-типу аватарки
-    @Column(name = "avatar_type", nullable = true)
-    private String avatarType;
+    @Column(name = "avatar_content_type")
+    private String avatarContentType;
 
     public long getDaysInApp() {
         return ChronoUnit.DAYS.between(createdAt, LocalDateTime.now());
+    }
+    public boolean hasAvatar() {
+        return avatar != null && avatar.length > 0;
     }
 }
 

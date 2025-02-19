@@ -68,19 +68,24 @@
     <ul class="navbar-nav ml-auto">
       <li class="nav-item mx-2" th:if="${#authentication.name != 'anonymousUser'}">
         <a class="nav-link" th:href="@{/profile/personal/{id}(id=${person.id})}">
-          <img th:if="${person.avatarPath != null}"
+          <!-- Використовуємо метод hasAvatar() для перевірки наявності аватару -->
+          <img th:if="${person.hasAvatar()}"
                th:src="@{'/person/avatar/display/' + ${person.id}}"
                alt="Аватарка користувача"
                class="rounded-circle img-fluid"
                style="width: 32px; height: 32px; object-fit: cover;">
-          <img th:if="${person.avatarPath == null}" src="/placeholder-avatar.png" alt="Avatar"
+          <!-- Якщо аватара немає, показуємо дефолтне зображення -->
+          <img th:unless="${person.hasAvatar()}"
+               src="/placeholder-avatar.png"
+               alt="Avatar"
                class="rounded-circle img-fluid"
                style="width: 32px; height: 32px; object-fit: cover;">
         </a>
       </li>
       <li class="nav-item mx-2" th:if="${#authentication.name == 'anonymousUser'}">
-        <a class="nav-link" th:href="@{/profile/personal/{id}(id=${person.id})}">
-          <img src="/placeholder-avatar.png" alt="Avatar"
+        <a class="nav-link" th:href="@{/auth/login}">
+          <img src="/placeholder-avatar.png"
+               alt="Avatar"
                class="rounded-circle img-fluid"
                style="width: 32px; height: 32px; object-fit: cover;">
         </a>

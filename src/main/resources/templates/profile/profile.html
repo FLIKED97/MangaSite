@@ -127,13 +127,14 @@
     <div class="profile-header">
       <div class="d-flex align-items-center">
         <!-- Якщо avatarPath не null -->
+        <!-- Якщо аватар завантажено -->
         <div class="profile-avatar"
-             th:if="${person.avatarPath != null}"
+             th:if="${person.hasAvatar()}"
              th:style="'background-image: url(/person/avatar/display/' + ${person.id} + ');'">
         </div>
-        <!-- Якщо avatarPath == null -->
+        <!-- Якщо аватар відсутній -->
         <div class="profile-avatar"
-             th:if="${person.avatarPath == null}"
+             th:if="${!person.hasAvatar()}"
              style="background-image: url('/placeholder-avatar.png');">
         </div>
 

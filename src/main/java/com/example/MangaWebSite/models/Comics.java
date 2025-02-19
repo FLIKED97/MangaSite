@@ -1,10 +1,7 @@
 package com.example.MangaWebSite.models;
 
 import com.example.MangaWebSite.serializer.ComicsSerializer;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -39,7 +36,7 @@ public class Comics {
 
     @Lob // (BLOB)
     @JsonIgnore // Додаємо цю анотацію
-    @Basic(fetch = FetchType.LAZY)
+    @Basic(fetch = FetchType.EAGER)
     @Column(name = "cover_image", nullable = true, length = 100000)
     private byte[] coverImage;
 
@@ -129,11 +126,11 @@ public class Comics {
         this.popularityRating = viewScore + ratingScore + commentScore;
     }
     @JsonProperty("coverImageBase64")
+    @JsonIgnore
     public String getCoverImageBase64() {
         if (coverImage == null) return null;
         return Base64.getEncoder().encodeToString(coverImage);
     }
-
     public int getTotalPagesForChapter(Chapter chapter) {
         return chapter.getComicPages().size();
     }

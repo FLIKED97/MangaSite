@@ -89,11 +89,11 @@
                             <div style="flex-direction: unset" class="user-info">
                                 <!-- Відображається лише один елемент аватара (залежно від умови) -->
                                 <div class="user-avatar"
-                                     th:if="${c.person.avatarPath != null}"
+                                     th:if="${c.person.hasAvatar()}"
                                      th:style="'background-image: url(/person/avatar/display/' + ${c.person.id} + ');'">
                                 </div>
                                 <div class="user-avatar"
-                                     th:if="${c.person.avatarPath == null}"
+                                     th:unless="${c.person.hasAvatar()}"
                                      style="background-image: url('/placeholder-avatar.png');">
                                 </div>
                                 <!-- Новий блок для текстової інформації -->
@@ -123,11 +123,11 @@
                         <div style="flex-direction: unset" class="user-info">
                             <!-- Відображається лише один елемент аватара (залежно від умови) -->
                             <div class="user-avatar"
-                                 th:if="${c.person.avatarPath != null}"
+                                 th:if="${c.person.hasAvatar()}"
                                  th:style="'background-image: url(/person/avatar/display/' + ${c.person.id} + ');'">
                             </div>
                             <div class="user-avatar"
-                                 th:if="${c.person.avatarPath == null}"
+                                 th:unless="${c.person.hasAvatar()}"
                                  style="background-image: url('/placeholder-avatar.png');">
                             </div>
                             <!-- Новий блок для текстової інформації -->

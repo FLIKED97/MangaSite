@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 @Service
+@Transactional
 public class RegistrationService {
 
     private final PersonRepository peopleRepository;

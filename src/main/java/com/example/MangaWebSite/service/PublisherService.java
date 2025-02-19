@@ -22,6 +22,7 @@ import static com.example.MangaWebSite.models.Role.ROLE_PUBLISHER;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class PublisherService {
     private final PublisherRepository publisherRepository;
     private final PersonService personService;

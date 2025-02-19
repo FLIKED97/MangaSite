@@ -53,7 +53,8 @@ public interface ComicsRepository extends JpaRepository<Comics, Integer> {
     @Query("SELECT c FROM Comics c LEFT JOIN c.ratings r " +
             "WHERE LOWER(c.title) LIKE LOWER(CONCAT('%', :search, '%')) " +
             "GROUP BY c " +
-            "ORDER BY CASE WHEN :sortBy = 'rating' THEN AVG(COALESCE(r.rating, 0)) " +
+            "ORDER BY CASE " +
+            "WHEN :sortBy = 'rating' THEN COALESCE(AVG(r.rating), 0) " +
             "WHEN :sortBy = 'views' THEN c.viewCount " +
             "ELSE c.popularityRating END DESC")
     Page<Comics> findByTitleContainingIgnoreCaseAndSort(

@@ -7,12 +7,14 @@ import com.example.MangaWebSite.repository.FriendshipRepository;
 import com.example.MangaWebSite.repository.PersonRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class FriendshipService {
 
     private final FriendshipRepository friendshipRepository;
@@ -55,6 +57,7 @@ public class FriendshipService {
     }
 
     // Отримати список друзів (підтверджена дружба)
+    @Transactional
     public List<Person> getFriends(int userId) {
         List<Friendship> friendships = friendshipRepository.findAllByPersonIdAndStatus(userId, FriendshipStatus.ACCEPTED);
 

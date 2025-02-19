@@ -21,27 +21,40 @@
     </style>
 </head>
 <body>
-<h1>Завантажити аватарку</h1>
+<div class="container">
+    <h1>Завантажити аватарку</h1>
 
-<div th:if="${error}" style="color: red;">
-    <p th:text="${error}"></p>
-</div>
-<div th:if="${message}" style="color: green;">
-    <p th:text="${message}"></p>
-</div>
-
-<form th:action="@{/person/avatar}" method="post" enctype="multipart/form-data">
-    <input type="file" name="avatar" accept="image/*" required />
-    <button type="submit">Завантажити</button>
-</form>
-
-<div>
-    <h2>Поточна аватарка:</h2>
-    <div th:if="${person.avatarPath != null}">
-        <img th:src="@{'/person/avatar/display/' + ${person.id}}" alt="Avatar" style="width: 150px; height: 150px; border-radius: 50%;">
+    <div th:if="${error}" class="error">
+        <p th:text="${error}"></p>
     </div>
-    <div th:if="${person.avatarPath == null}">
-        <p>Аватар не завантажено.</p>
+    <div th:if="${message}" class="message">
+        <p th:text="${message}"></p>
+    </div>
+
+    <form th:action="@{/person/avatar}" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="avatarFile" class="form-label">Виберіть зображення:</label>
+            <input type="file" id="avatarFile" name="avatar" accept="image/*" required class="form-control" />
+            <small class="text-muted">Підтримувані формати: JPEG, PNG, GIF. Максимальний розмір: 5MB</small>
+        </div>
+        <button type="submit" class="btn btn-primary">Завантажити</button>
+    </form>
+
+    <div class="mt-4">
+        <h2>Поточна аватарка:</h2>
+        <!-- Використовуємо hasAvatar() для перевірки наявності аватару -->
+        <div th:if="${person.hasAvatar()}">
+            <img th:src="@{'/person/avatar/display/' + ${person.id}}"
+                 alt="Аватарка користувача"
+                 class="avatar-preview">
+        </div>
+        <!-- Якщо аватара немає -->
+        <div th:unless="${person.hasAvatar()}">
+            <img src="/placeholder-avatar.png"
+                 alt="Аватарка за замовчуванням"
+                 class="avatar-preview">
+            <p>Аватар не завантажено.</p>
+        </div>
     </div>
 </div>
 </body>

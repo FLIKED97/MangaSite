@@ -14,11 +14,13 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class PersonDetailsService implements UserDetailsService {
     private final PersonRepository personRepository;
 
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<Person> person = personRepository.findByEmail(username);
 

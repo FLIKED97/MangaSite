@@ -6,11 +6,13 @@ import com.example.MangaWebSite.models.Person;
 import com.example.MangaWebSite.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MessageService {
 
     private final MessageRepository messageRepository;
