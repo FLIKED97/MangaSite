@@ -1,11 +1,20 @@
 .chat-container {
     display: flex;
     height: 100vh;
+    max-width: 1200px;
+    margin: 0 auto;
+    flex-direction: row;
+    background-color: #1c1c1c;
 }
-
+body{
+    background: #0A0A0A !important;
+    color: #BFBFBF !important;
+    line-height: 1.4 !important;
+    font-family: -apple-system, BlinkMacSystemFont, Open Sans, Roboto, Helvetica Neue, Helvetica, sans-serif !important;
+}
 .chat-sidebar {
     width: 25%;
-    background-color: #f3f3f3;
+    background-color: #1c1c1c;
     overflow-y: auto;
     border-right: 1px solid #ddd;
 }
@@ -26,17 +35,66 @@
     align-items: center;
 }
 
-.chat-sidebar li a img.avatar {
+.chat-sidebar li a {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    text-decoration: none;
+    color: inherit;
+    transition: background-color 0.3s;
+}
+
+.chat-sidebar li a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.chat-sidebar li a .avatar-container {
     width: 40px;
     height: 40px;
     border-radius: 50%;
     margin-right: 10px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    flex-shrink: 0;
+}
+
+.chat-sidebar .empty-list {
+    padding: 20px;
+    text-align: center;
+    color: #888;
+    font-style: italic;
+}
+
+/* Якщо потрібно стилізувати також списки для інших вкладок */
+#received li, #sent li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+#received .avatar-container, #sent .avatar-container {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#received .user-info, #sent .user-info {
+    display: flex;
+    align-items: center;
 }
 
 .chat-main {
+    width: 75%;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    background-color: #1c1c1c;
 }
 
 .chat-header {

@@ -25,7 +25,7 @@ public class ChatController {
     private final FriendshipService friendshipService;
     private final MessageService messageService;
 
-    @GetMapping
+    @GetMapping()
     public String getChatPage(Model model, @AuthenticationPrincipal PersonDetails user) {
         List<Person> friends = friendshipService.getFriends(user.getPerson().getId());
         model.addAttribute("friends", friends);

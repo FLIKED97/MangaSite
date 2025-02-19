@@ -3,18 +3,41 @@
 <head>
   <title>Чат</title>
   <link rel="stylesheet" href="/css/chat.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <th:block th:replace="~{fragments/header :: head-styles}"></th:block>
+  <link rel="stylesheet" th:href="@{/css/custom-btn.css}">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+<header>
+  <!-- Include top navbar fragment -->
+  <th:block th:replace="~{fragments/header :: top-navbar}"></th:block>
+
+  <!-- Include search modal fragment -->
+  <th:block th:replace="~{fragments/header :: search-modal}"></th:block>
+</header>
+<th:block th:replace="~{fragments/header :: bottom-navbar}"></th:block>
 <div class="chat-container">
   <!-- Список друзів -->
   <div class="chat-sidebar">
     <ul>
       <li th:each="friend : ${friends}">
         <a href="#" th:attr="data-id=${friend.id}" class="friend-link">
-          <img src="/images/default-avatar.png" alt="Avatar" class="avatar">
+          <!-- Якщо avatarPath не null -->
+          <div class="avatar-container"
+               th:if="${friend.avatarPath != null}"
+               th:style="'background-image: url(/person/avatar/display/' + ${friend.id} + ');'">
+          </div>
+          <!-- Якщо avatarPath == null -->
+          <div class="avatar-container"
+               th:if="${friend.avatarPath == null}"
+               style="background-image: url('/placeholder-avatar.png');">
+          </div>
           <span th:text="${friend.username}"></span>
         </a>
+      </li>
+      <li th:if="${friends.isEmpty()}" class="empty-list">
+        <span>У вас тут пусто...</span>
       </li>
     </ul>
   </div>
@@ -33,6 +56,7 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
   $(document).ready(function () {
     const csrfToken = $("input[name='_csrf']").val();
