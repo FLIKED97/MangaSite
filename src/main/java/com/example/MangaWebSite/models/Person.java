@@ -94,11 +94,12 @@ public class Person {
     @Column(name = "avatar_content_type")
     private String avatarContentType;
 
-    public long getDaysInApp() {
-        return ChronoUnit.DAYS.between(createdAt, LocalDateTime.now());
-    }
+    @JsonProperty("hasAvatar")
     public boolean hasAvatar() {
         return avatar != null && avatar.length > 0;
+    }
+    public long getDaysInApp() {
+        return ChronoUnit.DAYS.between(createdAt, LocalDateTime.now());
     }
 }
 

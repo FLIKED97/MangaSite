@@ -25,12 +25,12 @@
         <a href="#" th:attr="data-id=${friend.id}" class="friend-link">
           <!-- Якщо avatarPath не null -->
           <div class="avatar-container"
-               th:if="${friend.avatarPath != null}"
+               th:if="${friend.hasAvatar()}"
                th:style="'background-image: url(/person/avatar/display/' + ${friend.id} + ');'">
           </div>
           <!-- Якщо avatarPath == null -->
           <div class="avatar-container"
-               th:if="${friend.avatarPath == null}"
+               th:if="${!friend.hasAvatar()}"
                style="background-image: url('/placeholder-avatar.png');">
           </div>
           <span th:text="${friend.username}"></span>
@@ -70,7 +70,16 @@
         url: `/chat/messages/${friendId}`,
         method: "GET",
         success: function (data) {
-          $("#chat-header").html(`<h2>${data.friend.username}</h2>`);
+          $("#chat-header").html(`
+  <div class="chat-header-content">
+    <div class="avatar-container"
+         style="background-image: url(${data.friend.hasAvatar ?
+                  `/person/avatar/display/${data.friend.id}` :
+                  '/placeholder-avatar.png'});">
+    </div>
+    <h2>${data.friend.username}</h2>
+  </div>
+`);
           let messagesHtml = '';
           let lastSenderId = null;
 

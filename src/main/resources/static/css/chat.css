@@ -120,13 +120,83 @@ body{
     font-size: 0.8em;
 }
 
+/*.message .timestamp {*/
+/*    display: block;*/
+/*    color: #888;*/
+/*    font-size: 0.7em;*/
+/*    text-align: right;*/
+/*}*/
+
+.hidden {
+    display: none;
+}
+
+/* Стилі для повідомлень */
+#chat-messages {
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.message {
+    max-width: 70%;
+    margin-bottom: 15px;
+    padding: 10px 15px;
+    border-radius: 15px;
+    position: relative;
+}
+
+/* Вхідні повідомлення (від друга) */
+.message.incoming {
+    align-self: flex-start;
+    background-color: #2a2a2a;
+    border-bottom-left-radius: 5px;
+}
+
+/* Вихідні повідомлення (від користувача) */
+.message.outgoing {
+    align-self: flex-end;
+    background-color: #0B93F6;
+    color: white;
+    border-bottom-right-radius: 5px;
+}
+
+/* Приховуємо часову мітку */
 .message .timestamp {
+    display: none; /* Тимчасово приховуємо */
+    /* Коли захочете повернути, змініть на:
     display: block;
     color: #888;
     font-size: 0.7em;
     text-align: right;
+    margin-top: 5px;
+    */
 }
 
-.hidden {
-    display: none;
+/* Стилі для тексту повідомлення */
+.message p {
+    margin: 0;
+    word-wrap: break-word;
+}
+.chat-header-content {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+#chat-header .avatar-container {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 15px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    flex-shrink: 0;
+}
+
+#chat-header h2 {
+    margin: 0;
+    font-size: 1.2rem;
 }
