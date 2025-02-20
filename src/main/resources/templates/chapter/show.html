@@ -4,10 +4,17 @@
     <meta charset="UTF-8">
     <title th:text="'Глава ' + ${chapter.chapterNumber} + ' - ' + ${chapter.title}">Глава</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <meta name="_csrf" th:content="${_csrf.token}">
     <meta name="chapter-id" th:content="${chapter.id}">
     <meta name="last-page" th:content="${lastPage ?: 0}">
     <style>
+        body {
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+
         .comic-page {
             max-width: 100%;
             margin: 0 auto;
@@ -19,9 +26,309 @@
             padding: 20px;
             display: none;
         }
+
+        /* Стилі для плаваючого хедера */
+        .comics-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(20, 20, 20, 0.8);
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        body:hover .comics-header {
+            transform: translateY(0);
+        }
+
+        /* Ліва частина хедера */
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .back-button-container {
+            position: relative;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+
+        .back-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Випадаюче меню */
+        .navigation-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: rgba(30, 30, 30, 0.9);
+            border-radius: 4px;
+            padding: 10px 0;
+            min-width: 150px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            z-index: 1001;
+        }
+
+        .back-button-container:hover .navigation-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 15px;
+            color: white;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+
+        .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Назви коміксу */
+        .comics-titles {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .original-title {
+            font-size: 16px;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .translated-title {
+            font-size: 14px;
+            margin: 0;
+            opacity: 0.8;
+        }
+
+        /* Центральна частина з навігацією */
+        .chapter-navigation {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .chapter-prev, .chapter-next {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+
+        .chapter-prev:hover, .chapter-next:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .chapter-indicator {
+            font-weight: 500;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        /* Права частина з налаштуваннями */
+        .settings-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+
+        .settings-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Панель налаштувань */
+        .settings-panel {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100vh;
+            background-color: rgba(30, 30, 30, 0.95);
+            z-index: 1002;
+            padding: 20px;
+            transition: right 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .settings-panel.active {
+            right: 0;
+        }
+
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .settings-header h3 {
+            margin: 0;
+            color: white;
+        }
+
+        .close-settings {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .setting-item {
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .setting-item label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .size-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .size-decrease, .size-increase {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .size-decrease:hover, .size-increase:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .current-size {
+            min-width: 50px;
+            text-align: center;
+        }
+
+        /* Додатковий відступ для контейнера */
+        .container.mt-5 {
+            margin-top: 70px !important;
+        }
     </style>
 </head>
 <body>
+<!-- Плаваючий хедер -->
+<div class="comics-header">
+    <!-- Ліва частина з кнопкою назад і меню -->
+    <div class="header-left">
+        <div class="back-button-container">
+            <button class="back-button" onclick="window.location.href='/comics/' + [[${chapter.comics.id}]]">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <div class="navigation-dropdown">
+                <a href="/bookmarks" class="nav-item">
+                    <i class="fas fa-bookmark"></i> Закладки
+                </a>
+                <a href="/" class="nav-item">
+                    <i class="fas fa-home"></i> Головна
+                </a>
+            </div>
+        </div>
+
+        <!-- Назви коміксу -->
+        <div class="comics-titles">
+            <h3 class="original-title" th:text="${chapter.comics.originalTitle ?: chapter.comics.title}">Оригінальна назва</h3>
+            <h4 class="translated-title" th:text="${chapter.title}">Переведена назва</h4>
+        </div>
+    </div>
+
+    <!-- Центральна частина з навігацією по розділах -->
+    <div class="chapter-navigation">
+        <button class="chapter-prev" th:if="${prevChapter != null}"
+                th:onclick="'window.location.href=\'/chapters/' + ${prevChapter.id} + '\''">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="chapter-prev" th:if="${prevChapter == null}" disabled style="opacity: 0.5;">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <div class="chapter-indicator" th:text="'Розділ ' + ${chapter.chapterNumber}">Розділ</div>
+        <button class="chapter-next" th:if="${nextChapter != null}"
+                th:onclick="'window.location.href=\'/chapters/' + ${nextChapter.id} + '\''">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+        <button class="chapter-next" th:if="${nextChapter == null}" disabled style="opacity: 0.5;">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+
+    <!-- Права частина з налаштуваннями -->
+    <div class="header-right">
+        <button class="settings-button" id="comicsSettingsBtn">
+            <i class="fas fa-cog"></i>
+        </button>
+    </div>
+</div>
+
+<!-- Панель налаштувань, що виїжджає справа -->
+<div class="settings-panel" id="comicsSettingsPanel">
+    <div class="settings-header">
+        <h3>Налаштування</h3>
+        <button class="close-settings">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div class="settings-content">
+        <div class="setting-item">
+            <label>Розмір сторінки</label>
+            <div class="size-controls">
+                <button class="size-decrease">-</button>
+                <span class="current-size">100%</span>
+                <button class="size-increase">+</button>
+            </div>
+        </div>
+        <!-- Можна додати інші налаштування -->
+    </div>
+</div>
+
 <div class="container mt-5">
     <h1 th:text="'Глава ' + ${chapter.chapterNumber} + ': ' + ${chapter.title}">Назва глави</h1>
 
@@ -51,5 +358,57 @@
 
 <script src="/js/chapter-view.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Обробка кнопки налаштувань
+        const settingsBtn = document.getElementById('comicsSettingsBtn');
+        const settingsPanel = document.getElementById('comicsSettingsPanel');
+        const closeSettingsBtn = document.querySelector('.close-settings');
+
+        settingsBtn.addEventListener('click', function() {
+            settingsPanel.classList.toggle('active');
+        });
+
+        closeSettingsBtn.addEventListener('click', function() {
+            settingsPanel.classList.remove('active');
+        });
+
+        // Закрити панель налаштувань при кліку поза нею
+        document.addEventListener('click', function(event) {
+            if (!settingsPanel.contains(event.target) && event.target !== settingsBtn) {
+                settingsPanel.classList.remove('active');
+            }
+        });
+
+        // Логіка для зміни розміру
+        const decreaseBtn = document.querySelector('.size-decrease');
+        const increaseBtn = document.querySelector('.size-increase');
+        const currentSizeEl = document.querySelector('.current-size');
+        let currentSize = 100;
+
+        decreaseBtn.addEventListener('click', function() {
+            if (currentSize > 50) {
+                currentSize -= 10;
+                updateSize();
+            }
+        });
+
+        increaseBtn.addEventListener('click', function() {
+            if (currentSize < 200) {
+                currentSize += 10;
+                updateSize();
+            }
+        });
+
+        function updateSize() {
+            currentSizeEl.textContent = currentSize + '%';
+            // Зміна розміру всіх зображень коміксу
+            const comicImages = document.querySelectorAll('.comic-page');
+            comicImages.forEach(img => {
+                img.style.width = currentSize + '%';
+            });
+        }
+    });
+</script>
 </body>
 </html>
