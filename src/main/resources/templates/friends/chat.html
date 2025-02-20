@@ -20,7 +20,17 @@
 <div class="chat-container">
   <!-- Список друзів -->
   <div class="chat-sidebar">
+    <!-- Поле пошуку -->
+    <div class="search-container">
+      <input type="text" id="friend-search" placeholder="Пошук друзів..." autocomplete="off">
+      <div class="search-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+        </svg>
+      </div>
+    </div>
     <ul>
+      <!-- Існуючий код для списку друзів -->
       <li th:each="friend : ${friends}">
         <a href="#" th:attr="data-id=${friend.id}" class="friend-link">
           <!-- Якщо avatarPath не null -->
@@ -61,6 +71,35 @@
   $(document).ready(function () {
     const csrfToken = $("input[name='_csrf']").val();
 
+    // Функціонал пошуку друзів
+    $("#friend-search").on("input", function() {
+      const searchQuery = $(this).val().toLowerCase();
+
+      $(".chat-sidebar ul li").each(function() {
+        const username = $(this).find("span").text().toLowerCase();
+
+        if (username.includes(searchQuery) || $(this).hasClass("empty-list")) {
+          $(this).show();
+        } else {
+          $(this).hide();
+        }
+      });
+
+      // Показуємо повідомлення, якщо нічого не знайдено
+      const visibleItems = $(".chat-sidebar ul li:visible").not(".empty-list").length;
+
+      // Видаляємо попереднє повідомлення про відсутність результатів
+      $(".no-results").remove();
+
+      if (visibleItems === 0 && searchQuery.length > 0) {
+        $(".chat-sidebar ul").append(
+                `<li class="no-results">
+          <span>Нічого не знайдено</span>
+        </li>`
+        );
+      }
+    });
+
     // Клік по другу
     $(".friend-link").click(function (e) {
       e.preventDefault();
@@ -96,14 +135,19 @@
             lastSenderId = msg.sender.id;
           });
 
+          // Додайте після завантаження повідомлень:
           $("#chat-messages").html(messagesHtml);
           $("#chat-form").data("friend-id", friendId);
+
+          // Прокручуємо до останнього повідомлення
+          $("#chat-messages").scrollTop($("#chat-messages")[0].scrollHeight);
 
           // Показуємо поле для вводу повідомлень
           $(".chat-input").removeClass("hidden");
         }
       });
     });
+
 
     // Відправлення повідомлення
     $("#chat-form").submit(function (e) {
@@ -119,6 +163,8 @@
         success: function () {
           $(".friend-link[data-id='" + friendId + "']").click();
           $("#chat-form").find("input[name='content']").val('');
+          // Прокручуємо до останнього повідомлення
+          $("#chat-messages").scrollTop($("#chat-messages")[0].scrollHeight);
         },
         error: function (xhr) {
           console.error("Помилка при відправці повідомлення:", xhr.status, xhr.responseText);

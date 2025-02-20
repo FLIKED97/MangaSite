@@ -1,6 +1,7 @@
 .chat-container {
     display: flex;
-    height: 100vh;
+    height: 100%;
+    min-height: 92.4vh;
     max-width: 1200px;
     margin: 0 auto;
     flex-direction: row;
@@ -16,7 +17,7 @@ body{
     width: 25%;
     background-color: #1c1c1c;
     overflow-y: auto;
-    border-right: 1px solid #ddd;
+    border-right: 1px solid #6c757d;
 }
 
 .chat-sidebar ul {
@@ -25,8 +26,8 @@ body{
 }
 
 .chat-sidebar li {
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
+    /*padding: 10px;*/
+    border-bottom: 1px solid #6c757d;
 }
 
 .chat-sidebar li a {
@@ -95,11 +96,31 @@ body{
     display: flex;
     flex-direction: column;
     background-color: #1c1c1c;
+    max-height: calc(100vh - 60px); /* Приблизна висота з урахуванням навігації */
+    height: 100%;
+}
+/*#chat-messages:empty::after { */
+/*    content: "";*/
+/*    display: block;*/
+/*    height: 100%; !* Відступ, який ви бажаєте *!*/
+/*    min-height: 630px;*/
+/*}*/
+
+#chat-header {
+    flex-shrink: 0; /* Запобігає стисканню заголовка */
 }
 
 .chat-header {
     padding: 10px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #6c757d;
+}
+.chat-input {
+    flex-shrink: 0; /* Запобігає стисканню форми вводу */
+    margin-top: auto; /* Підштовхує блок до нижньої межі контейнера */
+    padding: 15px;
+    border-top: 1px solid #2a2a2a;
+    display: flex;
+    background-color: #1c1c1c;
 }
 
 .chat-messages {
@@ -108,10 +129,56 @@ body{
     overflow-y: auto;
 }
 
-.chat-input {
-    padding: 10px;
-    border-top: 1px solid #ddd;
+#chat-form {
     display: flex;
+    width: 100%;
+    align-items: center;
+}
+
+#chat-form input[type="text"] {
+    flex-grow: 1;
+    padding: 12px 15px;
+    border-radius: 20px;
+    border: 1px solid #333;
+    background-color: #2a2a2a;
+    color: #BFBFBF;
+    font-size: 14px;
+    outline: none;
+    width: 75%;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    margin-right: 10px;
+}
+
+#chat-form input[type="text"]:focus {
+    border-color: #0B93F6;
+    box-shadow: 0 0 0 2px rgba(11, 147, 246, 0.2);
+}
+
+#chat-form input[type="text"]::placeholder {
+    color: #6c757d;
+}
+
+#chat-form button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 15px;
+    background-color: transparent;
+    color: #0B93F6;
+    border: 1px solid #0B93F6;
+    border-radius: 20px;
+    cursor: pointer;
+    width: 25%;
+    font-weight: 500;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#chat-form button:hover {
+    background-color: rgba(11, 147, 246, 0.1);
+}
+
+#chat-form button:active {
+    transform: scale(0.97);
 }
 .message .sender {
     display: block;
@@ -133,10 +200,12 @@ body{
 
 /* Стилі для повідомлень */
 #chat-messages {
-    padding: 15px;
+    flex: 1;
     overflow-y: auto;
+    padding: 15px;
     display: flex;
     flex-direction: column;
+    max-height: calc(100% - 70px);
 }
 
 .message {
@@ -165,13 +234,6 @@ body{
 /* Приховуємо часову мітку */
 .message .timestamp {
     display: none; /* Тимчасово приховуємо */
-    /* Коли захочете повернути, змініть на:
-    display: block;
-    color: #888;
-    font-size: 0.7em;
-    text-align: right;
-    margin-top: 5px;
-    */
 }
 
 /* Стилі для тексту повідомлення */
@@ -183,6 +245,7 @@ body{
     display: flex;
     align-items: center;
     padding: 10px;
+    border-bottom: 1px solid #2a2a2a;
 }
 
 #chat-header .avatar-container {
@@ -199,4 +262,51 @@ body{
 #chat-header h2 {
     margin: 0;
     font-size: 1.2rem;
+}
+
+/* Стилі для пошукового поля */
+.search-container {
+    padding: 15px 10px;
+    border-bottom: 1px solid #6c757d;
+    background-color: #1c1c1c;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+#friend-search {
+    width: 100%;
+    padding: 10px 15px 10px 35px;
+    border-radius: 20px;
+    border: 1px solid #333;
+    background-color: #2a2a2a;
+    color: #BFBFBF;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+#friend-search:focus {
+    border-color: #0B93F6;
+    box-shadow: 0 0 0 2px rgba(11, 147, 246, 0.2);
+}
+
+#friend-search::placeholder {
+    color: #6c757d;
+}
+
+.search-icon {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+}
+
+/* Забезпечуємо видимість іконки на темному фоні */
+.search-icon svg {
+    fill: #6c757d;
 }
