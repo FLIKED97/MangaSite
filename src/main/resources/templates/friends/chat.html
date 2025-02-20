@@ -123,17 +123,41 @@
           let lastSenderId = null;
 
           data.messages.forEach(msg => {
-            const messageClass = msg.sender.id === data.friend.id ? 'incoming' : 'outgoing';
-            const showSender = lastSenderId !== msg.sender.id;
-
-            messagesHtml += `<div class="message ${messageClass}">
-                            ${showSender ? `<span class="sender">${msg.sender.username}</span>` : ''}
-                            <p>${msg.content}</p>
-                            <span class="timestamp">${msg.createdAt}</span>
-                        </div>`;
-
-            lastSenderId = msg.sender.id;
+            let messageHtml = '';
+            if (msg.messageType === 'COMICS_SHARE') {
+              const messageClass = msg.sender.id === data.friend.id ? 'incoming' : 'outgoing';
+              // Відображення повідомлення з поділом коміксу
+              messageHtml = `
+              <div class="message comics-share ${messageClass}">
+                <a href="/comics/${msg.comics.id}" class="comics-link">
+                  <div class="comics-preview">
+                    <div class="comics-image-container">
+                      <img src="/comics/image/${msg.comics.id}" alt="Comics Cover">
+                      <div class="comics-rating">
+                        <span>${parseFloat(msg.comics.averageRating).toFixed(1)}</span>
+                        <i class="fas fa-star"></i>
+                      </div>
+                    </div>
+                    <div class="comics-info">
+                      <h4>${msg.comics.title}</h4>
+                    </div>
+                  </div>
+                </a>
+              </div>
+                  `;
+            } else {
+              // Звичайне повідомлення
+              const messageClass = msg.sender.id === data.friend.id ? 'incoming' : 'outgoing';
+              messageHtml = `
+      <div class="message ${messageClass}">
+        <p>${msg.content}</p>
+        <span class="timestamp">${msg.createdAt}</span>
+      </div>
+    `;
+            }
+            messagesHtml += messageHtml;
           });
+
 
           // Додайте після завантаження повідомлень:
           $("#chat-messages").html(messagesHtml);

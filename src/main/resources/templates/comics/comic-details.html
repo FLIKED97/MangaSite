@@ -18,6 +18,92 @@
         .star:hover {
             color: #ffc107;
         }
+         .share-dropdown {
+             position: relative;
+             display: inline-block;
+         }
+        .left-vt{
+         padding: 0 10px 10px !important;
+        }
+        .btn svg {
+            transition: transform 0.2s ease;
+        }
+
+        .btn:hover svg {
+            transform: scale(1.2);
+        }
+        .dropdown-content {
+            position: absolute;
+            right: 0;
+            background-color: #1c1c1c;
+            min-width: 250px;
+            border-radius: 8px;
+            padding: 10px;
+            z-index: 1000;
+            border: 1px solid #333;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .search-friends {
+            padding: 10px;
+            border-bottom: 1px solid #333;
+        }
+
+        .search-friends input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #333;
+            border-radius: 4px;
+            background-color: #2a2a2a;
+            color: #fff;
+        }
+
+        .friends-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 10px 0;
+        }
+
+        .friend-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-bottom: 4px;
+        }
+
+        .friend-item:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .friend-item img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .friend-item label {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .friend-checkbox {
+            margin-left: auto;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #shareForm button {
+            width: 100%;
+            padding: 8px;
+            margin-top: 10px;
+        }
     </style>
     <link rel="stylesheet" th:href="@{/css/custom-btn.css}">
     <link rel="stylesheet" th:href="@{/css/comic-page-styles.css}">
@@ -155,6 +241,38 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link custom-btn navs-it" id="comments-tab" data-bs-toggle="tab" data-bs-target="#comments" type="button" role="tab" aria-controls="comments" aria-selected="false">Коментарі</button>
                 </li>
+                <!-- Кнопка поділитися -->
+                <div class="share-dropdown">
+                    <button class="btn btn-primary left-vt" onclick="toggleShareMenu()" title="Поділитися">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
+                        </svg>
+                    </button>
+                    <div id="friendsList" class="dropdown-content hidden">
+                        <div class="search-friends">
+                            <input type="text" id="friendSearch" placeholder="Пошук друзів..." onkeyup="filterFriends()">
+                        </div>
+                        <form id="shareForm" th:data-comics-id="${comic.id}">
+                            <div class="friends-list">
+                                <div th:each="friend : ${friends}" class="friend-item">
+                                    <label>
+                                        <span th:text="${friend.username}"></span>
+                                        <input type="checkbox"
+                                               th:value="${friend.id}"
+                                               name="selectedFriends"
+                                               class="friend-checkbox">
+                                    </label>
+                                </div>
+                                <div th:if="${friends.isEmpty()}" class="empty-list">
+                                    <p>У вас поки немає друзів</p>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-success">
+                                Поділитися
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </ul>
             <!-- Вміст вкладок -->
             <div class="tab-content mt-4" id="comicTabsContent">
@@ -287,11 +405,11 @@
                             <li class="lt_cm_comment_item" th:each="comment : ${comments}">
                                 <div class="lt_cm_comment_header">
                                     <a class="lt_cm_avatar_link" th:href="@{/profile/personal/{id}(id=${comment.person.id})}">
-                                        <img th:if="${comment.person.avatarPath != null}"
+                                        <img th:if="${comment.person.hasAvatar()}"
                                              th:src="@{'/person/avatar/display/' + ${comment.person.id}}"
                                              alt="Аватар"
                                              class="lt_cm_avatar">
-                                        <img th:if="${comment.person.avatarPath == null}" src="/placeholder-avatar.png" alt="Avatar"
+                                        <img th:unless="${comment.person.hasAvatar()}" src="/placeholder-avatar.png" alt="Avatar"
                                              class="lt_cm_avatar">
                                     </a>
                                     <span class="lt_cm_author" th:text="${comment.person.username}">Автор</span>
@@ -379,6 +497,67 @@
         const bookmarkList = document.getElementById('bookmarkList');
         bookmarkList.style.display = bookmarkList.style.display === 'none' ? 'block' : 'none';
     }
+    function toggleShareMenu() {
+        const dropdown = document.getElementById('friendsList');
+        dropdown.classList.toggle('hidden');
+    }
+
+    function filterFriends() {
+        const searchText = document.getElementById('friendSearch').value.toLowerCase();
+        const friendItems = document.querySelectorAll('.friend-item');
+
+        friendItems.forEach(item => {
+            const username = item.querySelector('span').textContent.toLowerCase();
+            if (username.includes(searchText)) {
+                item.style.display = '';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    document.getElementById('shareForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const comicsId = this.getAttribute('data-comics-id');
+        const selectedFriends = Array.from(document.querySelectorAll('input[name="selectedFriends"]:checked'))
+            .map(checkbox => checkbox.value);
+
+        if (selectedFriends.length === 0) {
+            alert('Будь ласка, виберіть хоча б одного друга');
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/share/comics/${comicsId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="_csrf"]').content
+                },
+                body: JSON.stringify(selectedFriends)
+            });
+
+            if (response.ok) {
+                window.location.href = '/chat';
+            } else {
+                alert('Помилка при надсиланні коміксу');
+            }
+        } catch (error) {
+            console.error('Error sharing comics:', error);
+            alert('Сталася помилка при надсиланні');
+        }
+    });
+
+    // Закриваємо дропдаун при кліку поза ним
+    document.addEventListener('click', function(e) {
+        const dropdown = document.getElementById('friendsList');
+        const shareButton = document.querySelector('.share-dropdown button');
+
+        if (!dropdown.contains(e.target) && e.target !== shareButton) {
+            dropdown.classList.add('hidden');
+        }
+    });
 
     document.addEventListener('DOMContentLoaded', function () {
         const comicId = [[${comic.id}]];

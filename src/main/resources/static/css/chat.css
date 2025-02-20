@@ -96,15 +96,9 @@ body{
     display: flex;
     flex-direction: column;
     background-color: #1c1c1c;
-    max-height: calc(100vh - 60px); /* Приблизна висота з урахуванням навігації */
+    max-height: calc(100vh - 60px);
     height: 100%;
 }
-/*#chat-messages:empty::after { */
-/*    content: "";*/
-/*    display: block;*/
-/*    height: 100%; !* Відступ, який ви бажаєте *!*/
-/*    min-height: 630px;*/
-/*}*/
 
 #chat-header {
     flex-shrink: 0; /* Запобігає стисканню заголовка */
@@ -115,17 +109,20 @@ body{
     border-bottom: 1px solid #6c757d;
 }
 .chat-input {
-    flex-shrink: 0; /* Запобігає стисканню форми вводу */
-    margin-top: auto; /* Підштовхує блок до нижньої межі контейнера */
+    flex-shrink: 0;
     padding: 15px;
     border-top: 1px solid #2a2a2a;
     display: flex;
     background-color: #1c1c1c;
 }
 
-.chat-messages {
-    flex-grow: 1;
-    padding: 10px;
+#chat-messages {
+    flex: 1;
+    height: 660px; /* Фіксована висота */
+    min-height: 660px; /* Мінімальна висота */
+    padding: 15px;
+    display: flex;
+    flex-direction: column-reverse; /* Змінюємо напрямок на зворотний */
     overflow-y: auto;
 }
 
@@ -208,6 +205,7 @@ body{
     max-height: calc(100% - 70px);
 }
 
+/* Стилі для контейнера повідомлень */
 .message {
     max-width: 70%;
     margin-bottom: 15px;
@@ -231,6 +229,9 @@ body{
     border-bottom-right-radius: 5px;
 }
 
+#chat-messages .message:last-child {
+    margin-top: 0;
+}
 /* Приховуємо часову мітку */
 .message .timestamp {
     display: none; /* Тимчасово приховуємо */
@@ -309,4 +310,73 @@ body{
 /* Забезпечуємо видимість іконки на темному фоні */
 .search-icon svg {
     fill: #6c757d;
+}
+
+.comics-share {
+    cursor: pointer;
+}
+
+.comics-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.comics-preview {
+    display: flex;
+    flex-direction: column;
+    max-width: 148.86px;
+}
+
+.comics-image-container {
+    position: relative;
+    width: 148.86px;
+    height: 223.27px;
+}
+
+.comics-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.comics-rating {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.comics-rating span {
+    color: #FFD700;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.comics-rating i {
+    color: #FFD700;
+    font-size: 12px;
+}
+
+.comics-info {
+    margin-top: 8px;
+}
+
+.comics-info h4 {
+    font-size: 14px;
+    margin: 0;
+    text-decoration: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.comics-link:hover {
+    color: inherit !important;
+    text-decoration: none !important;
 }

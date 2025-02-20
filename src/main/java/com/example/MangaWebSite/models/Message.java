@@ -33,6 +33,14 @@ public class Message {
     @Column(nullable = false)
     private MessageStatus status; // SENT, DELIVERED, READ
 
+    @ManyToOne
+    @JoinColumn(name = "comics_id")
+    private Comics comics; // Додаємо посилання на комікс
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "message_type")
+    private MessageType messageType = MessageType.TEXT; // За замовчуванням TEXT
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

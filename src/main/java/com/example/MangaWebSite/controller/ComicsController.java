@@ -49,6 +49,7 @@ public class ComicsController {
     private final RatingService ratingService;
 
     private final CommentService commentService;
+    private final FriendshipService friendshipService;
 
     private static final Logger logger = LoggerFactory.getLogger(ComicsController.class);
 
@@ -106,6 +107,7 @@ public class ComicsController {
         model.addAttribute("currentPage", page);
         model.addAttribute("userRating", ratingService.getUserRating(comicId, personDetails.getPerson().getId()));
         model.addAttribute("comments", commentService.getCommentsByComicsId(comicId));
+        model.addAttribute("friends", friendshipService.getFriends(personDetails.getPerson().getId()));
         return "comics/comic-details";
     }
 
