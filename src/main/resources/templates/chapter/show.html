@@ -38,7 +38,7 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 10px;
+            height: 40px;
             z-index: 999;
         }
 
@@ -47,7 +47,8 @@
             top: 0;
             left: 0;
             right: 0;
-            background-color: rgba(20, 20, 20, 0.8);
+            /*background-color: rgba(20, 20, 20, 0.8);*/
+            background-color: rgb(37, 37, 39) !important;
             color: white;
             padding: 10px 20px;
             display: flex;
@@ -99,10 +100,6 @@
             transition: background-color 0.2s;
         }
 
-        /*.back-button:hover {*/
-        /*    background-color: rgba(255, 255, 255, 0.1);*/
-        /*}*/
-
         /* Випадаюче меню */
         .navigation-dropdown {
             position: absolute;
@@ -143,10 +140,12 @@
         .comics-titles {
             display: flex;
             flex-direction: column;
+            font-size: 14px;
+            font-weight: 600;
         }
 
         .original-title {
-            font-size: 16px;
+            font-size: 12px;
             margin: 0;
             font-weight: 600;
         }
@@ -175,7 +174,6 @@
         .chapter-navigation {
             display: flex;
             align-items: center;
-            gap: 10px;
             justify-content: flex-start; /* Вирівнювання елементів до лівого краю */
         }
 
@@ -189,14 +187,8 @@
             transition: background-color 0.2s;
         }
 
-        /*.chapter-prev:hover, .chapter-next:hover {*/
-        /*    background-color: rgba(255, 255, 255, 0.1);*/
-        /*}*/
-
         .chapter-indicator {
-            font-weight: 500;
-            min-width: 100px;
-            text-align: center;
+            position: relative;
         }
 
         /* Права частина з налаштуваннями */
@@ -314,6 +306,124 @@
             min-width: 50px;
             text-align: center;
         }
+        /* Стилі для випадаючого меню розділів */
+        .dropdown-btn {
+            background: none;
+            border: none;
+            color: #BFBFBF;
+            font-size: 14px;
+            padding: 8px 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-family: inherit;
+        }
+
+        /* Remove the default button styles */
+        .dropdown-btn:focus {
+            outline: none;
+        }
+
+        /* Hide the dropdown arrow */
+        .dropdown-btn .fa-chevron-down {
+            display: none;
+        }
+
+        /* Style for disabled navigation buttons */
+        .chapter-prev[disabled],
+        .chapter-next[disabled] {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Style for the navigation arrows */
+        .chapter-prev,
+        .chapter-next {
+            background: none;
+            border: none;
+            color: #BFBFBF;
+            padding: 8px;
+            cursor: pointer;
+        }
+        /* Панель розділов */
+        .chapter-panel {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100vh;
+            background-color: rgba(30, 30, 30, 0.95);
+            z-index: 1002;
+            padding: 20px;
+            transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2);
+            will-change: transform;
+            transform: translateX(0);
+            overflow-y: auto;
+        }
+
+        .chapter-panel.active {
+            transform: translateX(300px);
+        }
+
+        .chapter-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chapter-panel-header h3 {
+            margin: 0;
+            color: inherit;
+        }
+
+        .close-chapters {
+            background: none;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .chapters-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chapter-item {
+            display: flex;
+            flex-direction: column;
+            padding: 12px 15px;
+            border-radius: 4px;
+            color: #BFBFBF;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+
+        .chapter-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .chapter-item.active {
+            background-color: rgba(61, 90, 254, 0.2);
+            border-left: 3px solid #3D5AFE;
+        }
+
+        .chapter-number {
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .chapter-title {
+            font-size: 13px;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
     </style>
 </head>
 <body>
@@ -355,7 +465,14 @@
             <button class="chapter-prev" th:if="${prevChapter == null}" disabled style="opacity: 0.5;">
                 <i class="fas fa-chevron-left"></i>
             </button>
-            <div class="chapter-indicator" th:text="'Розділ ' + ${chapter.chapterNumber}">Розділ</div>
+
+            <div class="dropdown chapter-indicator">
+                <button id="chaptersBtn" class="dropdown-btn">
+                    <span th:text="'Розділ ' + ${chapter.chapterNumber}">Розділ</span>
+                    <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 6px; opacity: 0.7;"></i>
+                </button>
+            </div>
+
             <button class="chapter-next" th:if="${nextChapter != null}"
                     th:onclick="'window.location.href=\'/chapters/' + ${nextChapter.id} + '\''">
                 <i class="fas fa-chevron-right"></i>
@@ -398,6 +515,25 @@
         <!-- Можна додати інші налаштування -->
     </div>
 </div>
+<!-- Панель розділів, що виїжджає зліва -->
+<div class="chapter-panel" id="chaptersPanel">
+    <div class="chapter-panel-header">
+        <h3>Розділи</h3>
+        <button class="close-chapters">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div class="chapters-list">
+        <th:block th:each="chap : ${allChapter}">  <!-- Змінив allChapter на allChapters -->
+            <a th:href="@{/chapters/{id}(id=${chap.id})}"
+            class="chapter-item"
+            th:classappend="${chap.id == chapter.id ? 'active' : ''}">
+            <span class="chapter-number" th:text="'Розділ ' + ${chap.chapterNumber}">Розділ</span>
+            <span class="chapter-title" th:text="${chap.title}">Назва розділу</span>
+            </a>
+        </th:block>
+    </div>
+</div>
 
 <div class="container mt-5">
     <h1 th:text="'Глава ' + ${chapter.chapterNumber} + ': ' + ${chapter.title}">Назва глави</h1>
@@ -430,7 +566,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Получаем элементы
+        // Получаем элементы для хедера
         const headerTrigger = document.querySelector('.comics-header-trigger');
         const header = document.querySelector('.comics-header');
         const settingsBtn = document.getElementById('comicsSettingsBtn');
@@ -453,7 +589,7 @@
             if (!isHeaderHovered && !settingsPanel.classList.contains('active')) {
                 headerTimer = setTimeout(() => {
                     header.classList.remove('comics-header-visible');
-                }, 10000); // 2 секунды задержка
+                }, 1000); // 1 секунда задержка
             }
         }
 
@@ -539,6 +675,75 @@
             });
         }
     });
+        // ========================
+        // ЛОГИКА ВЫПАДАЮЩЕГО МЕНЮ
+        // ========================
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Элементы для панели разделов
+            const chaptersBtn = document.getElementById('chaptersBtn');
+            const chaptersPanel = document.getElementById('chaptersPanel');
+            const closeChaptersBtn = document.querySelector('.close-chapters');
+            const overlay = document.getElementById('overlay'); // Используем существующий оверлей
+
+            // Обработчик для кнопки разделов
+            chaptersBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+
+                // Сначала активируем overlay для плавного появления
+                overlay.classList.add('active');
+
+                // Используем requestAnimationFrame для синхронизации с отрисовкой браузера
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        // Принудительно вызываем перерасчет стилей перед анимацией
+                        window.getComputedStyle(chaptersPanel).transform;
+                        window.getComputedStyle(overlay).opacity;
+
+                        chaptersPanel.classList.add('active');
+                    });
+                });
+            });
+
+            // Закрытие панели разделов
+            function closeChaptersPanel(e) {
+                if (e) e.stopPropagation();
+                chaptersPanel.classList.remove('active');
+
+                // Если панель настроек также не активна, убираем оверлей
+                if (!document.getElementById('comicsSettingsPanel').classList.contains('active')) {
+                    setTimeout(() => {
+                        overlay.classList.remove('active');
+                    }, 100);
+                }
+            }
+
+            closeChaptersBtn.addEventListener('click', closeChaptersPanel);
+
+            // Закрываем панель разделов при клике на оверлей
+            overlay.addEventListener('click', function(e) {
+                // Закрываем обе панели при клике на оверлей
+                closeChaptersPanel(e);
+
+                // Если существует функция закрытия настроек, вызываем её
+                if (typeof closeSettings === 'function') {
+                    closeSettings(e);
+                }
+            });
+
+            // Прокрутка к активному разделу
+            function scrollToActiveChapter() {
+                const activeChapter = document.querySelector('.chapter-item.active');
+                if (activeChapter) {
+                    setTimeout(() => {
+                        activeChapter.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                    }, 300);
+                }
+            }
+
+            // Прокручиваем к активному разделу при открытии панели
+            chaptersBtn.addEventListener('click', scrollToActiveChapter);
+        });
 </script>
 </body>
 </html>

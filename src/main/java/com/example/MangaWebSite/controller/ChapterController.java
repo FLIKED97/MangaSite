@@ -68,9 +68,16 @@ public class ChapterController {
         Chapter nextChapter = chapterService.findNextChapter(chapter);
         Chapter prevChapter = chapterService.findPrevChapter(chapter);
 
+        // Отримуємо id коміксу з поточної глави
+        int comicsId = chapter.getComics().getId();
+
         model.addAttribute("chapter", chapter);
         model.addAttribute("nextChapter", nextChapter);
         model.addAttribute("prevChapter", prevChapter);
+
+        List<Chapter> allChapters = chapterService.findAllChapterByComicsId(comicsId);
+        System.out.println("Кількість розділів: " + allChapters.size());
+        model.addAttribute("allChapter", allChapters);
 
         ReadingProgress progress = readingProgressService.findByPersonAndComic(chapter.getComics());
         if (progress == null) {
