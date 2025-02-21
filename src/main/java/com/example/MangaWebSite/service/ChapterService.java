@@ -159,4 +159,11 @@ public class ChapterService {
         System.out.println("Chapters found: " + chapters.getContent().size());
         return chapters;
     }
+
+    public Chapter findPrevChapter(Chapter currentChapter) {
+        return chapterRepository.findFirstByComicsAndChapterNumberLessThanOrderByChapterNumberDesc(
+                currentChapter.getComics(),
+                currentChapter.getChapterNumber()
+        );
+    }
 }

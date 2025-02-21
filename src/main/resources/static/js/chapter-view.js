@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             pages.forEach((page, index) => {
                 const pageContainer = document.createElement('div');
-                pageContainer.className = 'mb-3';
+                // pageContainer.className = 'mb-3';
                 pageContainer.setAttribute('data-page-number', currentPage * pageSize + index + 1);
 
                 const img = document.createElement('img');

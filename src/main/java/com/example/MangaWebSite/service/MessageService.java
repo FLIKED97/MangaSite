@@ -42,6 +42,7 @@ public class MessageService {
     public Message save(Message message) {
         return messageRepository.save(message);
     }
+//    TODO ЗРОБИТИ СВІЙ ВАРІАНТ
     public List<Message> shareComicsWithFriends(
             int comicsId,
             List<Integer> friendIds,

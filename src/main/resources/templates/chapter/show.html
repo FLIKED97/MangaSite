@@ -13,6 +13,11 @@
             margin: 0;
             padding: 0;
             position: relative;
+            overflow-x: hidden; /* Предотвращает горизонтальную прокрутку */
+            background: #0A0A0A !important;
+            color: #BFBFBF !important;
+            line-height: 1.4 !important;
+            font-family: -apple-system, BlinkMacSystemFont, Open Sans, Roboto, Helvetica Neue, Helvetica, sans-serif !important;
         }
 
         .comic-page {
@@ -28,6 +33,15 @@
         }
 
         /* Стилі для плаваючого хедера */
+        .comics-header-trigger {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 10px;
+            z-index: 999;
+        }
+
         .comics-header {
             position: fixed;
             top: 0;
@@ -40,12 +54,14 @@
             justify-content: space-between;
             align-items: center;
             transform: translateY(-100%);
-            transition: transform 0.3s ease;
+            transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
             z-index: 1000;
             backdrop-filter: blur(5px);
+            height: 60px;
+            will-change: transform; /* Оптимизация для анимаций */
         }
 
-        body:hover .comics-header {
+        .comics-header-visible {
             transform: translateY(0);
         }
 
@@ -67,13 +83,13 @@
             font-size: 18px;
             cursor: pointer;
             padding: 8px;
-            border-radius: 50%;
+            /*border-radius: 50%;*/
             transition: background-color 0.2s;
         }
 
-        .back-button:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
+        /*.back-button:hover {*/
+        /*    background-color: rgba(255, 255, 255, 0.1);*/
+        /*}*/
 
         /* Випадаюче меню */
         .navigation-dropdown {
@@ -129,11 +145,26 @@
             opacity: 0.8;
         }
 
+        a.comics-titles {
+            text-decoration: none !important;
+            color: inherit !important;
+        }
+
+        a.comics-titles:visited,
+        a.comics-titles:hover,
+        a.comics-titles:active,
+        a.comics-titles:focus {
+            text-decoration: none !important;
+            color: inherit !important;
+        }
+
+
         /* Центральна частина з навігацією */
         .chapter-navigation {
             display: flex;
             align-items: center;
             gap: 15px;
+            justify-content: flex-start; /* Вирівнювання елементів до лівого краю */
         }
 
         .chapter-prev, .chapter-next {
@@ -146,9 +177,9 @@
             transition: background-color 0.2s;
         }
 
-        .chapter-prev:hover, .chapter-next:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
+        /*.chapter-prev:hover, .chapter-next:hover {*/
+        /*    background-color: rgba(255, 255, 255, 0.1);*/
+        /*}*/
 
         .chapter-indicator {
             font-weight: 500;
@@ -168,8 +199,29 @@
             transition: background-color 0.2s;
         }
 
-        .settings-button:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+        /*.settings-button:hover {*/
+        /*    background-color: rgba(255, 255, 255, 0.1);*/
+        /*}*/
+
+        /* Затемнение фона при открытии панели настроек */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0);
+            z-index: 1001;
+            visibility: hidden;
+            transition: background-color 0.3s cubic-bezier(0.4, 0.0, 0.2, 1), visibility 0.3s;
+            backdrop-filter: none;
+            will-change: background-color, backdrop-filter;
+        }
+
+        .overlay.active {
+            visibility: visible;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: none;
         }
 
         /* Панель налаштувань */
@@ -182,13 +234,15 @@
             background-color: rgba(30, 30, 30, 0.95);
             z-index: 1002;
             padding: 20px;
-            transition: right 0.3s ease;
+            transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
             backdrop-filter: blur(10px);
             box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+            will-change: transform; /* Оптимизация для анимаций */
+            transform: translateX(0);
         }
 
         .settings-panel.active {
-            right: 0;
+            transform: translateX(-300px);
         }
 
         .settings-header {
@@ -248,14 +302,12 @@
             min-width: 50px;
             text-align: center;
         }
-
-        /* Додатковий відступ для контейнера */
-        .container.mt-5 {
-            margin-top: 70px !important;
-        }
     </style>
 </head>
 <body>
+<!-- Зона тригера для хедера -->
+<div class="comics-header-trigger"></div>
+
 <!-- Плаваючий хедер -->
 <div class="comics-header">
     <!-- Ліва частина з кнопкою назад і меню -->
@@ -265,20 +317,20 @@
                 <i class="fas fa-arrow-left"></i>
             </button>
             <div class="navigation-dropdown">
-                <a href="/bookmarks" class="nav-item">
+                <a href="/#" class="nav-item">
                     <i class="fas fa-bookmark"></i> Закладки
                 </a>
-                <a href="/" class="nav-item">
+                <a th:href="@{/main}" class="nav-item">
                     <i class="fas fa-home"></i> Головна
                 </a>
             </div>
         </div>
 
         <!-- Назви коміксу -->
-        <div class="comics-titles">
+        <a class="comics-titles" th:href="@{/comics/{id}(id=${chapter.comics.id})}">
             <h3 class="original-title" th:text="${chapter.comics.originalTitle ?: chapter.comics.title}">Оригінальна назва</h3>
-            <h4 class="translated-title" th:text="${chapter.title}">Переведена назва</h4>
-        </div>
+            <h4 class="translated-title" th:text="${chapter.comics.title}">Переведена назва</h4>
+        </a>
     </div>
 
     <!-- Центральна частина з навігацією по розділах -->
@@ -307,6 +359,9 @@
         </button>
     </div>
 </div>
+
+<!-- Затемнение фона -->
+<div class="overlay" id="overlay"></div>
 
 <!-- Панель налаштувань, що виїжджає справа -->
 <div class="settings-panel" id="comicsSettingsPanel">
@@ -360,25 +415,83 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Обробка кнопки налаштувань
+        // Получаем элементы
+        const headerTrigger = document.querySelector('.comics-header-trigger');
+        const header = document.querySelector('.comics-header');
         const settingsBtn = document.getElementById('comicsSettingsBtn');
         const settingsPanel = document.getElementById('comicsSettingsPanel');
         const closeSettingsBtn = document.querySelector('.close-settings');
+        const overlay = document.getElementById('overlay');
 
-        settingsBtn.addEventListener('click', function() {
-            settingsPanel.classList.toggle('active');
-        });
+        // Переменные для таймера
+        let headerTimer;
+        let isHeaderHovered = false;
 
-        closeSettingsBtn.addEventListener('click', function() {
-            settingsPanel.classList.remove('active');
-        });
+        // Функция показа хедера
+        function showHeader() {
+            header.classList.add('comics-header-visible');
+            clearTimeout(headerTimer);
+        }
 
-        // Закрити панель налаштувань при кліку поза нею
-        document.addEventListener('click', function(event) {
-            if (!settingsPanel.contains(event.target) && event.target !== settingsBtn) {
-                settingsPanel.classList.remove('active');
+        // Функция скрытия хедера с задержкой
+        function hideHeaderWithDelay() {
+            if (!isHeaderHovered && !settingsPanel.classList.contains('active')) {
+                headerTimer = setTimeout(() => {
+                    header.classList.remove('comics-header-visible');
+                }, 1000); // 2 секунды задержка
             }
+        }
+
+        // Показываем хедер при наведении на триггер
+        headerTrigger.addEventListener('mouseenter', showHeader);
+        headerTrigger.addEventListener('mouseleave', hideHeaderWithDelay);
+
+        // Отслеживаем наведение на сам хедер
+        header.addEventListener('mouseenter', () => {
+            isHeaderHovered = true;
+            showHeader();
         });
+
+        header.addEventListener('mouseleave', () => {
+            isHeaderHovered = false;
+            hideHeaderWithDelay();
+        });
+
+        // Предварительное вычисление размерения для плавной анимации
+        function prepareAnimation() {
+            // Принудительно вызываем перерасчет стилей перед анимацией
+            window.getComputedStyle(settingsPanel).transform;
+            window.getComputedStyle(overlay).opacity;
+        }
+
+        // Обработка кнопки налаштувань
+        settingsBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+
+            // Сначала активируем overlay для плавного появления
+            overlay.classList.add('active');
+
+            // Используем requestAnimationFrame для синхронизации с отрисовкой браузера
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    prepareAnimation();
+                    settingsPanel.classList.add('active');
+                });
+            });
+        });
+
+        closeSettingsBtn.addEventListener('click', closeSettings);
+        overlay.addEventListener('click', closeSettings);
+
+        function closeSettings(e) {
+            if (e) e.stopPropagation();
+            settingsPanel.classList.remove('active');
+
+            // Добавляем обработчик события окончания анимации для overlay
+            setTimeout(() => {
+                overlay.classList.remove('active');
+            }, 100); // Небольшая задержка для синхронизации анимаций
+        }
 
         // Логіка для зміни розміру
         const decreaseBtn = document.querySelector('.size-decrease');
@@ -386,14 +499,16 @@
         const currentSizeEl = document.querySelector('.current-size');
         let currentSize = 100;
 
-        decreaseBtn.addEventListener('click', function() {
+        decreaseBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
             if (currentSize > 50) {
                 currentSize -= 10;
                 updateSize();
             }
         });
 
-        increaseBtn.addEventListener('click', function() {
+        increaseBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
             if (currentSize < 200) {
                 currentSize += 10;
                 updateSize();

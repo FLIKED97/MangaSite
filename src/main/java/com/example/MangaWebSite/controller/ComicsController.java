@@ -65,7 +65,7 @@ public class ComicsController {
     public String getComicById(@PathVariable("id") int comicId,
                                Model model,
                                @RequestParam(defaultValue = "0") int page,
-                               @RequestParam(defaultValue = "2") int size,
+                               @RequestParam(defaultValue = "10") int size,
                                HttpSession session) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();

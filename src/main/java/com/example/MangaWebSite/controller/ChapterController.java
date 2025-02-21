@@ -66,9 +66,11 @@ public class ChapterController {
     public String showChapter(@PathVariable int id, Model model) {
         Chapter chapter = chapterService.findById(id);
         Chapter nextChapter = chapterService.findNextChapter(chapter);
+        Chapter prevChapter = chapterService.findPrevChapter(chapter);
 
         model.addAttribute("chapter", chapter);
         model.addAttribute("nextChapter", nextChapter);
+        model.addAttribute("prevChapter", prevChapter);
 
         ReadingProgress progress = readingProgressService.findByPersonAndComic(chapter.getComics());
         if (progress == null) {
