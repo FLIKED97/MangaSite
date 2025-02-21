@@ -51,15 +51,27 @@
             color: white;
             padding: 10px 20px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between; /* Розподіляє ліву групу і header-right */
             transform: translateY(-100%);
             transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
             z-index: 1000;
             backdrop-filter: blur(5px);
             height: 60px;
-            will-change: transform; /* Оптимизация для анимаций */
+            will-change: transform;
         }
+
+        .left-group {
+            display: flex;
+            align-items: center;
+            gap: 20px; /* Простір між header-left та chapter-navigation */
+        }
+
+        /* Якщо потрібно додатково відсуваємо header-right на 15px */
+        .header-right {
+            margin-left: 15px;
+        }
+
 
         .comics-header-visible {
             transform: translateY(0);
@@ -163,7 +175,7 @@
         .chapter-navigation {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
             justify-content: flex-start; /* Вирівнювання елементів до лівого краю */
         }
 
@@ -310,46 +322,48 @@
 
 <!-- Плаваючий хедер -->
 <div class="comics-header">
-    <!-- Ліва частина з кнопкою назад і меню -->
-    <div class="header-left">
-        <div class="back-button-container">
-            <button class="back-button" onclick="window.location.href='/comics/' + [[${chapter.comics.id}]]">
-                <i class="fas fa-arrow-left"></i>
-            </button>
-            <div class="navigation-dropdown">
-                <a href="/#" class="nav-item">
-                    <i class="fas fa-bookmark"></i> Закладки
-                </a>
-                <a th:href="@{/main}" class="nav-item">
-                    <i class="fas fa-home"></i> Головна
-                </a>
+    <div class="left-group">
+        <!-- Ліва частина з кнопкою назад і меню -->
+        <div class="header-left">
+            <div class="back-button-container">
+                <button class="back-button" onclick="window.location.href='/comics/' + [[${chapter.comics.id}]]">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <div class="navigation-dropdown">
+                    <a href="/#" class="nav-item">
+                        <i class="fas fa-bookmark"></i> Закладки
+                    </a>
+                    <a th:href="@{/main}" class="nav-item">
+                        <i class="fas fa-home"></i> Головна
+                    </a>
+                </div>
             </div>
+
+            <!-- Назви коміксу -->
+            <a class="comics-titles" th:href="@{/comics/{id}(id=${chapter.comics.id})}">
+                <h3 class="original-title" th:text="${chapter.comics.originalTitle ?: chapter.comics.title}">Оригінальна назва</h3>
+                <h4 class="translated-title" th:text="${chapter.comics.title}">Переведена назва</h4>
+            </a>
         </div>
 
-        <!-- Назви коміксу -->
-        <a class="comics-titles" th:href="@{/comics/{id}(id=${chapter.comics.id})}">
-            <h3 class="original-title" th:text="${chapter.comics.originalTitle ?: chapter.comics.title}">Оригінальна назва</h3>
-            <h4 class="translated-title" th:text="${chapter.comics.title}">Переведена назва</h4>
-        </a>
-    </div>
-
-    <!-- Центральна частина з навігацією по розділах -->
-    <div class="chapter-navigation">
-        <button class="chapter-prev" th:if="${prevChapter != null}"
-                th:onclick="'window.location.href=\'/chapters/' + ${prevChapter.id} + '\''">
-            <i class="fas fa-chevron-left"></i>
-        </button>
-        <button class="chapter-prev" th:if="${prevChapter == null}" disabled style="opacity: 0.5;">
-            <i class="fas fa-chevron-left"></i>
-        </button>
-        <div class="chapter-indicator" th:text="'Розділ ' + ${chapter.chapterNumber}">Розділ</div>
-        <button class="chapter-next" th:if="${nextChapter != null}"
-                th:onclick="'window.location.href=\'/chapters/' + ${nextChapter.id} + '\''">
-            <i class="fas fa-chevron-right"></i>
-        </button>
-        <button class="chapter-next" th:if="${nextChapter == null}" disabled style="opacity: 0.5;">
-            <i class="fas fa-chevron-right"></i>
-        </button>
+        <!-- Центральна частина з навігацією по розділах -->
+        <div class="chapter-navigation">
+            <button class="chapter-prev" th:if="${prevChapter != null}"
+                    th:onclick="'window.location.href=\'/chapters/' + ${prevChapter.id} + '\''">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="chapter-prev" th:if="${prevChapter == null}" disabled style="opacity: 0.5;">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <div class="chapter-indicator" th:text="'Розділ ' + ${chapter.chapterNumber}">Розділ</div>
+            <button class="chapter-next" th:if="${nextChapter != null}"
+                    th:onclick="'window.location.href=\'/chapters/' + ${nextChapter.id} + '\''">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+            <button class="chapter-next" th:if="${nextChapter == null}" disabled style="opacity: 0.5;">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
     </div>
 
     <!-- Права частина з налаштуваннями -->
@@ -359,6 +373,7 @@
         </button>
     </div>
 </div>
+
 
 <!-- Затемнение фона -->
 <div class="overlay" id="overlay"></div>
@@ -438,7 +453,7 @@
             if (!isHeaderHovered && !settingsPanel.classList.contains('active')) {
                 headerTimer = setTimeout(() => {
                     header.classList.remove('comics-header-visible');
-                }, 1000); // 2 секунды задержка
+                }, 10000); // 2 секунды задержка
             }
         }
 
