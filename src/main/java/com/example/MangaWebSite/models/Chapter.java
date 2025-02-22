@@ -39,6 +39,9 @@ public class Chapter {
     @Column(name = "pages_count", nullable = false)
     private int pagesCount;
 
+    @Column(name = "thanks_count")
+    private Integer thanksCount = 0;
+
     @Column(name = "volume") // Додано поле для тому
     private int volume;
 

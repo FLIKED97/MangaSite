@@ -195,7 +195,7 @@
         .settings-button {
             background: none;
             border: none;
-            color: white;
+            color: #BFBFBF;
             font-size: 18px;
             cursor: pointer;
             padding: 8px;
@@ -229,57 +229,57 @@
         }
 
         /* Панель налаштувань */
-        .settings-panel {
-            position: fixed;
-            top: 0;
-            right: -300px;
-            width: 300px;
-            height: 100vh;
-            background-color: rgba(30, 30, 30, 0.95);
-            z-index: 1002;
-            padding: 20px;
-            transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
-            backdrop-filter: blur(10px);
-            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
-            will-change: transform; /* Оптимизация для анимаций */
-            transform: translateX(0);
-        }
+            .settings-panel {
+                position: fixed;
+                top: 0;
+                right: -300px;
+                width: 300px;
+                height: 100vh;
+                background-color: rgba(30, 30, 30, 0.95);
+                z-index: 1002;
+                padding: 20px;
+                transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+                backdrop-filter: blur(10px);
+                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+                will-change: transform; /* Оптимизация для анимаций */
+                transform: translateX(0);
+            }
 
-        .settings-panel.active {
-            transform: translateX(-300px);
-        }
+            .settings-panel.active {
+                transform: translateX(-300px);
+            }
 
-        .settings-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
+            .settings-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+                padding-bottom: 10px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
 
-        .settings-header h3 {
-            margin: 0;
-            color: white;
-        }
+            .settings-header h3 {
+                margin: 0;
+                color: white;
+            }
 
-        .close-settings {
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            font-size: 16px;
-        }
+            .close-settings {
+                background: none;
+                border: none;
+                color: white;
+                cursor: pointer;
+                font-size: 16px;
+            }
 
-        .setting-item {
-            margin-bottom: 20px;
-            color: white;
-        }
+            .setting-item {
+                margin-bottom: 20px;
+                color: white;
+            }
 
-        .setting-item label {
-            display: block;
-            margin-bottom: 8px;
-        }
+            .setting-item label {
+                display: block;
+                margin-bottom: 8px;
+            }
 
         .size-controls {
             display: flex;
@@ -305,6 +305,71 @@
         .current-size {
             min-width: 50px;
             text-align: center;
+        }
+        /* Стилі для режиму читання */
+        .reading-mode-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .mode-btn.active {
+            background-color: rgba(61, 90, 254, 0.5);
+        }
+
+        /* Стилі для слайдерів */
+        .brightness-controls, .auto-scroll-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .brightness-value, .speed-value {
+            min-width: 40px;
+            text-align: right;
+        }
+
+        /* Стилі для кнопки автопрокрутки */
+        .auto-scroll-btn {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .auto-scroll-btn.active {
+            background-color: rgba(61, 90, 254, 0.5);
         }
         /* Стилі для випадаючого меню розділів */
         .dropdown-btn {
@@ -424,6 +489,56 @@
             opacity: 0.8;
             margin-top: 4px;
         }
+
+        .chapter-nav-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        /* Основний стиль кнопок навігації */
+        .nav-btn {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            padding: 20px;
+            background-color: rgb(37, 37, 39) !important;
+            color: #BFBFBF;
+            border: 1px solid rgb(70, 70, 70);
+            border-radius: 8px;
+            font-size: 18px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            min-height: 100px;
+        }
+
+        /* Ефект при наведенні */
+        .nav-btn:hover {
+            background-color: rgb(50, 50, 50) !important;
+            transform: scale(1.02);
+        }
+
+        /* Стиль для неактивної (disabled) кнопки */
+        .nav-btn.disabled {
+            background-color: rgb(25, 25, 25) !important;
+            pointer-events: none;
+        }
+
+        /* Стилізація напису на кнопці */
+        .btn-label {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* Номер глави (якщо є) */
+        .btn-chapter-number {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
     </style>
 </head>
 <body>
@@ -504,6 +619,20 @@
         </button>
     </div>
     <div class="settings-content">
+        <!-- Режим читання -->
+        <div class="setting-item">
+            <label>Режим читання</label>
+            <div class="reading-mode-controls">
+                <button class="mode-btn active" data-mode="scroll">
+                    <i class="fas fa-scroll"></i> Прокрутка
+                </button>
+                <button class="mode-btn" data-mode="paged">
+                    <i class="fas fa-book-open"></i> Посторінково
+                </button>
+            </div>
+        </div>
+
+        <!-- Розмір сторінки -->
         <div class="setting-item">
             <label>Розмір сторінки</label>
             <div class="size-controls">
@@ -512,7 +641,27 @@
                 <button class="size-increase">+</button>
             </div>
         </div>
-        <!-- Можна додати інші налаштування -->
+
+        <!-- Яскравість -->
+        <div class="setting-item">
+            <label>Яскравість</label>
+            <div class="brightness-controls">
+                <input type="range" id="brightnessSlider" min="50" max="150" value="100" class="brightness-slider">
+                <span class="brightness-value">100%</span>
+            </div>
+        </div>
+
+        <!-- Автопрокрутка -->
+        <div class="setting-item">
+            <label>Автопрокрутка</label>
+            <div class="auto-scroll-controls">
+                <button class="auto-scroll-btn">
+                    <i class="fas fa-play"></i>
+                </button>
+                <input type="range" id="scrollSpeedSlider" min="1" max="10" value="5" class="speed-slider">
+                <span class="speed-value">5</span>
+            </div>
+        </div>
     </div>
 </div>
 <!-- Панель розділів, що виїжджає зліва -->
@@ -536,13 +685,13 @@
 </div>
 
 <div class="container mt-5">
-    <h1 th:text="'Глава ' + ${chapter.chapterNumber} + ': ' + ${chapter.title}">Назва глави</h1>
+<!--    <h1 th:text="'Глава ' + ${chapter.chapterNumber} + ': ' + ${chapter.title}">Назва глави</h1>-->
 
-    <div class="mb-3">
-        <a th:href="@{/comics/{id}(id=${chapter.comics.id})}" class="btn btn-secondary">
-            Назад до коміксу
-        </a>
-    </div>
+<!--    <div class="mb-3">-->
+<!--        <a th:href="@{/comics/{id}(id=${chapter.comics.id})}" class="btn btn-secondary">-->
+<!--            Назад до коміксу-->
+<!--        </a>-->
+<!--    </div>-->
 
     <div id="comicPages-container" class="mb-4"></div>
 
@@ -552,13 +701,32 @@
         </div>
     </div>
 
-    <div class="mt-4">
+    <div class="chapter-nav-container">
+        <!-- Кнопка для попередньої глави -->
+        <a th:if="${prevChapter != null}"
+           th:href="@{/chapters/{id}(id=${prevChapter.id})}"
+           class="nav-btn prev-btn">
+            <span class="btn-label">Попередня глава</span>
+            <span class="btn-chapter-number" th:text="${prevChapter.chapterNumber}">0</span>
+        </a>
+        <a th:if="${prevChapter == null}"
+           class="nav-btn prev-btn disabled">
+            <span class="btn-label">Попередня глава</span>
+            <span class="btn-chapter-number">—</span>
+        </a>
+
+        <!-- Кнопка для наступної глави або переходу на сторінку коміксу -->
         <a th:if="${nextChapter != null}"
            th:href="@{/chapters/{id}(id=${nextChapter.id})}"
-           class="btn btn-primary">Наступна глава</a>
+           class="nav-btn next-btn">
+            <span class="btn-label">Наступна глава</span>
+            <span class="btn-chapter-number" th:text="${nextChapter.chapterNumber}">0</span>
+        </a>
         <a th:if="${nextChapter == null}"
            th:href="@{/comics/{id}(id=${chapter.comics.id})}"
-           class="btn btn-primary">До сторінки коміксу</a>
+           class="nav-btn next-btn">
+            <span class="btn-label">До сторінки коміксу</span>
+        </a>
     </div>
 </div>
 
@@ -673,6 +841,111 @@
             comicImages.forEach(img => {
                 img.style.width = currentSize + '%';
             });
+        }
+
+        // Режим читання
+        const modeButtons = document.querySelectorAll('.mode-btn');
+        const container = document.getElementById('comicPages-container');
+        let currentPageIndex = 0;
+        let readingMode = 'scroll';
+
+        modeButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                modeButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                readingMode = btn.dataset.mode;
+
+                if (readingMode === 'paged') {
+                    container.style.overflow = 'hidden';
+                    setupPagedNavigation();
+                } else {
+                    container.style.overflow = '';
+                    removePagedNavigation();
+                }
+            });
+        });
+
+        // Яскравість
+        const brightnessSlider = document.getElementById('brightnessSlider');
+        const brightnessValue = document.querySelector('.brightness-value');
+
+        brightnessSlider.addEventListener('input', (e) => {
+            const value = e.target.value;
+            brightnessValue.textContent = `${value}%`;
+            container.style.filter = `brightness(${value}%)`;
+        });
+
+        // Автопрокрутка
+        const autoScrollBtn = document.querySelector('.auto-scroll-btn');
+        const speedSlider = document.getElementById('scrollSpeedSlider');
+        const speedValue = document.querySelector('.speed-value');
+        let autoScrollInterval;
+
+        autoScrollBtn.addEventListener('click', () => {
+            autoScrollBtn.classList.toggle('active');
+            if (autoScrollBtn.classList.contains('active')) {
+                startAutoScroll();
+            } else {
+                stopAutoScroll();
+            }
+        });
+
+        speedSlider.addEventListener('input', (e) => {
+            const value = e.target.value;
+            speedValue.textContent = value;
+            if (autoScrollBtn.classList.contains('active')) {
+                stopAutoScroll();
+                startAutoScroll();
+            }
+        });
+
+        function startAutoScroll() {
+            const speed = speedSlider.value;
+            autoScrollInterval = setInterval(() => {
+                window.scrollBy(0, 1);
+            }, 11 - speed);
+        }
+
+        function stopAutoScroll() {
+            clearInterval(autoScrollInterval);
+        }
+
+        // Посторінкова навігація
+        function setupPagedNavigation() {
+            const pages = document.querySelectorAll('.comic-page');
+            pages.forEach((page, index) => {
+                if (index !== currentPageIndex) {
+                    page.style.display = 'none';
+                }
+            });
+
+            container.addEventListener('click', handlePageClick);
+        }
+
+        function handlePageClick(e) {
+            const pages = document.querySelectorAll('.comic-page');
+            const clickX = e.clientX;
+            const containerWidth = container.offsetWidth;
+
+            if (clickX < containerWidth / 2 && currentPageIndex > 0) {
+                // Клік зліва - попередня сторінка
+                pages[currentPageIndex].style.display = 'none';
+                currentPageIndex--;
+                pages[currentPageIndex].style.display = 'block';
+            } else if (clickX >= containerWidth / 2 && currentPageIndex < pages.length - 1) {
+                // Клік справа - наступна сторінка
+                pages[currentPageIndex].style.display = 'none';
+                currentPageIndex++;
+                pages[currentPageIndex].style.display = 'block';
+            }
+        }
+
+        function removePagedNavigation() {
+            const pages = document.querySelectorAll('.comic-page');
+            pages.forEach(page => {
+                page.style.display = 'block';
+            });
+            container.removeEventListener('click', handlePageClick);
         }
     });
         // ========================
