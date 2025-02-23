@@ -14,7 +14,7 @@ public class ChapterLike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
     // Зв'язок з главою (Chapter)
     @ManyToOne(optional = false)

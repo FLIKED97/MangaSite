@@ -6,6 +6,8 @@ import com.example.MangaWebSite.models.Comics;
 import com.example.MangaWebSite.repository.ChapterRepository;
 import com.example.MangaWebSite.repository.ComicsRepository;
 import com.example.MangaWebSite.security.PersonDetails;
+import jakarta.persistence.EntityNotFoundException;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -103,8 +105,14 @@ public class ChapterService {
         return chapterRepository.findByComicsId(comicId, pageable);
     }
 
+    @Transactional(readOnly = true)
     public Chapter findById(int id) {
-    return chapterRepository.findById(id).orElse(null);
+        Chapter chapter = chapterRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Chapter not found"));
+
+        // Примусово ініціалізуємо необхідні зв'язки
+        Hibernate.initialize(chapter.getComics());
+        return chapter;
     }
 
     public Chapter findNextChapter(Chapter currentChapter) {

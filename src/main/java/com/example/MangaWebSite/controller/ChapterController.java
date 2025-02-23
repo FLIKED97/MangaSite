@@ -1,13 +1,12 @@
 package com.example.MangaWebSite.controller;
 
 import com.example.MangaWebSite.models.Chapter;
+import com.example.MangaWebSite.models.ChapterLike;
 import com.example.MangaWebSite.models.ComicPage;
 import com.example.MangaWebSite.models.ReadingProgress;
+import com.example.MangaWebSite.repository.ChapterLikeRepository;
 import com.example.MangaWebSite.security.PersonDetails;
-import com.example.MangaWebSite.service.ChapterService;
-import com.example.MangaWebSite.service.FileSorterService;
-import com.example.MangaWebSite.service.PageService;
-import com.example.MangaWebSite.service.ReadingProgressService;
+import com.example.MangaWebSite.service.*;
 import lombok.AllArgsConstructor;
 import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
@@ -17,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +42,7 @@ public class ChapterController {
     private final PageService pageService;
 
     private final ReadingProgressService readingProgressService;
+    private final ChapterLikeService chapterLikeService;
 
 
     @GetMapping("/add")
@@ -63,7 +64,8 @@ public class ChapterController {
     }
 
     @GetMapping("/{id}")
-    public String showChapter(@PathVariable int id, Model model) {
+    public String showChapter(@PathVariable int id, Model model,
+                              @AuthenticationPrincipal PersonDetails user) {
         Chapter chapter = chapterService.findById(id);
         Chapter nextChapter = chapterService.findNextChapter(chapter);
         Chapter prevChapter = chapterService.findPrevChapter(chapter);
@@ -74,6 +76,9 @@ public class ChapterController {
         model.addAttribute("chapter", chapter);
         model.addAttribute("nextChapter", nextChapter);
         model.addAttribute("prevChapter", prevChapter);
+        model.addAttribute("chapterLike", chapterLikeService.findLikeChapter(id, user.getPerson()).orElse(null));
+        long likesCount = chapterLikeService.countLikes(chapter.getId());
+        model.addAttribute("likesCount", likesCount);
 
         List<Chapter> allChapters = chapterService.findAllChapterByComicsId(comicsId);
         System.out.println("Кількість розділів: " + allChapters.size());

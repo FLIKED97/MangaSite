@@ -56,7 +56,9 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers("/publisher/register")
                         .permitAll()
-                        .requestMatchers("/publisher/**", "/chapters/**")
+                        .requestMatchers("/chapters/**", "/chapter/**")
+                        .permitAll()  // Тимчасово для тестування
+                        .requestMatchers("/publisher/**")
                         .hasRole("PUBLISHER") // Publisher-specific routes
                         .requestMatchers("/user/**", "/reservation/**", "/main/**", "/ratings/**",
                                 "/currently-reading/**", "/search/**", "/comment/**", "/friends/**", "/chat/**", "/person/**")
