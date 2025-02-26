@@ -64,18 +64,18 @@ public interface ComicsRepository extends JpaRepository<Comics, Integer>, JpaSpe
             Pageable pageable
     );
 
-    @Query("SELECT DISTINCT c FROM Comics c LEFT JOIN FETCH c.tabs t " +
-            "WHERE LOWER(c.title) LIKE LOWER(CONCAT('%', :search, '%')) " +
-            "AND (t IS NULL OR t.person.id = :personId) " +
-            "GROUP BY c.id " +
-            "ORDER BY CASE WHEN :sortBy = 'rating' THEN c.popularityRating " +
-            "WHEN :sortBy = 'views' THEN c.viewCount " +
-            "ELSE c.popularityRating END DESC")
-    Page<Comics> findByTitleContainingIgnoreCaseAndSortWithTabs(
-            @Param("search") String search,
-            @Param("sortBy") String sortBy,
-            @Param("personId") int personId,
-            Pageable pageable
-    );
+//    @Query("SELECT DISTINCT c FROM Comics c LEFT JOIN FETCH c.tabs t " +
+//            "WHERE LOWER(c.title) LIKE LOWER(CONCAT('%', :search, '%')) " +
+//            "AND (t IS NULL OR t.person.id = :personId) " +
+//            "GROUP BY c.id " +
+//            "ORDER BY CASE WHEN :sortBy = 'rating' THEN c.popularityRating " +
+//            "WHEN :sortBy = 'views' THEN c.viewCount " +
+//            "ELSE c.popularityRating END DESC")
+//    Page<Comics> findByTitleContainingIgnoreCaseAndSortWithTabs(
+//            @Param("search") String search,
+//            @Param("sortBy") String sortBy,
+//            @Param("personId") int personId,
+//            Pageable pageable
+//    );
 
 }

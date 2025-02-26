@@ -266,18 +266,48 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function changeDays(days) {
     fetch(`/main/data?days=${days}`)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
+            // Check if data exists before trying to access its properties
+            if (!data) {
+                console.error('No data returned from server');
+                return;
+            }
+
             updateComicsSection('newCreatedComics', data.newCreatedComics);
             updateComicsSection('currentlyPopularReading', data.currentlyPopularReading);
             updateComicsSection('popularComics', data.popularComics);
         })
-        .catch(error => console.error('Error fetching data:', error));
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            // Display a user-friendly error message on the page
+            document.querySelectorAll('#newCreatedComics, #currentlyPopularReading, #popularComics')
+                .forEach(container => {
+                    container.innerHTML = '<div class="alert alert-danger">Помилка завантаження даних</div>';
+                });
+        });
 }
 
 function updateComicsSection(sectionId, comics) {
     const container = document.getElementById(sectionId);
+    if (!container) {
+        console.error(`Container element with ID '${sectionId}' not found`);
+        return;
+    }
+
     container.innerHTML = ''; // Очищуємо старі дані
+
+    // Check if comics exists and is an array before using forEach
+    if (!comics || !Array.isArray(comics)) {
+        console.warn(`No comics data available for section '${sectionId}'`);
+        container.innerHTML = '<div class="alert alert-warning">Немає даних для відображення</div>';
+        return;
+    }
 
     comics.forEach(comic => {
         const comicDiv = document.createElement('div');
