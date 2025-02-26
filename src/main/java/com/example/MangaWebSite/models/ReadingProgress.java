@@ -13,9 +13,9 @@ import java.util.Date;
 @NoArgsConstructor
 @Entity
 @Table(name = "reading_progress", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"person_id", "comic_id"})
+        @UniqueConstraint(columnNames = {"person_id", "chapter_id"})
 })
-@JsonIgnoreProperties({"comics", "person"})
+@JsonIgnoreProperties({"chapter", "person", "comics"})
 public class ReadingProgress {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,15 +27,14 @@ public class ReadingProgress {
     private Person person;
 
     @ManyToOne
-    @JoinColumn(name = "comic_id", nullable = false)
-    private Comics comics;
-
-    @ManyToOne
     @JoinColumn(name = "chapter_id", nullable = false)
     private Chapter chapter;
 
     @Column(name = "last_page", nullable = false)
     private int lastPage;
+
+    @Column(name = "is_completed")
+    private boolean isCompleted = false;
 
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
@@ -45,6 +44,5 @@ public class ReadingProgress {
     public void updateTimestamp() {
         this.updatedAt = LocalDateTime.now();
     }
-
 }
 

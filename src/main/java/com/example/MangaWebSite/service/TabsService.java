@@ -73,4 +73,8 @@ public class TabsService {
     public List<Tabs> getTabsWithComicsCount(int personId) {
         return tabsRepository.findByPersonIdWithComics(personId);
     }
+
+    public List<Tabs> getAllTabs() {
+        return tabsRepository.findAll();
+    }
 }

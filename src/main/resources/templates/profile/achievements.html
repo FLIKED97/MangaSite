@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/main}">
+<head>
+  <title>Мої досягнення</title>
+  <link rel="stylesheet" th:href="@{/css/achievements.css}">
+</head>
+<body>
+<div layout:fragment="content" class="container my-5">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-0">Профіль користувача</h4>
+        </div>
+        <div class="card-body text-center">
+          <div class="avatar-container mb-3">
+            <div class="level-badge" th:text="${profile.level}">1</div>
+            <img th:src="@{/images/avatars/default.png}" alt="Аватар" class="rounded-circle img-fluid avatar-img">
+          </div>
+          <h5 th:text="${profile.person.username}">Користувач</h5>
+          <p class="text-muted" th:text="${profile.person.email}">email@example.com</p>
+
+          <div class="level-progress mb-3">
+            <div class="d-flex justify-content-between mb-1">
+              <span>Рівень <span th:text="${profile.level}">1</span></span>
+              <span>XP: <span th:text="${profile.experiencePoints}">0</span>/<span th:text="${nextLevelXp}">100</span></span>
+            </div>
+            <div class="progress">
+              <div class="progress-bar bg-success" role="progressbar"
+                   th:style="'width: ' + ${xpProgress} + '%'"
+                   th:aria-valuenow="${xpProgress}"
+                   aria-valuemin="0" aria-valuemax="100">
+                <span th:text="${xpProgress} + '%'"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="stats-overview">
+            <div class="row">
+              <div class="col-6 mb-3">
+                <div class="stat-item">
+                  <div class="stat-value" th:text="${completedComics}">0</div>
+                  <div class="stat-label">Коміксів</div>
+                </div>
+              </div>
+              <div class="col-6 mb-3">
+                <div class="stat-item">
+                  <div class="stat-value" th:text="${completedChapters}">0</div>
+                  <div class="stat-label">Глав</div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="stat-item">
+                  <div class="stat-value" th:text="${profile.commentsPosted}">0</div>
+                  <div class="stat-label">Коментарів</div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="stat-item">
+                  <div class="stat-value" th:text="${profile.likesReceived}">0</div>
+                  <div class="stat-label">Лайків</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-3">
+            <a th:href="@{/profile/statistics}" class="btn btn-outline-primary btn-sm">Детальна статистика</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-0">Мої досягнення</h4>
+        </div>
+        <div class="card-body">
+          <ul class="nav nav-tabs" id="achievementTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="earned-tab" data-bs-toggle="tab"
+                      data-bs-target="#earned" type="button" role="tab"
+                      aria-controls="earned" aria-selected="true">
+                Здобуті <span class="badge bg-success" th:text="${userAchievements.size()}">0</span>
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="available-tab" data-bs-toggle="tab"
+                      data-bs-target="#available" type="button" role="tab"
+                      aria-controls="available" aria-selected="false">
+                Доступні <span class="badge bg-secondary"
+                               th:text="${allAchievements.size() - userAchievements.size()}">0</span>
+              </button>
+            </li>
+          </ul>
+
+          <div class="tab-content p-3" id="achievementTabsContent">
+            <!-- Здобуті досягнення -->
+            <div class="tab-pane fade show active" id="earned" role="tabpanel" aria-labelledby="earned-tab">
+              <div th:if="${userAchievements.isEmpty()}" class="text-center py-5">
+                <i class="fas fa-trophy fa-3x text-muted mb-3"></i>
+                <p>У вас поки немає здобутих досягнень. Продовжуйте читати комікси!</p>
+              </div>
+
+              <div class="row" th:unless="${userAchievements.isEmpty()}">
+                <div class="col-md-6 mb-3" th:each="userAchievement : ${userAchievements}">
+                  <div class="achievement-card earned">
+                    <div class="achievement-icon">
+                      <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="achievement-info">
+                      <h5 th:text="${userAchievement.achievement.title}">Назва досягнення</h5>
+                      <p th:text="${userAchievement.achievement.description}">Опис досягнення</p>
+                      <div class="achievement-meta">
+                                                <span class="achievement-date"
+                                                      th:text="${#temporals.format(userAchievement.achievedAt, 'dd.MM.yyyy')}">
+                                                    01.01.2023
+                                                </span>
+                        <span class="achievement-xp">+<span
+                                th:text="${userAchievement.achievement.experienceReward}">50</span> XP</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Доступні досягнення -->
+            <div class="tab-pane fade" id="available" role="tabpanel" aria-labelledby="available-tab">
+              <div class="row">
+                <!-- Припускаємо, що у моделі є змінна userAchievementIds (List або Set з id досягнень) -->
+                <div class="col-md-6 mb-3" th:each="achievement : ${allAchievements}"
+                     th:if="${!userAchievementIds.contains(achievement.id)}">
+                  <div class="achievement-card locked">
+                    <div class="achievement-icon">
+                      <i class="fas fa-lock"></i>
+                    </div>
+                    <div class="achievement-info">
+                      <h5 th:text="${achievement.title}">Назва досягнення</h5>
+                      <p th:text="${achievement.description}">Опис досягнення</p>
+                      <div class="progress">
+                        <div class="progress-bar" role="progressbar"
+                             th:with="progress=${(userProgress.get(achievement.type) * 100 / achievement.threshold) > 100 ? 100 : (userProgress.get(achievement.type) * 100 / achievement.threshold)}"
+                             th:style="'width: ' + progress + '%'"
+                             th:attr="aria-valuenow=${progress}"
+                             aria-valuemin="0" aria-valuemax="100">
+                        </div>
+                      </div>
+                      <div class="achievement-progress">
+                        <span th:text="${userProgress.get(achievement.type)} + ' / ' + achievement.threshold">0/10</span>
+                        <span class="achievement-xp">+<span th:text="${achievement.experienceReward}">50</span> XP</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<th:block layout:fragment="scripts">
+  <script th:src="@{/js/achievements.js}"></script>
+</th:block>
+</body>
+</html>

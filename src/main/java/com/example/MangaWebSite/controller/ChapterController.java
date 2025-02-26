@@ -84,12 +84,15 @@ public class ChapterController {
         System.out.println("Кількість розділів: " + allChapters.size());
         model.addAttribute("allChapter", allChapters);
 
-        ReadingProgress progress = readingProgressService.findByPersonAndComic(chapter.getComics());
+        ReadingProgress progress = readingProgressService.findByPersonAndChapter(chapter);
         if (progress == null) {
-            System.out.println("Прогрес не знайдено для коміксу: " + chapter.getComics().getId());
+            System.out.println("Прогрес не знайдено для глави: " + chapter.getId());
+            // Наприклад, починати з першої сторінки:
+            // lastPage = 1;
         } else {
             System.out.println("Прогрес знайдено: " + progress.getLastPage());
         }
+
 
         model.addAttribute("lastPage", progress != null ? progress.getLastPage() : 0);
 

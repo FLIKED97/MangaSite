@@ -182,9 +182,14 @@ public class ComicsController {
                              Model model,
                              @AuthenticationPrincipal PersonDetails user) {
         List<Comics> comics = comicsService.getComicsSortedBy(sortBy);
-
         model.addAttribute("comics", comics);
         model.addAttribute("sortBy", sortBy);
+
+        List<Tabs> tabs = tabsService.getAllTabs();
+        model.addAttribute("tabs", tabs);
+
+        // Додаємо список всіх типів коміксів
+        model.addAttribute("comicsTypes", Arrays.asList(ComicsType.values()));
 
         return "comics/newShow";
     }

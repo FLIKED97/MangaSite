@@ -59,4 +59,9 @@ public class Chapter {
         comicPages.add(comicPage);
         comicPage.setChapter(this); // Встановлюємо зв'язок сторінки з главою
     }
+
+    public int getTotalPages() {
+        return comicPages != null ? comicPages.size() : 0;
+    }
+
 }

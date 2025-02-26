@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/main}">
+<head>
+    <title>Моя статистика</title>
+    <link rel="stylesheet" th:href="@{/css/statistics.css}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div layout:fragment="content" class="container my-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="border-bottom pb-2">Моя статистика читання</h2>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value" th:text="${readingStats.totalComicsRead}">0</div>
+                    <div class="stat-label">Прочитано коміксів</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-bookmark"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value" th:text="${readingStats.totalChaptersRead}">0</div>
+                    <div class="stat-label">Прочитано глав</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-comment"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value" th:text="${readingStats.commentsPosted}">0</div>
+                    <div class="stat-label">Залишено коментарів</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value" th:text="${readingStats.likesReceived}">0</div>
+                    <div class="stat-label">Отримано лайків</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">Прогрес за тиждень</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="weeklyChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">Прогрес за місяць</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="monthlyChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Активність</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>Тип активності</th>
+                                <th>Кількість</th>
+                                <th>Прогрес</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Прочитано коміксів</td>
+                                <td th:text="${readingStats.totalComicsRead}">0</td>
+                                <td>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-success" role="progressbar"
+                                             th:style="'width: ' + ${readingStats.totalComicsRead * 5 > 100 ? 100 : readingStats.totalComicsRead * 5} + '%'"
+                                             th:aria-valuenow="${readingStats.totalComicsRead * 5 > 100 ? 100 : readingStats.totalComicsRead * 5}"
+                                             aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Прочитано глав</td>
+                                <td th:text="${readingStats.totalChaptersRead}">0</td>
+                                <td>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-info" role="progressbar"
+                                             th:style="'width: ' + ${readingStats.totalChaptersRead > 100 ? 100 : readingStats.totalChaptersRead} + '%'"
+                                             th:aria-valuenow="${readingStats.totalChaptersRead > 100 ? 100 : readingStats.totalChaptersRead}"
+                                             aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Залишено коментарів</td>
+                                <td th:text="${readingStats.commentsPosted}">0</td>
+                                <td>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-warning" role="progressbar"
+                                             th:style="'width: ' + ${readingStats.commentsPosted * 2 > 100 ? 100 : readingStats.commentsPosted * 2} + '%'"
+                                             th:aria-valuenow="${readingStats.commentsPosted * 2 > 100 ? 100 : readingStats.commentsPosted * 2}"
+                                             aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Днів активності підряд</td>
+                                <td th:text="${readingStats.daysStreak}">0</td>
+                                <td>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-danger" role="progressbar"
+                                             th:style="'width: ' + ${readingStats.daysStreak * 10 > 100 ? 100 : readingStats.daysStreak * 10} + '%'"
+                                             th:aria-valuenow="${readingStats.daysStreak * 10 > 100 ? 100 : readingStats.daysStreak * 10}"
+                                             aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12 text-center">
+            <a th:href="@{/profile/achievements}" class="btn btn-primary">Перейти до досягнень</a>
+        </div>
+    </div>
+</div>
+<th:block layout:fragment="scripts">
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            // Дані для графіка по тижнях
+            const weeklyData = /*[[${weeklyStats}]]*/ {};
+            const weeklyLabels = Object.keys(weeklyData);
+            const weeklyValues = Object.values(weeklyData);
+
+            const weeklyChart = new Chart(document.getElementById('weeklyChart'), {
+                type: 'bar',
+                data: {
+                    labels: weeklyLabels.map(week => {
+                        const [year, weekNum] = week.split('-');
+                        return `Тиждень ${weekNum}`;
+                    }),
+                    datasets: [{
+                        label: 'Прочитані глави',
+                        data: weeklyValues,
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Дані для графіка по місяцях
+            const monthlyData = /*[[${monthlyStats}]]*/ {};
+            const monthlyLabels = Object.keys(monthlyData);
+            const monthlyValues = Object.values(monthlyData);
+
+            const monthNames = [
+                'Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень',
+                'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'
+            ];
+
+            const monthlyChart = new Chart(document.getElementById('monthlyChart'), {
+                type: 'line',
+                data: {
+                    labels: monthlyLabels.map(month => {
+                        const [year, monthNum] = month.split('-');
+                        return `${monthNames[parseInt(monthNum) - 1]}`;
+                    }),
+                    datasets: [{
+                        label: 'Прочитані глави',
+                        data: monthlyValues,
+                        fill: true,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 2,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</th:block>
+</body>
+</html>

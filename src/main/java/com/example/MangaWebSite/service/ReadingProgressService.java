@@ -2,6 +2,7 @@ package com.example.MangaWebSite.service;
 
 import com.example.MangaWebSite.models.*;
 import com.example.MangaWebSite.repository.ReadingProgressRepository;
+import com.example.MangaWebSite.repository.UserProfileRepository;
 import com.example.MangaWebSite.security.PersonDetails;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,7 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -21,22 +25,78 @@ import java.util.List;
 @Transactional
 public class ReadingProgressService {
     private final ReadingProgressRepository readingProgressRepository;
+    private final UserProfileRepository userProfileRepository;
 
+    private AchievementService achievementService;
+
+    @Transactional
     public void saveOrUpdateProgress(Person person, Chapter chapter, int lastPage) {
+        // Get or create the progress record for this specific chapter
         ReadingProgress readingProgress = readingProgressRepository
-                .findByPersonIdAndComicsId(person.getId(), chapter.getComics().getId())
-                .orElse(null);
+                .findByPersonIdAndChapterId(person.getId(), chapter.getId())
+                .orElse(new ReadingProgress());
 
-        if (readingProgress == null) {
-            readingProgress = new ReadingProgress();
+        // Set initial values if new
+        if (readingProgress.getId() == 0) {
             readingProgress.setPerson(person);
-            readingProgress.setComics(chapter.getComics());
+            readingProgress.setChapter(chapter);
         }
 
-        readingProgress.setChapter(chapter);
+        // Update the progress
         readingProgress.setLastPage(lastPage);
 
+        // Check if chapter is completed
+        boolean justCompleted = false;
+        if (lastPage >= chapter.getTotalPages() && !readingProgress.isCompleted()) {
+            readingProgress.setCompleted(true);
+            justCompleted = true;
+        }
+
+        // Save progress
         readingProgressRepository.save(readingProgress);
+
+        // If chapter was just completed, update user stats and check achievements
+        if (justCompleted) {
+            updateUserStats(person, chapter);
+        }
+    }
+    @Transactional
+    void updateUserStats(Person person, Chapter chapter) {
+        // Get or create user profile
+        UserProfile profile = userProfileRepository.findById(person.getId())
+                .orElse(new UserProfile());
+
+        if (profile.getPersonId() == 0) {
+            profile.setPerson(person);
+        }
+
+        // Increment chapters read
+        profile.setChaptersRead(profile.getChaptersRead() + 1);
+
+        // Check if this is the first chapter of this comic the user has completed
+        boolean isFirstChapterOfComic = readingProgressRepository
+                .countCompletedChaptersByPersonAndComic(person.getId(), chapter.getComics().getId()) == 1;
+
+        if (isFirstChapterOfComic) {
+            profile.setComicsRead(profile.getComicsRead() + 1);
+        }
+
+        // Award experience
+        int expReward = 10; // Base XP for reading a chapter
+        profile.setExperiencePoints(profile.getExperiencePoints() + expReward);
+
+        // Calculate level - simple formula, can be adjusted
+        int newLevel = (int) Math.floor(Math.sqrt(profile.getExperiencePoints() / 100)) + 1;
+        if (newLevel > profile.getLevel()) {
+            profile.setLevel(newLevel);
+            // Could trigger level-up notification here
+        }
+
+        // Save profile
+        userProfileRepository.save(profile);
+
+        // Check for achievements
+        achievementService.checkAndAwardAchievements(person);
     }
     public ReadingProgress findByPersonAndComic(Comics comics) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -45,13 +105,26 @@ public class ReadingProgressService {
         return readingProgressRepository.findByPersonIdAndComicsId(personDetails.getPerson().getId(), comics.getId()).orElse(null);
     }
 
-    public List<ReadingProgress> getRecentlyReadComicsWithProgress(int id) {
-        Pageable topFive = PageRequest.of(0, 10); // Сторінка 0, розмір 10
+    public List<ReadingProgress> getRecentlyReadComicsWithProgress(int personId) {
+        Pageable pageable = PageRequest.of(0, 10); // отримуємо, наприклад, 10 останніх записів
+        List<ReadingProgress> allProgress = readingProgressRepository.findRecentlyReadByPersonId(personId, pageable);
 
-        return readingProgressRepository.findRecentlyReadByPersonId(id, topFive);
+        // Групуємо записи по comicId (отримуємо його через chapter.comics.id)
+        Map<Integer, ReadingProgress> latestProgressByComic = new LinkedHashMap<>();
+        for (ReadingProgress rp : allProgress) {
+            int comicId = rp.getChapter().getComics().getId();
+            // Якщо ще немає запису для цього коміксу, додаємо його (через те, що список відсортований DESC, перший запис буде останнім оновленим)
+            if (!latestProgressByComic.containsKey(comicId)) {
+                latestProgressByComic.put(comicId, rp);
+            }
+        }
+        // Повертаємо список останніх записів для кожного коміксу
+        return new ArrayList<>(latestProgressByComic.values());
     }
+
     public ReadingProgress getReadingProgress(int comicsId, int personId) {
-        return readingProgressRepository.findLatestByComicsIdAndPersonId(comicsId, personId)
+        return readingProgressRepository
+                .findFirstByPersonIdAndChapter_Comics_IdOrderByUpdatedAtDesc(personId, comicsId)
                 .orElse(null);
     }
 
@@ -66,4 +139,13 @@ public class ReadingProgressService {
         LocalDateTime cutoffTime = LocalDateTime.now().minusDays(1);
         return readingProgressRepository.findCurrentlyPopularReading(cutoffTime, topFive);
     }
+
+    public ReadingProgress findByPersonAndChapter(Chapter chapter) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
+        return readingProgressRepository
+                .findByPersonIdAndChapterId(personDetails.getPerson().getId(), chapter.getId())
+                .orElse(null);
+    }
+
 }

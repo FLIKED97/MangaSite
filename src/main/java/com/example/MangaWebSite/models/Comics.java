@@ -74,9 +74,9 @@ public class Comics {
     @OneToMany(mappedBy = "comics", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "comics", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ReadingProgress> readingProgress;
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "comics", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<ReadingProgress> readingProgress;
 
     @JsonIgnore
     @JsonIgnoreProperties({"person"}) // щоб уникнути циклічних посилань
