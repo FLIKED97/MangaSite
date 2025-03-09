@@ -28,11 +28,9 @@ public interface ChapterRepository extends JpaRepository<Chapter, Integer> {
     @Query("SELECT ch FROM Chapter ch JOIN FETCH ch.comics c WHERE ch.releaseDate > :oneMonthAgo ORDER BY ch.releaseDate DESC")
     Page<Chapter> findAllNewChapters(@Param("oneMonthAgo") LocalDateTime oneMonthAgo, Pageable pageable);
 
-    @Query("SELECT ch FROM Chapter ch " +
-            "LEFT JOIN ch.comics c " +
-            "JOIN c.tabs t " +
-            "WHERE t.person.id = :personId ")
+    @Query("SELECT ch FROM Chapter ch LEFT JOIN FETCH ch.comics c JOIN c.tabs t WHERE t.person.id = :personId")
     Page<Chapter> findNewChaptersInTabs(@Param("personId") int personId, Pageable pageable);
+
 
     Optional<Chapter> findFirstByComicsIdOrderByChapterNumberAsc(int comicsId);
 

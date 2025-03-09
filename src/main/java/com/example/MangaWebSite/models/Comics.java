@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -65,6 +66,8 @@ public class Comics {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate publishedAt;
 
+    @Formula("(SELECT COALESCE(AVG(r.rating), 0) FROM ratings r WHERE r.comic_id = id)")
+    private double averageRating;
 
     @JsonIgnoreProperties({"comics", "comicPages"})
     @OneToMany(mappedBy = "comics", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -73,10 +76,6 @@ public class Comics {
     @JsonIgnore
     @OneToMany(mappedBy = "comics", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
-
-//    @JsonIgnore
-//    @OneToMany(mappedBy = "comics", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<ReadingProgress> readingProgress;
 
     @JsonIgnore
     @JsonIgnoreProperties({"person"}) // щоб уникнути циклічних посилань

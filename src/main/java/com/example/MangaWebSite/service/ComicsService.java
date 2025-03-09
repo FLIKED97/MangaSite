@@ -4,6 +4,7 @@ import com.example.MangaWebSite.models.*;
 import com.example.MangaWebSite.repository.ComicsRepository;
 import com.example.MangaWebSite.repository.GenreRepository;
 import com.example.MangaWebSite.repository.ReadingProgressRepository;
+import jakarta.persistence.criteria.*;
 import lombok.AllArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -11,14 +12,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -88,7 +87,7 @@ public class ComicsService {
         Pageable pageable = PageRequest.of(page, pageSize, Sort.by("viewCount").descending());
         return comicsRepository.findAll(pageable).getContent();
     }
-
+    @Transactional(readOnly = true)
     public List<Comics> getPopularComicsWithNewChapters(double threshold) {
         LocalDateTime oneMonthAgo = LocalDateTime.now().minusMonths(1);
         return comicsRepository.findPopularComicsWithNewChapters(threshold, oneMonthAgo);
@@ -122,6 +121,7 @@ public class ComicsService {
         return comicsRepository.findByAuthorContaining(term);
     }
 
+    @Transactional(readOnly = true)
     public List<Comics> getNewCreatedComics(int page, int pageSize, int day) {
         Pageable pageable = PageRequest.of(page, pageSize, Sort.by("createdAt").descending());
         LocalDateTime oneMonthAgo = LocalDateTime.now().minusDays(day);
@@ -134,12 +134,13 @@ public class ComicsService {
         LocalDateTime oneMonthAgo = LocalDateTime.now().minusDays(70);
         return comicsRepository.findAllComicsWithNewChapters(oneMonthAgo, pageable);
     }
+    @Transactional(readOnly = true)
     public List<Comics> getCurrentlyPopularReading(int page, int pageSize, int day) {
         Pageable pageable = PageRequest.of(page, pageSize);
         LocalDateTime cutoffTime = LocalDateTime.now().minusDays(day);
         return readingProgressRepository.findCurrentlyPopularReading(cutoffTime, pageable).getContent();
     }
-
+    @Transactional(readOnly = true)
     public List<Comics> getCurrentlyReading(int page, int pageSize, int day) {
         Pageable pageable = PageRequest.of(page, pageSize);
         LocalDateTime cutoffTime = LocalDateTime.now().minusDays(day); // Активність за останні 30 хв
@@ -154,10 +155,76 @@ public class ComicsService {
         return comicsRepository.findAllByPersonId(id);
     }
     @Transactional(readOnly = true)
-    public Page<Comics> searchComics(String search, String sortBy, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return comicsRepository.findByTitleContainingIgnoreCaseAndSort(search, sortBy, pageable);
+    public Page<Comics> searchComics(String search, String sortBy, int page, int size,
+                                     String genres, String comicsTypes, Integer minChapters, Integer maxChapters) {
+        Pageable pageable = PageRequest.of(page, size, getSort(sortBy));
+        Specification<Comics> spec = (root, query, cb) -> {
+            assert query != null;
+            query.distinct(true);  // Встановлюємо distinct всередині лямбди
+
+            List<Predicate> predicates = new ArrayList<>();
+
+            // Пошук за назвою (якщо не порожня)
+            if (search != null && !search.isEmpty()) {
+                predicates.add(cb.like(cb.lower(root.get("title")), "%" + search.toLowerCase() + "%"));
+            }
+
+            // Фільтр за типами коміксів
+            if (comicsTypes != null && !comicsTypes.isEmpty()) {
+                List<ComicsType> types = Arrays.stream(comicsTypes.split(","))
+                        .map(String::trim)
+                        .map(ComicsType::valueOf)  // Перетворюємо строкове представлення в enum
+                        .collect(Collectors.toList());
+                predicates.add(root.get("comicsType").in(types));
+            }
+
+            // Фільтр за жанрами (використовуємо subquery для пошуку коміксів із заданими жанрами)
+            if (genres != null && !genres.isEmpty()) {
+                List<Integer> genreIds = Arrays.stream(genres.split(","))
+                        .map(String::trim)
+                        .map(Integer::parseInt)
+                        .collect(Collectors.toList());
+
+                Subquery<Long> genreSubquery = query.subquery(Long.class);
+                Root<Comics> subRoot = genreSubquery.correlate(root);
+                Join<Comics, Genre> genreJoin = subRoot.join("genres", JoinType.INNER);
+                genreSubquery.select(cb.literal(1L))
+                        .where(genreJoin.get("id").in(genreIds));
+
+                predicates.add(cb.exists(genreSubquery));
+            }
+
+            // Фільтр за кількістю глав – використовуючи розмір списку "chapters"
+            if (minChapters != null) {
+                Expression<Integer> chapterCount = cb.size(root.get("chapters"));
+                predicates.add(cb.ge(chapterCount, minChapters));
+            }
+            if (maxChapters != null) {
+                Expression<Integer> chapterCount = cb.size(root.get("chapters"));
+                predicates.add(cb.le(chapterCount, maxChapters));
+            }
+
+            if (predicates.isEmpty()) {
+                return cb.conjunction();
+            }
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+
+        return comicsRepository.findAll(spec, pageable);
     }
+
+    // Удосконалений метод сортування
+    private Sort getSort(String sortBy) {
+        return switch (sortBy.toLowerCase()) {
+            case "views" -> Sort.by(Sort.Direction.DESC, "viewCount");
+            case "newest" -> Sort.by(Sort.Direction.DESC, "createdAt");
+            case "chapters" -> Sort.by(Sort.Direction.DESC, "chapters.size");
+            case "title" -> Sort.by(Sort.Direction.ASC, "title");
+            default -> Sort.by(Sort.Direction.DESC, "averageRating");
+        };
+    }
+
+
     public List<Comics> findSimilarComics(Comics comic, int limit) {
         return comicsRepository.findAll().stream()
                 .filter(Objects::nonNull)
@@ -168,5 +235,59 @@ public class ComicsService {
                 .sorted(Comparator.comparing(Comics::getPopularityRating, Comparator.reverseOrder()))
                 .limit(limit)
                 .collect(Collectors.toList());
+    }
+
+    // Додайте цей метод до вашого ComicsService
+    @Transactional
+    public Page<Comics> searchComicsAdvanced(
+            String search, String sortBy, int page, int size,
+            List<String> genres, int minChapters, ComicsType comicsType) {
+
+        Pageable pageable;
+        if ("views".equals(sortBy)) {
+            pageable = PageRequest.of(page, size, Sort.by("viewCount").descending());
+        } else {
+            pageable = PageRequest.of(page, size, Sort.by("averageRating").descending());
+        }
+
+        // Використовуємо Specification для побудови складного запиту
+        Specification<Comics> spec = Specification.where(null);
+
+        // Додаємо фільтр за назвою, якщо вказаний пошуковий запит
+        if (search != null && !search.isEmpty()) {
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("title")), "%" + search.toLowerCase() + "%"));
+        }
+
+        // Додаємо фільтр за типом коміксу
+        if (comicsType != null) {
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("comicsType"), comicsType));
+        }
+
+        // Додаємо фільтр за кількістю глав
+        if (minChapters > 1) {
+            spec = spec.and((root, query, criteriaBuilder) -> {
+                // Підзапит для підрахунку кількості глав
+                Subquery<Long> chapterCountSubquery = query.subquery(Long.class);
+                Root<Chapter> chapterRoot = chapterCountSubquery.from(Chapter.class);
+                chapterCountSubquery.select(criteriaBuilder.count(chapterRoot))
+                        .where(criteriaBuilder.equal(chapterRoot.get("comics"), root));
+
+                return criteriaBuilder.greaterThanOrEqualTo(chapterCountSubquery, (long) minChapters);
+            });
+        }
+
+        // Додаємо фільтр за жанрами
+        if (genres != null && !genres.isEmpty()) {
+            for (String genreName : genres) {
+                spec = spec.and((root, query, criteriaBuilder) -> {
+                    Join<Comics, Genre> genreJoin = root.join("genres");
+                    return criteriaBuilder.equal(criteriaBuilder.lower(genreJoin.get("name")), genreName.toLowerCase());
+                });
+            }
+        }
+
+        return comicsRepository.findAll(spec, pageable);
     }
 }

@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="uk" xmlns:th="http://www.thymeleaf.org">
+<html lang="uk" xmlns:th="http://www.thymeleaf.org"
+                     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+                     layout:decorate="~{layouts/main}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,6 +11,196 @@
   <link rel="stylesheet" th:href="@{/css/custom-btn.css}">
   <link rel="stylesheet" th:href="@{/css/currently-reading-style.css}">
   <th:block th:replace="~{fragments/header :: head-styles}"></th:block>
+  <style>
+    /* Стилі для панелі розширеного пошуку */
+    .advanced-search {
+      position: fixed;
+      top: 0;
+      right: -350px;
+      width: 350px;
+      height: 100vh;
+      background-color: #fff;
+      box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      transition: right 0.3s ease;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .advanced-search.show {
+      right: 0;
+    }
+
+    .advanced-search-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .filter-group {
+      margin-bottom: 20px;
+    }
+
+    .filter-group h5 {
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .genres-list ul, .types-list ul {
+      list-style: none;
+      padding: 0;
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid #eee;
+      border-radius: 4px;
+      padding: 10px;
+    }
+
+    .genres-list li, .types-list li {
+      margin-bottom: 8px;
+    }
+
+    .filter-group input[type="number"] {
+      width: 70px;
+      padding: 5px;
+      margin: 0 5px;
+    }
+
+    #applyAdvancedFilters {
+      width: 100%;
+      padding: 10px;
+      background-color: #4a76a8;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    #applyAdvancedFilters:hover {
+      background-color: #3a5a78;
+    }
+
+    /* Стилі для кнопки розширеного пошуку */
+    #showAdvancedSearch {
+      margin-top: 10px;
+      width: 100%;
+      padding: 8px;
+      background-color: #f8f9fa;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+    }
+
+    #showAdvancedSearch:hover {
+      background-color: #e9ecef;
+    }
+
+    /* Стилі для відображення активних фільтрів */
+    .active-filters {
+      margin: 15px 0;
+      padding: 10px;
+      background-color: #f8f9fa;
+      border-radius: 4px;
+      border: 1px solid #ced4da;
+    }
+
+    .filter-title {
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .filter-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .filter-tag {
+      background-color: #e9ecef;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.9em;
+    }
+
+    .reset-filters-btn {
+      margin-left: auto;
+      padding: 5px 10px;
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9em;
+      transition: background-color 0.2s;
+    }
+
+    .reset-filters-btn:hover {
+      background-color: #bd2130;
+    }
+
+    /* Стилі для індикатора завантаження */
+    .comics-loader {
+      width: 100%;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-radius: 50%;
+      border-top-color: #3a5a78;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Стилі для повідомлення про відсутність результатів */
+    .no-results {
+      width: 100%;
+      text-align: center;
+      padding: 30px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+
+    /* Додаємо нижній рядок з кількістю глав до картки комікса */
+    .cm_chapters {
+      font-size: 0.8em;
+      color: #6c757d;
+      margin-top: 5px;
+    }
+
+    /* Стилі для повідомлення про помилку */
+    .error-message {
+      width: 100%;
+      text-align: center;
+      padding: 15px;
+      background-color: #f8d7da;
+      color: #721c24;
+      border-radius: 4px;
+      margin: 10px 0;
+    }
+  </style>
 </head>
 <body>
 <header>
@@ -44,84 +236,369 @@
   <div id="comicsGrid" class="comics-grid">
   </div>
 </div>
+<!-- Advanced Search Panel -->
+<div id="advancedSearchPanel" class="advanced-search">
+  <div class="advanced-search-header">
+    <h4>Додаткові фільтри</h4>
+    <button id="closeAdvancedSearch" class="close-btn">&times;</button>
+  </div>
+  <div class="advanced-search-content">
+    <!-- Фільтр за жанрами -->
+    <div class="filter-group">
+      <h5>Жанри</h5>
+      <div class="genres-list">
+        <ul>
+          <li th:each="genre : ${genres}">
+            <label>
+              <input type="checkbox" name="genre" th:value="${genre.id}">
+              <span th:text="${genre.name}">Назва жанру</span>
+            </label>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Фільтр за типами коміксів -->
+    <div class="filter-group">
+      <h5>Тип коміксу</h5>
+      <div class="types-list">
+        <ul>
+          <li th:each="type : ${comicsTypes}">
+            <label>
+              <input type="checkbox" name="comicsType" th:value="${type.name()}">
+              <span th:text="${type.displayName}">Тип</span>
+            </label>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Фільтр за кількістю глав -->
+    <div class="filter-group">
+      <h5>Кількість глав</h5>
+      <label>Від: <input type="number" id="minChapters" value="0" min="0"></label>
+      <label>До: <input type="number" id="maxChapters" value="100" min="0"></label>
+    </div>
+
+    <button id="applyAdvancedFilters" class="btn btn-primary">Підтвердити</button>
+  </div>
+</div>
+
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-  // Приклад частини коду для AJAX-запиту
+  // Змінні для елементів DOM
   const searchInput = document.getElementById('searchInput');
   const sortBy = document.getElementById('sortBy');
   const comicsGrid = document.getElementById('comicsGrid');
+  const advancedSearchPanel = document.getElementById('advancedSearchPanel');
+  const closeAdvancedSearch = document.getElementById('closeAdvancedSearch');
+  const applyAdvancedFilters = document.getElementById('applyAdvancedFilters');
+  const minChaptersInput = document.getElementById('minChapters');
+  const maxChaptersInput = document.getElementById('maxChapters');
 
+  // Змінні для управління пагінацією та станом завантаження
   let currentPage = 0;
   let isLoading = false;
   let hasMore = true;
+  let currentFilters = {
+    search: '',
+    sortBy: 'rating',
+    genres: [],
+    comicsTypes: [],
+    minChapters: 0,
+    maxChapters: null
+  };
 
+  // Функція для скидання сітки коміксів
   const resetGrid = () => {
     currentPage = 0;
     hasMore = true;
     comicsGrid.innerHTML = '';
   };
 
+  // Додаємо кнопку для відкриття розширеного пошуку
+  const createAdvancedSearchButton = () => {
+    const advSearchBtn = document.createElement('button');
+    advSearchBtn.id = 'showAdvancedSearch';
+    advSearchBtn.className = 'btn btn-outline-secondary';
+    advSearchBtn.innerHTML = 'Розширений пошук';
+    advSearchBtn.onclick = () => {
+      advancedSearchPanel.classList.add('show');
+    };
+
+    // Додаємо кнопку після поля пошуку
+    const searchContainer = document.querySelector('.cm_search');
+    searchContainer.appendChild(advSearchBtn);
+  };
+
+  // Функція для побудови параметрів запиту
+  const buildQueryParams = () => {
+    const params = new URLSearchParams();
+
+    // Базові параметри
+    params.append('search', currentFilters.search);
+    params.append('sortBy', currentFilters.sortBy);
+    params.append('page', currentPage);
+    params.append('size', 10);
+
+    // Жанри
+    if (currentFilters.genres.length > 0) {
+      params.append('genres', currentFilters.genres.join(','));
+    }
+
+    // Типи коміксів
+    if (currentFilters.comicsTypes.length > 0) {
+      params.append('comicsTypes', currentFilters.comicsTypes.join(','));
+    }
+
+    // Кількість глав
+    if (currentFilters.minChapters !== null && currentFilters.minChapters > 0) {
+      params.append('minChapters', currentFilters.minChapters);
+    }
+
+    if (currentFilters.maxChapters !== null && currentFilters.maxChapters > 0) {
+      params.append('maxChapters', currentFilters.maxChapters);
+    }
+
+    return params.toString();
+  };
+
+  // Функція для відображення активних фільтрів
+  const updateActiveFiltersDisplay = () => {
+    // Створюємо або отримуємо контейнер для активних фільтрів
+    let filterDisplay = document.getElementById('activeFilters');
+    if (!filterDisplay) {
+      filterDisplay = document.createElement('div');
+      filterDisplay.id = 'activeFilters';
+      filterDisplay.className = 'active-filters';
+      const headerWrapper = document.querySelector('.cm_header_wrapper');
+      headerWrapper.appendChild(filterDisplay);
+    }
+
+    // Очищаємо поточний вміст
+    filterDisplay.innerHTML = '';
+
+    // Створюємо список активних фільтрів
+    const activeFilters = [];
+
+    if (currentFilters.genres.length > 0) {
+      const genreLabels = Array.from(document.querySelectorAll('input[name="genre"]:checked'))
+              .map(el => el.nextElementSibling.textContent);
+      activeFilters.push(`Жанри: ${genreLabels.join(', ')}`);
+    }
+
+    if (currentFilters.comicsTypes.length > 0) {
+      const typeLabels = Array.from(document.querySelectorAll('input[name="comicsType"]:checked'))
+              .map(el => el.nextElementSibling.textContent);
+      activeFilters.push(`Типи: ${typeLabels.join(', ')}`);
+    }
+
+    if (currentFilters.minChapters > 0 || (currentFilters.maxChapters !== null && currentFilters.maxChapters < 100)) {
+      activeFilters.push(`Глави: від ${currentFilters.minChapters} до ${currentFilters.maxChapters || '∞'}`);
+    }
+
+    // Якщо є активні фільтри, відображаємо їх
+    if (activeFilters.length > 0) {
+      const filterTitle = document.createElement('div');
+      filterTitle.className = 'filter-title';
+      filterTitle.textContent = 'Активні фільтри:';
+      filterDisplay.appendChild(filterTitle);
+
+      const filterList = document.createElement('div');
+      filterList.className = 'filter-list';
+
+      activeFilters.forEach(filter => {
+        const filterTag = document.createElement('span');
+        filterTag.className = 'filter-tag';
+        filterTag.textContent = filter;
+        filterList.appendChild(filterTag);
+      });
+
+      // Додаємо кнопку скидання фільтрів
+      if (activeFilters.length > 0) {
+        const resetBtn = document.createElement('button');
+        resetBtn.className = 'reset-filters-btn';
+        resetBtn.textContent = 'Скинути всі фільтри';
+        resetBtn.onclick = resetAllFilters;
+        filterList.appendChild(resetBtn);
+      }
+
+      filterDisplay.appendChild(filterList);
+    }
+  };
+
+  // Функція для скидання всіх фільтрів
+  const resetAllFilters = () => {
+    // Скидаємо чекбокси жанрів
+    document.querySelectorAll('input[name="genre"]').forEach(checkbox => {
+      checkbox.checked = false;
+    });
+
+    // Скидаємо чекбокси типів
+    document.querySelectorAll('input[name="comicsType"]').forEach(checkbox => {
+      checkbox.checked = false;
+    });
+
+    // Скидаємо кількість глав
+    minChaptersInput.value = 0;
+    maxChaptersInput.value = 100;
+
+    // Оновлюємо об'єкт фільтрів
+    currentFilters.genres = [];
+    currentFilters.comicsTypes = [];
+    currentFilters.minChapters = 0;
+    currentFilters.maxChapters = null;
+
+    // Оновлюємо відображення фільтрів
+    updateActiveFiltersDisplay();
+
+    // Перезавантажуємо комікси
+    resetGrid();
+    fetchComics();
+  };
+
+  // Головна функція завантаження коміксів
   const fetchComics = async () => {
     if (isLoading || !hasMore) return;
     isLoading = true;
+
     try {
-      const searchValue = searchInput.value.trim();
-      const sortByValue = sortBy.value;
-      const response = await fetch(
-              `/comics/api/search?search=${encodeURIComponent(searchValue)}&sortBy=${sortByValue}&page=${currentPage}`
-      );
+      // Створюємо індикатор завантаження
+      const loader = document.createElement('div');
+      loader.className = 'comics-loader';
+      loader.innerHTML = '<div class="spinner"></div><p>Завантаження...</p>';
+      comicsGrid.appendChild(loader);
+
+      // Будуємо URL з параметрами
+      const queryParams = buildQueryParams();
+      const response = await fetch(`/comics/api/search?${queryParams}`);
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
+
       const data = await response.json();
+
+      // Видаляємо індикатор завантаження
+      comicsGrid.removeChild(loader);
+
       if (data.content.length === 0) {
         hasMore = false;
+
+        // Якщо це перша сторінка і немає результатів
+        if (currentPage === 0) {
+          const noResults = document.createElement('div');
+          noResults.className = 'no-results';
+          noResults.innerHTML = '<p>На жаль, комікси за вашим запитом не знайдено</p>';
+          comicsGrid.appendChild(noResults);
+        }
+
         isLoading = false;
         return;
       }
+
+      // Рендеримо комікси
       const newComics = data.content.map(comic => `
-        <div class="comic-col">
-          <a href="/comics/${comic.id}" style="text-decoration: none; color: inherit;">
-            <div class="comics-card">
-              <div class="comic-image-container">
-                <img src="/comics/image/${comic.id}" class="card-imges-top" alt="Comic Cover">
-                <div class="comics-rating">${comic.averageRating || 'N/A'}</div>
-              </div>
-              <div class="comics-info">
-                <h6 class="card-title-comics">${comic.title}</h6>
-                  <div class="cm_tp">${comic.comicsTypeDisplay || 'Unknown'}</div>
-              </div>
+      <div class="comic-col">
+        <a href="/comics/${comic.id}" style="text-decoration: none; color: inherit;">
+          <div class="comics-card">
+            <div class="comic-image-container">
+              <img src="/comics/image/${comic.id}" class="card-imges-top" alt="Comic Cover">
+              <div class="comics-rating">${comic.averageRating || 'N/A'}</div>
             </div>
-          </a>
-        </div>
-      `).join('');
+            <div class="comics-info">
+              <h6 class="card-title-comics">${comic.title}</h6>
+              <div class="cm_tp">${comic.comicsTypeDisplay || 'Unknown'}</div>
+              <div class="cm_chapters">${comic.chaptersCount || 0} глав</div>
+            </div>
+          </div>
+        </a>
+      </div>
+    `).join('');
+
       comicsGrid.innerHTML += newComics;
       currentPage++;
+
+      // Якщо це остання сторінка
+      if (data.last) {
+        hasMore = false;
+      }
     } catch (error) {
       console.error('Error fetching comics:', error);
+
+      // Показати повідомлення про помилку
+      const errorMsg = document.createElement('div');
+      errorMsg.className = 'error-message';
+      errorMsg.textContent = 'Помилка завантаження даних. Спробуйте пізніше.';
+      comicsGrid.appendChild(errorMsg);
     } finally {
       isLoading = false;
     }
   };
 
-  // Обробники для пошуку та сортування
-  searchInput.addEventListener('input', () => {
-    resetGrid();
+  // Ініціалізація сторінки
+  document.addEventListener('DOMContentLoaded', () => {
+    // Створюємо кнопку розширеного пошуку
+    createAdvancedSearchButton();
+
+    // Завантажуємо початкові дані
     fetchComics();
-  });
-  sortBy.addEventListener('change', () => {
-    resetGrid();
-    fetchComics();
-  });
-  window.addEventListener('scroll', () => {
-    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-    if (scrollTop + clientHeight >= scrollHeight - 100) {
+
+    // Ініціалізуємо обробники подій
+    // Пошук за текстом
+    searchInput.addEventListener('input', () => {
+      currentFilters.search = searchInput.value.trim();
+      resetGrid();
       fetchComics();
-    }
+    });
+
+    // Сортування
+    sortBy.addEventListener('change', () => {
+      currentFilters.sortBy = sortBy.value;
+      resetGrid();
+      fetchComics();
+    });
+
+    // Нескінченний скрол
+    window.addEventListener('scroll', () => {
+      const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+      if (scrollTop + clientHeight >= scrollHeight - 100) {
+        fetchComics();
+      }
+    });
+
+    // Обробники для розширеного пошуку
+    closeAdvancedSearch.addEventListener('click', () => {
+      advancedSearchPanel.classList.remove('show');
+    });
+
+    applyAdvancedFilters.addEventListener('click', () => {
+      // Збираємо вибрані жанри
+      currentFilters.genres = Array.from(document.querySelectorAll('input[name="genre"]:checked'))
+              .map(el => el.value);
+
+      // Збираємо вибрані типи коміксів
+      currentFilters.comicsTypes = Array.from(document.querySelectorAll('input[name="comicsType"]:checked'))
+              .map(el => el.value);
+
+      // Збираємо значення для кількості глав
+      currentFilters.minChapters = parseInt(minChaptersInput.value) || 0;
+      const maxChapters = parseInt(maxChaptersInput.value);
+      currentFilters.maxChapters = isNaN(maxChapters) ? null : maxChapters;
+
+      // Оновлюємо відображення активних фільтрів
+      updateActiveFiltersDisplay();
+
+      // Закриваємо панель розширеного пошуку
+      advancedSearchPanel.classList.remove('show');
+
+      // Перезавантажуємо комікси
+      resetGrid();
+      fetchComics();
+    });
   });
-  document.addEventListener('DOMContentLoaded', fetchComics);
 </script>
 </body>
 </html>

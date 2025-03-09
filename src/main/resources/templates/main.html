@@ -105,7 +105,7 @@
                     <div id="newCreatedComics">
                         <div class="mb-3" th:each="comic : ${newCreatedComics}">
                             <div class="d-flex align-items-center">
-                                <img th:src="@{/comics/image/{id}(id=${comic.id})}" alt="Comic Cover" class="images">
+<!--                                <img th:src="@{/comics/image/{id}(id=${comic.id})}" alt="Comic Cover" class="images">-->
                                 <div>
                                     <h6 class="mb-1" th:text="${comic.title}"></h6>
                                     <p class="mb-0 small" th:text="${comic.getComicsType().getDisplayName()}">Манга</p>
@@ -121,7 +121,7 @@
                     <div id="currentlyPopularReading">
                         <div class="mb-3" th:each="comic : ${currentlyPopularReading}">
                             <div class="d-flex align-items-center">
-                                <img th:src="@{/comics/image/{id}(id=${comic.id})}" alt="Comic Cover" class="images ">
+<!--                                <img th:src="@{/comics/image/{id}(id=${comic.id})}" alt="Comic Cover" class="images ">-->
                                 <div>
                                     <h6 class="mb-1" th:text="${comic.title}"></h6>
                                     <p class="mb-0 small" th:text="${comic.getComicsType().getDisplayName()}">Манга</p>
@@ -137,7 +137,7 @@
                     <div id="popularComics">
                         <div class="mb-3" th:each="comic : ${popularComics}">
                             <div class="d-flex align-items-center">
-                                <img th:src="@{/comics/image/{id}(id=${comic.id})}" alt="Comic Cover" class="images ">
+<!--                                <img th:src="@{/comics/image/{id}(id=${comic.id})}" alt="Comic Cover" class="images ">-->
                                 <div>
                                     <h6 class="mb-1" th:text="${comic.title}"></h6>
                                     <p class="mb-0 small" th:text="${comic.getComicsType().getDisplayName()}">Манга</p>

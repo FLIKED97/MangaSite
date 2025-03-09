@@ -185,8 +185,8 @@ public class ComicsController {
         model.addAttribute("comics", comics);
         model.addAttribute("sortBy", sortBy);
 
-        List<Tabs> tabs = tabsService.getAllTabs();
-        model.addAttribute("tabs", tabs);
+        List<Genre> genres = genreService.findAll();
+        model.addAttribute("genres", genres);
 
         // Додаємо список всіх типів коміксів
         model.addAttribute("comicsTypes", Arrays.asList(ComicsType.values()));
