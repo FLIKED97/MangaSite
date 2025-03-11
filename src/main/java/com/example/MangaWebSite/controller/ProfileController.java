@@ -6,6 +6,7 @@ import com.example.MangaWebSite.security.PersonDetails;
 import com.example.MangaWebSite.service.ComicsService;
 import com.example.MangaWebSite.service.FriendshipService;
 import com.example.MangaWebSite.service.PersonService;
+import com.example.MangaWebSite.service.UserProfileService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,6 +23,7 @@ public class ProfileController {
     private final PersonService personService;
     private final ComicsService comicsService;
     private final FriendshipService friendshipService;
+    private final UserProfileService userProfileService;
 
     @GetMapping("/personal/{id}")
     public String showProfile(@PathVariable int id, Model model) {
@@ -33,6 +35,10 @@ public class ProfileController {
         }
 
         model.addAttribute("person", person);
+
+        // Додавання профільної інформації через сервіс
+        userProfileService.addProfileInfoToModel(model, id);
+
         return "profile/profile"; // Ім'я HTML-шаблону
     }
 

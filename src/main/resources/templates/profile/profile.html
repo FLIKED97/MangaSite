@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="uk" xmlns:th="http://www.thymeleaf.org">
+<html lang="uk" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/main}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,6 +10,7 @@
   <link rel="stylesheet" th:href="@{/css/custom-btn.css}">
 <link rel="stylesheet" th:href="@{/css/custom-profile.css}">
   <th:block th:replace="~{fragments/header :: head-styles}"></th:block>
+  <link rel="stylesheet" th:href="@{/css/achievements.css}">
   <style>
     .comic-card {
       transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -138,10 +140,37 @@
              style="background-image: url('/placeholder-avatar.png');">
         </div>
 
+        <!-- Інформація про профіль -->
         <div class="profile-info">
-          <h4 class="mb-1" th:text="${person.username}">User Name</h4>
-          <p class="text-muted">У додатку <span th:text="${person.daysInApp}">X</span> дня</p>
+          <!-- 1) Рядок з іменем і рівнем (іконка + цифра) -->
+          <div class="d-flex align-items-center mb-1" style="gap: 5px">
+            <h4 class="mb-0 me-2" th:text="${person.username}">User Name</h4>
+            <!-- Іконка (наприклад, Font Awesome Trophy) -->
+            <i class="fas fa-trophy text-warning me-1"></i>
+            <span th:text="${profile.level}">1</span>
+          </div>
+
+          <!-- 2) Прогрес-бар під ними -->
+          <div class="level-progress text-muted">
+            <div class="d-flex justify-content-between mb-1">
+            </div>
+            <div class="progress">
+              <div class="progress-bar bg-success" role="progressbar"
+                   th:style="'width: ' + ${xpProgress} + '%'"
+                   th:aria-valuenow="${xpProgress}"
+                   aria-valuemin="0" aria-valuemax="100">
+                <span th:text="${xpProgress} + '%'"></span>
+              </div>
+            </div>
+          </div>
         </div>
+<!--        TODO ДОБАВИТИ ЦЕ В ПРОФІЛЬ/СТАТИСТИКА-->
+<!--        <div class="profile-info">-->
+<!--          <h4 class="mb-1" th:text="${person.username}">User Name</h4>-->
+<!--          <p class="text-muted">У додатку <span th:text="${person.daysInApp}">X</span> дня</p>-->
+<!--        </div>-->
+
+
       </div>
       <button class="btn btn-primary">Налаштування</button>
     </div>
@@ -152,6 +181,7 @@
       <button class="custom-btn" data-section="bookmarks">Закладки</button>
       <button class="custom-btn" data-section="comments">Коментарі</button>
       <button class="custom-btn" data-section="friends">Друзі</button>
+      <button class="custom-btn" data-section="friends">Статистика</button>
     </div>
   </div>
 
@@ -201,5 +231,19 @@
 <script src="/js/comment-manager.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+<script th:inline="javascript">
+  document.addEventListener('DOMContentLoaded', function() {
+    // Перевіряємо, чи є активна секція
+    const activeSection = /*[[${activeSection}]]*/ null;
+
+    if (activeSection) {
+      // Знаходимо кнопку для цієї секції і клікаємо на неї
+      const button = document.querySelector(`.custom-btn[data-section="${activeSection}"]`);
+      if (button) {
+        button.click();
+      }
+    }
+  });
+</script>
 </body>
 </html>

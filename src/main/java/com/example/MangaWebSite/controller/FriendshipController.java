@@ -5,6 +5,7 @@ import com.example.MangaWebSite.models.Person;
 import com.example.MangaWebSite.security.PersonDetails;
 import com.example.MangaWebSite.service.FriendshipService;
 import com.example.MangaWebSite.service.PersonService;
+import com.example.MangaWebSite.service.UserProfileService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -25,6 +26,7 @@ public class FriendshipController {
 
     private final PersonService personService;
 
+    private final UserProfileService userProfileService;
     // Сторінка зі списком друзів
     @GetMapping("/{userId}")
     public String getFriends(@PathVariable int userId, Model model) {
@@ -44,7 +46,26 @@ public class FriendshipController {
 
         return "friends/list";
     }
+    @GetMapping("/profile/{id}/friends")
+    public String showFriends(@PathVariable int id, Model model) {
+        // Завантажити користувача з бази за ID
+        Person person = personService.findById(id);
 
+        if (person == null) {
+            // Обробка помилки, якщо користувач не знайдений
+            return "error/404";
+        }
+
+        model.addAttribute("person", person);
+
+        // Додавання профільної інформації через сервіс
+        userProfileService.addProfileInfoToModel(model, id);
+
+        // Додаємо спеціальний атрибут для позначення, що потрібно активувати вкладку "Друзі"
+        model.addAttribute("activeSection", "friends");
+
+        return "profile/profile"; // Той самий шаблон що і для профілю
+    }
     @GetMapping("/requests")
     public String viewFriendRequests(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
