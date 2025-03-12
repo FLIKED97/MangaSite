@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 
 @Controller
@@ -28,13 +29,20 @@ import java.nio.file.Paths;
 public class PersonController {
 
     private final PersonService personService;
+    @GetMapping("/display")
+    public String showAllPerson(Model model){
+        List<Person> people = personService.findAll();
 
+        model.addAttribute("people", people);
+        return "person/personList";
+    }
     @GetMapping("/avatar")
     public String showAvatarPage(Model model, @AuthenticationPrincipal PersonDetails user) {
         Person person = personService.findById(user.getPerson().getId());
         model.addAttribute("person", person);
         return "upload-avatar"; // HTML-шаблон для завантаження аватарки
     }
+
 
     @PostMapping("/avatar")
     public String uploadAvatar(@RequestParam("avatar") MultipartFile file,

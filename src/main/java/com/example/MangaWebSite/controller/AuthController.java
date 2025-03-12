@@ -3,6 +3,7 @@ package com.example.MangaWebSite.controller;
 
 import com.example.MangaWebSite.models.Person;
 import com.example.MangaWebSite.service.RegistrationService;
+import com.example.MangaWebSite.service.UserProfileService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/auth")
 public class AuthController {
     private final RegistrationService registrationService;
+    private final UserProfileService userProfileService;
 
     @GetMapping("/login")
     public String loginPage(@ModelAttribute("person") Person person){
@@ -36,6 +38,7 @@ public class AuthController {
             return "auth/registration";
         }
         registrationService.register(person);
+        userProfileService.getUserProfile(person.getId());
         return "redirect:/auth/login";
     }
 

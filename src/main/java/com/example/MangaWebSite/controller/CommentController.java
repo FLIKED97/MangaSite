@@ -2,19 +2,19 @@ package com.example.MangaWebSite.controller;
 
 import com.example.MangaWebSite.models.Comment;
 import com.example.MangaWebSite.models.NewsComment;
+import com.example.MangaWebSite.models.Person;
 import com.example.MangaWebSite.security.PersonDetails;
 import com.example.MangaWebSite.service.CommentService;
 import com.example.MangaWebSite.service.NewsCommentService;
+import com.example.MangaWebSite.service.PersonService;
+import com.example.MangaWebSite.service.UserProfileService;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.Banner;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,6 +24,8 @@ import java.util.List;
 public class CommentController {
     private final CommentService commentService;
     private final NewsCommentService newsCommentService;
+    private final PersonService personService;
+    private final UserProfileService userProfileService;
 
     @GetMapping("/getByComics")
     public String getCommentsByComicsId(@RequestParam("comicsId") int comicsId, Model model) {
@@ -40,7 +42,26 @@ public class CommentController {
 
         return "redirect:/comics/" + comicsId;
     }
+    @GetMapping("/profile/{id}/comments")
+    public String showFriends(@PathVariable int id, Model model) {
+        // Завантажити користувача з бази за ID
+        Person person = personService.findById(id);
 
+        if (person == null) {
+            // Обробка помилки, якщо користувач не знайдений
+            return "error/404";
+        }
+
+        model.addAttribute("person", person);
+
+        // Додавання профільної інформації через сервіс
+        userProfileService.addProfileInfoToModel(model, id);
+
+        // Додаємо спеціальний атрибут для позначення, що потрібно активувати вкладку "Друзі"
+        model.addAttribute("activeSection", "comments");
+
+        return "profile/profile"; // Той самий шаблон що і для профілю
+    }
     @GetMapping("/show")
     public String showComment(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

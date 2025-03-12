@@ -31,5 +31,6 @@ public class RegistrationService {
         person.setCreatedAt(LocalDateTime.now());
 
         peopleRepository.save(person);
+
     }
 }

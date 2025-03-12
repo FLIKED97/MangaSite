@@ -234,7 +234,7 @@
 <script th:inline="javascript">
   document.addEventListener('DOMContentLoaded', function() {
     // Перевіряємо, чи є активна секція
-    const activeSection = /*[[${activeSection}]]*/ null;
+    const activeSection = [[${activeSection}]];
 
     if (activeSection) {
       // Знаходимо кнопку для цієї секції і клікаємо на неї
