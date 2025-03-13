@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/publisher-list.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <th:block th:replace="~{fragments/header :: head-styles}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/custom-btn.css}">
+</head>
+<body>
+<header>
+    <!-- Include top navbar fragment -->
+    <th:block th:replace="~{fragments/header :: top-navbar}"></th:block>
+
+    <!-- Include search modal fragment -->
+    <th:block th:replace="~{fragments/header :: search-modal}"></th:block>
+</header>
+<th:block th:replace="~{fragments/header :: bottom-navbar}"></th:block>
+<div class="publisher-list-container">
+    <!-- Заголовок -->
+    <div class="publisher-header">
+        <h3 class="publisher-list-title">Клуби перекладачів</h3>
+        <a th:href="@{/publisher/register}" class="publisher-create-btn">
+            <i class="fas fa-plus"></i> Створити
+        </a>
+    </div>
+    <!-- Пошук -->
+    <form class="publisher-search-form" th:action="@{/publisher/list}">
+        <input type="text" name="search" placeholder="Пошук клубу..."
+               th:value="${search}" autocomplete="off">
+    </form>
+
+    <!-- Список паблішерів -->
+    <div class="row">
+        <div th:each="publisher : ${publishers}" class="col-md-4 mb-4">
+            <div class="card publisher-card">
+                <div class="card-body publisher-card-body">
+                    <h5 class="publisher-name">
+                        <a th:href="@{/publisher/group/{id}(id=${publisher.id})}"
+                           th:text="${publisher.name}"></a>
+                    </h5>
+
+                    <div class="publisher-meta">
+                        <div>
+                            <i class="fas fa-users"></i>
+                            <span th:text="${publisher.persons.size()} + ' учасників'"></span>
+                        </div>
+                        <div>
+                            <i class="fas fa-calendar"></i>
+                            <span th:text="${#temporals.format(publisher.createdAt, 'dd.MM.yyyy')}"></span>
+                        </div>
+                    </div>
+
+                    <a th:href="@{/publisher/group/{id}(id=${publisher.id})}"
+                       class="btn publisher-details-btn">Детальніше</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

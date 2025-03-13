@@ -6,6 +6,7 @@ import com.example.MangaWebSite.repository.PersonRepository;
 import com.example.MangaWebSite.repository.PublisherRepository;
 import com.example.MangaWebSite.security.PersonDetails;
 import lombok.AllArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -59,11 +60,17 @@ public class PublisherService {
     public Publisher findByPersonId(int personId) {
         return publisherRepository.findPublisherByPersonId(personId);
     }
-
+    @Transactional(readOnly = true)
     public Publisher findById(int id) {
-        return publisherRepository.findById(id).orElse(null);
-    }
+        Publisher publisher = publisherRepository.findById(id).orElseThrow();
 
+        // Ініціалізуйте lazy-loaded collections
+        for (Person person : publisher.getPersons()) {
+            Hibernate.initialize(person.getAvatar());
+        }
+
+        return publisher;
+    }
     public void updateGroupName(int id, String name) {
         Publisher publisher = findById(id);
         publisher.setName(name);
@@ -73,6 +80,13 @@ public class PublisherService {
     @Transactional
     public List<Publisher> searchByName(String term) {
         return publisherRepository.findByNameContaining(term);
+    }
+
+    @Transactional
+    public List<Publisher> findAll() {
+        List<Publisher> publishers = publisherRepository.findAll();
+        publishers.forEach(p -> Hibernate.initialize(p.getPersons())); // Примусове ініціалізування
+        return publishers;
     }
 
 }

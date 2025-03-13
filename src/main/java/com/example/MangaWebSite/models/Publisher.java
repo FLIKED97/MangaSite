@@ -58,10 +58,5 @@ public class Publisher {
         // Знімаємо посилання на видавця у Person
         person.setPublisher(null);
     }
-
-//    public void addPerson(Person person) {
-//        persons.add(person);
-//        person.setPublisher(this);  // Встановлення з обох сторін
-//    }
 }
 

@@ -7,8 +7,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/publisher")
@@ -28,7 +31,7 @@ public class PublisherController {
         return "redirect:/main";
     }
     @GetMapping("/group/{id}")
-    public String infoGroup(@PathVariable int id, Model model){
+    public String infoGroup(@PathVariable int id, Model model) {
         Publisher publisher = publisherService.findById(id);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -47,6 +50,19 @@ public class PublisherController {
         publisherService.updateGroupName(id, name);
         return "redirect:/publisher/group/" + id;
 
+    }
+    @Transactional
+    @GetMapping("/list")
+    public String showAllPublishers(Model model,
+                                    @RequestParam(defaultValue = "") String search) {
+        List<Publisher> publishers;
+        if (!search.isEmpty()) {
+            publishers = publisherService.searchByName(search);
+        } else {
+            publishers = publisherService.findAll();
+        }
+        model.addAttribute("publishers", publishers);
+        return "publisher/list";
     }
 
 }
