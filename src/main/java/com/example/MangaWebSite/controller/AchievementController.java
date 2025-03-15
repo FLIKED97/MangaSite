@@ -3,6 +3,7 @@ package com.example.MangaWebSite.controller;
 import com.example.MangaWebSite.models.*;
 import com.example.MangaWebSite.repository.*;
 import com.example.MangaWebSite.security.PersonDetails;
+import com.example.MangaWebSite.service.ReadingProgressService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -28,6 +29,7 @@ public class AchievementController {
     private AchievementRepository achievementRepository;
 
     private ReadingProgressRepository readingProgressRepository;
+    private final ReadingProgressService readingProgressService;
 
     private PersonRepository personRepository;
 
@@ -105,8 +107,8 @@ public class AchievementController {
         readingStats.put("daysStreak", profile.getDaysStreak());
 
         // Отримуємо статистику по тижнях/місяцях для графіків
-        Map<String, Integer> weeklyReadingStats = readingProgressRepository.getWeeklyReadingStats(person.getId());
-        Map<String, Integer> monthlyReadingStats = readingProgressRepository.getMonthlyReadingStats(person.getId());
+        Map<String, Integer> weeklyReadingStats = readingProgressService.getWeeklyReadingStats(person.getId());
+        Map<String, Integer> monthlyReadingStats = readingProgressService.getMonthlyReadingStats(person.getId());
 
         model.addAttribute("profile", profile);
         model.addAttribute("readingStats", readingStats);

@@ -120,7 +120,7 @@ public class ReadingProgressService {
         // Повертаємо список останніх записів для кожного коміксу
         return new ArrayList<>(latestProgressByComic.values());
     }
-    
+
     public Map<Integer, Integer> getComicsProgress(int personId) {
         List<ReadingProgress> allProgress = readingProgressRepository.findByPersonId(personId);
         Map<Integer, Integer> comicsProgress = new HashMap<>();
@@ -151,6 +151,20 @@ public class ReadingProgressService {
                 .orElse(null);
     }
 
+    public Map<String, Integer> getWeeklyReadingStats(int personId) {
+        LocalDateTime startDate = LocalDateTime.now().minusWeeks(8);
+        List<Object[]> rawStats = readingProgressRepository.getWeeklyReadingStats(personId, startDate);
+
+        Map<String, Integer> stats = new LinkedHashMap<>();
+        for (Object[] row : rawStats) {
+            String week = (String) row[0];
+            Long count = (Long) row[1];
+            stats.put(week, count.intValue());
+        }
+
+        return stats;
+    }
+
     public List<Comics> getCurrentlyReading(int page, int pageSize) {
         Pageable pageable = PageRequest.of(page, pageSize);
         LocalDateTime cutoffTime = LocalDateTime.now().minusDays(1); // Активність за останні 30 хв
@@ -171,4 +185,16 @@ public class ReadingProgressService {
                 .orElse(null);
     }
 
+    public Map<String, Integer> getMonthlyReadingStats(int personId) {
+        LocalDateTime startDate = LocalDateTime.now().minusMonths(6);
+        List<Object[]> rawStats = readingProgressRepository.findMonthlyStats(personId, startDate);
+
+        Map<String, Integer> stats = new LinkedHashMap<>();
+        for (Object[] row : rawStats) {
+            String month = (String) row[0];
+            Long count = (Long) row[1];
+            stats.put(month, count.intValue());
+        }
+        return stats;
+    }
 }

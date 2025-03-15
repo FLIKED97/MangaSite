@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -89,27 +90,26 @@ public interface ReadingProgressRepository extends JpaRepository<ReadingProgress
             "WHERE rp.person.id = :personId AND rp.chapter.comics.id = :comicId AND rp.isCompleted = true")
     int countCompletedChaptersByPersonAndComic(@Param("personId") int personId, @Param("comicId") int comicId);
 
-    @Query(value = "SELECT to_char(rp.updated_at, 'YYYY-IW') as week, COUNT(DISTINCT rp.id) as count " +
-            "FROM reading_progress rp WHERE rp.person_id = :personId AND rp.is_completed = true " +
-            "AND rp.updated_at > :startDate GROUP BY week ORDER BY week", nativeQuery = true)
-    Map<String, Integer> getWeeklyReadingStats(@Param("personId") int personId,
-                                               @Param("startDate") LocalDateTime startDate);
+    @Query("SELECT FUNCTION('TO_CHAR', rp.updatedAt, 'YYYY-IW'), COUNT(rp.id) " +
+            "FROM ReadingProgress rp " +
+            "WHERE rp.person.id = :personId " +
+            "AND rp.isCompleted = true " +
+            "AND rp.updatedAt >= :startDate " +
+            "GROUP BY FUNCTION('TO_CHAR', rp.updatedAt, 'YYYY-IW') " +
+            "ORDER BY FUNCTION('TO_CHAR', rp.updatedAt, 'YYYY-IW')")
+    List<Object[]> getWeeklyReadingStats(@Param("personId") int personId,
+                                         @Param("startDate") LocalDateTime startDate);
 
-    default Map<String, Integer> getWeeklyReadingStats(int personId) {
-        LocalDateTime startDate = LocalDateTime.now().minusWeeks(8);
-        return getWeeklyReadingStats(personId, startDate);
-    }
-
-    @Query(value = "SELECT to_char(rp.updated_at, 'YYYY-MM') as month, COUNT(DISTINCT rp.id) as count " +
-            "FROM reading_progress rp WHERE rp.person_id = :personId AND rp.is_completed = true " +
-            "AND rp.updated_at > :startDate GROUP BY month ORDER BY month", nativeQuery = true)
-    Map<String, Integer> getMonthlyReadingStats(@Param("personId") int personId,
-                                                @Param("startDate") LocalDateTime startDate);
-
-    default Map<String, Integer> getMonthlyReadingStats(int personId) {
-        LocalDateTime startDate = LocalDateTime.now().minusMonths(6);
-        return getMonthlyReadingStats(personId, startDate);
-    }
-
+    @Query("SELECT FUNCTION('TO_CHAR', rp.updatedAt, 'YYYY-MM'), COUNT(rp) " +
+            "FROM ReadingProgress rp " +
+            "WHERE rp.person.id = :personId " +
+            "AND rp.isCompleted = true " +
+            "AND rp.updatedAt >= :startDate " +
+            "GROUP BY FUNCTION('TO_CHAR', rp.updatedAt, 'YYYY-MM') " +
+            "ORDER BY FUNCTION('TO_CHAR', rp.updatedAt, 'YYYY-MM')")
+    List<Object[]> findMonthlyStats(@Param("personId") int personId,
+                                    @Param("startDate") LocalDateTime startDate);
     List<ReadingProgress> findByPersonId(int personId);
+
+
 }
