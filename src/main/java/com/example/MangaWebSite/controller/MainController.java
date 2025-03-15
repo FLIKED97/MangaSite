@@ -46,7 +46,7 @@ public class MainController {
 
         // Комікси, які можна показати без авторизації
         List<Comics> popularComics = comicsService.getPopularComicsWithNewChapters(1.0);
-        Map<Integer, String> latestChapters = new HashMap<>();
+        Map<Integer, Integer> latestChapters = new HashMap<>();
         for (Comics comic : popularComics) {
             latestChapters.put(comic.getId(), chapterService.getLatestChapterTitle(comic.getId()));
         }
@@ -65,6 +65,8 @@ public class MainController {
         model.addAttribute("newComics", chapterService.getAllNewChapters(0));
         //Оновлені комікси з закадок.
         model.addAttribute("bookmarkedComics", chapterService.getNewChaptersInTabs(0));
+        model.addAttribute("selectedDays", 1);
+
 
         return "main";
     }

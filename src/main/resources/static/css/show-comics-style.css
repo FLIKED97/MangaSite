@@ -2,7 +2,7 @@
 .mn_sec{
     display: flex;
     flex-direction: column;
-    width: 902px;
+    width: 840px;
     margin: 20px auto;
     background-color: #1c1c1c;
     border-radius: 16px !important;

@@ -12,6 +12,21 @@ window.addEventListener('scroll', () => {
         loadMoreContent();
     }
 });
+// function getTimeDifference(releaseDate) {
+//     const date = new Date(releaseDate);
+//     const now = new Date();
+//     const diff = Math.floor((now - date) / 1000); // різниця в секундах
+//
+//     if (diff < 60) {
+//         return 'Опубліковано щойно';
+//     } else if (diff < 3600) {
+//         return `${Math.floor(diff / 60)} хв назад`;
+//     } else if (diff < 86400) {
+//         return `${Math.floor(diff / 3600)} год назад`;
+//     } else {
+//         return `${Math.floor(diff / 86400)} днів назад`;
+//     }
+// }
 
 // Завантаження додаткових даних для поточного табу
 function loadMoreContent() {
@@ -34,7 +49,7 @@ function loadMoreContent() {
                 div.className = 'd-flex align-items-center chapter-container';
 
                 if (currentTab === 'bookmarked') {
-                    const timeDifference = getTimeDifference(item.releaseDate);
+                    // const timeDifference = getTimeDifference(item.releaseDate);
                     div.innerHTML = `
                     <hr>
                     <img src="/comics/image/${item.comics.id}"
@@ -323,3 +338,13 @@ function updateComicsSection(sectionId, comics) {
     });
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+    const daysSelect = document.getElementById('daysSelect');
+    if(daysSelect){
+        // Встановити значення за замовчуванням, якщо потрібно
+        daysSelect.value = '1';
+        // Автоматично завантажити дані для "За добу"
+        changeDays('1');
+    }
+    // Інший код, пов’язаний з табами тощо…
+});

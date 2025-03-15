@@ -14,20 +14,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -50,9 +47,9 @@ public class ChapterService {
         this.comicsRepository = comicsRepository;
     }
 
-    public String getLatestChapterTitle(int comicId) {
+    public Integer getLatestChapterTitle(int comicId) {
         Optional<Chapter> latestChapter = chapterRepository.findLatestChapterByComicId(comicId);
-        return latestChapter.map(Chapter::getTitle).orElse("Немає глав");
+        return latestChapter.map(Chapter::getChapterNumber).orElse(0);
     }
 
     public void addChapterWithPages(int comicId, String title, List<MultipartFile> pageFiles) throws IOException {

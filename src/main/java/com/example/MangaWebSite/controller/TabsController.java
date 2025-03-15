@@ -41,7 +41,7 @@ public class TabsController {
     public String getComicsByTab(@PathVariable("personId") int personId, @PathVariable("tabId") int tabId, Model model) {
         List<Comics> comicsInTabs =  comicsService.getComicsByTabId(tabId);
         model.addAttribute("comics", comicsInTabs);
-        Map<Integer, String> latestChapters = new HashMap<>();
+        Map<Integer, Integer> latestChapters = new HashMap<>();
         for (Comics comic : comicsInTabs) {
             latestChapters.put(comic.getId(), chapterService.getLatestChapterTitle(comic.getId()));
         }

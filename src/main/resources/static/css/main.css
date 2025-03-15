@@ -12,6 +12,12 @@ body {
     color: inherit; /* Встановлює початковий колір */
     transition: color 0.3s ease; /* Анімація для плавного переходу кольору */
 }
+.card-title {
+    max-width: 135px; /* або width: 135px; */
+}
+.card-body {
+    width: 135px;
+}
 
 .card-title:hover {
     color: #f57c00; /* Зміна кольору при наведенні */
@@ -110,8 +116,7 @@ h3 a{
 .card-title {
     font-size: 14px;
     line-height: 1.2;
-    color: #BFBFBF !important;
-    max-height: 2.4em; /* Обмеження на 2 рядки */
+    max-height: calc(2.4em + 6px);
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
@@ -120,6 +125,7 @@ h3 a{
     padding: 6px 0 0;
     margin-bottom: 0 !important;
 }
+
 .card-title a {
     color: #BFBFBF;
     text-decoration: none;
