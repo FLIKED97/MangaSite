@@ -53,6 +53,7 @@
         <h3>Продовжити читати</h3>
         <div class="d-flex overflow-auto gap-3">
             <div th:each="progress : ${recentlyReadProgress}"
+                 th:if="${comicsProgress.get(progress.chapter.comics.id) < 100}"
                  class="reading-progress-item flex-shrink-0 mx-0 rounded">
                 <!-- Обгортаємо весь елемент у посилання -->
                 <a th:href="@{/chapters/{id}(id=${progress.chapter.id})}"
@@ -73,8 +74,7 @@
                             </div>
                             <div class="progress">
                                 <div class="progress-bar bg-warning"
-                                     role="progressbar"
-                                     th:style="'width: ' + (${progress.lastPage} / ${@chapterService.getTotalPagesForChapter()} * 100) + '%;'">
+                                     th:style="'width: ' + ${comicsProgress.get(progress.chapter.comics.id)} + '%;'">
                                 </div>
                             </div>
                         </div>

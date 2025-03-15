@@ -1,6 +1,7 @@
 package com.example.MangaWebSite.service;
 
 import com.example.MangaWebSite.models.*;
+import com.example.MangaWebSite.repository.ChapterRepository;
 import com.example.MangaWebSite.repository.ReadingProgressRepository;
 import com.example.MangaWebSite.repository.UserProfileRepository;
 import com.example.MangaWebSite.security.PersonDetails;
@@ -14,10 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Service
@@ -28,6 +26,7 @@ public class ReadingProgressService {
     private final UserProfileRepository userProfileRepository;
 
     private AchievementService achievementService;
+    private final ChapterRepository chapterRepository;
 
     @Transactional
     public void saveOrUpdateProgress(Person person, Chapter chapter, int lastPage) {
@@ -121,7 +120,31 @@ public class ReadingProgressService {
         // Повертаємо список останніх записів для кожного коміксу
         return new ArrayList<>(latestProgressByComic.values());
     }
+    
+    public Map<Integer, Integer> getComicsProgress(int personId) {
+        List<ReadingProgress> allProgress = readingProgressRepository.findByPersonId(personId);
+        Map<Integer, Integer> comicsProgress = new HashMap<>();
 
+        for (ReadingProgress progress : allProgress) {
+            Comics comic = progress.getChapter().getComics();
+            int comicId = comic.getId();
+
+            if (!comicsProgress.containsKey(comicId)) {
+                int totalChapters = chapterRepository.countTotalChaptersInComic(comicId);
+                int completedChapters = readingProgressRepository.countCompletedChaptersInComic(personId, comicId);
+
+                int progressPercentage = (int) ((completedChapters * 100.0) / totalChapters);
+                if (totalChapters == 0) {
+                    progressPercentage = 0;
+                } else {
+                    progressPercentage = (int) ((completedChapters * 100.0) / totalChapters);
+                }
+                comicsProgress.put(comicId, progressPercentage);
+            }
+        }
+
+        return comicsProgress;
+    }
     public ReadingProgress getReadingProgress(int comicsId, int personId) {
         return readingProgressRepository
                 .findFirstByPersonIdAndChapter_Comics_IdOrderByUpdatedAtDesc(personId, comicsId)

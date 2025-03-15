@@ -28,7 +28,11 @@ public interface ReadingProgressRepository extends JpaRepository<ReadingProgress
             "WHERE rp.person.id = :personId " +
             "ORDER BY rp.updatedAt DESC")
     List<ReadingProgress> findRecentlyReadByPersonId(@Param("personId") int personId, Pageable pageable);
-
+    @Query("SELECT COUNT(rp) FROM ReadingProgress rp " +
+            "WHERE rp.person.id = :personId " +
+            "AND rp.chapter.comics.id = :comicsId " +
+            "AND rp.isCompleted = true")
+    int countCompletedChaptersInComic(@Param("personId") int personId, @Param("comicsId") int comicsId);
     // 2. Знайти прогрес за парою (person, comics), використовуючи зв’язок через главу
     @Query("SELECT rp FROM ReadingProgress rp " +
             "JOIN rp.chapter ch " +
@@ -106,4 +110,6 @@ public interface ReadingProgressRepository extends JpaRepository<ReadingProgress
         LocalDateTime startDate = LocalDateTime.now().minusMonths(6);
         return getMonthlyReadingStats(personId, startDate);
     }
+
+    List<ReadingProgress> findByPersonId(int personId);
 }

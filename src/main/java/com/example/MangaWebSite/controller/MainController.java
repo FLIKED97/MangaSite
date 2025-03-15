@@ -56,8 +56,11 @@ public class MainController {
 
         // Додаткові атрибути тільки для авторизованих користувачів
         if (authentication != null && authentication.getPrincipal() instanceof PersonDetails personDetails) {
-            List<ReadingProgress> readingProgresses = readingProgressService.getRecentlyReadComicsWithProgress(personDetails.getPerson().getId());
-            model.addAttribute("recentlyReadProgress", readingProgresses);
+            List<ReadingProgress> recentlyRead = readingProgressService.getRecentlyReadComicsWithProgress(personDetails.getPerson().getId());
+            Map<Integer, Integer> comicsProgress = readingProgressService.getComicsProgress(personDetails.getPerson().getId());
+
+            model.addAttribute("recentlyReadProgress", recentlyRead);
+            model.addAttribute("comicsProgress", comicsProgress);
             model.addAttribute("person", personDetails.getPerson());
         }
 
@@ -70,7 +73,18 @@ public class MainController {
 
         return "main";
     }
+    @GetMapping("/some-page")
+    public String getPage(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof PersonDetails personDetails) {
+            List<ReadingProgress> recentlyRead = readingProgressService.getRecentlyReadComicsWithProgress(personDetails.getPerson().getId());
+            Map<Integer, Integer> comicsProgress = readingProgressService.getComicsProgress(personDetails.getPerson().getId());
 
+            model.addAttribute("recentlyReadProgress", recentlyRead);
+            model.addAttribute("comicsProgress", comicsProgress);
+        }
+        return "page";
+    }
     @GetMapping("/comics/new")
     @ResponseBody
     public ResponseEntity<List<Chapter>> getNewChapters(@RequestParam("page") int page) {

@@ -20,7 +20,8 @@ public interface ChapterRepository extends JpaRepository<Chapter, Integer> {
 
     @Query("SELECT c FROM Chapter c WHERE c.comics.id = :comicId AND c.chapterNumber = (SELECT MAX(ch.chapterNumber) FROM Chapter ch WHERE ch.comics.id = :comicId)")
     Optional<Chapter> findLatestChapterByComicId(@Param("comicId") int comicId);
-
+    @Query("SELECT COUNT(c) FROM Chapter c WHERE c.comics.id = :comicsId")
+    int countTotalChaptersInComic(@Param("comicsId") int comicsId);
     List<Chapter> findAllByComicsId(int comicId);
     Page<Chapter> findByComicsId(int comicId, Pageable pageable);
 
