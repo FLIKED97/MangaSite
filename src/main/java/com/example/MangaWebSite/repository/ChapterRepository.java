@@ -40,4 +40,9 @@ public interface ChapterRepository extends JpaRepository<Chapter, Integer> {
     Page<Chapter> findByComics_IdOrderByReleaseDateDesc(int comicId, Pageable pageable);
 
     Chapter findFirstByComicsAndChapterNumberLessThanOrderByChapterNumberDesc(Comics comics, int chapterNumber);
+    @Query("SELECT COUNT(c) FROM Chapter c " +
+            "WHERE c.comics.id = :comicsId " +
+            "AND c.releaseDate <= :cutoffDate")
+    int countChaptersCreatedBefore(@Param("comicsId") int comicsId,
+                                   @Param("cutoffDate") LocalDateTime cutoffDate);
 }

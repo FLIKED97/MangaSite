@@ -50,7 +50,7 @@ public class ReadingProgressService {
             readingProgress.setCompleted(true);
             justCompleted = true;
         }
-
+        readingProgress.setLastInteraction(LocalDateTime.now());
         // Save progress
         readingProgressRepository.save(readingProgress);
 
@@ -130,7 +130,10 @@ public class ReadingProgressService {
             int comicId = comic.getId();
 
             if (!comicsProgress.containsKey(comicId)) {
-                int totalChapters = chapterRepository.countTotalChaptersInComic(comicId);
+                int totalChapters = chapterRepository.countChaptersCreatedBefore(
+                        comicId,
+                        progress.getLastInteraction() // Враховуємо тільки глави, створені до останньої активності
+                );
                 int completedChapters = readingProgressRepository.countCompletedChaptersInComic(personId, comicId);
 
                 int progressPercentage = (int) ((completedChapters * 100.0) / totalChapters);

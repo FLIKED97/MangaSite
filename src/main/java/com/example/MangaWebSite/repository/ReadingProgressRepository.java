@@ -27,7 +27,8 @@ public interface ReadingProgressRepository extends JpaRepository<ReadingProgress
             "JOIN FETCH rp.chapter ch " +
             "JOIN FETCH ch.comics c " +
             "WHERE rp.person.id = :personId " +
-            "ORDER BY rp.updatedAt DESC")
+            "AND ch.releaseDate <= rp.lastInteraction " + // Тільки глави, існуючі на момент останньої активності
+            "ORDER BY rp.lastInteraction DESC")
     List<ReadingProgress> findRecentlyReadByPersonId(@Param("personId") int personId, Pageable pageable);
     @Query("SELECT COUNT(rp) FROM ReadingProgress rp " +
             "WHERE rp.person.id = :personId " +

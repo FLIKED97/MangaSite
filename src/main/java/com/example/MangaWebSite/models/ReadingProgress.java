@@ -39,6 +39,9 @@ public class ReadingProgress {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+    @Column(name = "last_interaction")
+    private LocalDateTime lastInteraction;
+
     @PrePersist
     @PreUpdate
     public void updateTimestamp() {
