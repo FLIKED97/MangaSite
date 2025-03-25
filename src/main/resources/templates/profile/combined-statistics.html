@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/main}">
+<head>
+    <title>Статистика та Досягнення</title>
+    <!-- Підключаємо CSS для статистики та досягнень -->
+    <link rel="stylesheet" th:href="@{/css/comb-statistics.css}">
+<!--    <link rel="stylesheet" th:href="@{/css/achievements.css}">-->
+    <!-- Підключення Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div layout:fragment="content" class="container my-4" style="padding-right: unset; padding-left: unset; border-radius: 10px">
+    <!-- Карта з вкладками -->
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <ul class="nav nav-tabs" id="combinedTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="stats-tab" data-bs-toggle="tab" data-bs-target="#stats" type="button" role="tab" aria-controls="stats" aria-selected="true">
+                        Статистика
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="achievements-tab" data-bs-toggle="tab" data-bs-target="#achievements" type="button" role="tab" aria-controls="achievements" aria-selected="false">
+                        Досягнення
+                    </button>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <div class="tab-content" id="combinedTabsContent">
+                <!-- Вкладка Статистика -->
+                <div class="tab-pane fade show active" id="stats" role="tabpanel" aria-labelledby="stats-tab">
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h2 class="border-bottom pb-2">Моя статистика читання</h2>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-book"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-value" th:text="${readingStats.totalComicsRead}">0</div>
+                                    <div class="stat-label">Прочитано коміксів</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-bookmark"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-value" th:text="${readingStats.totalChaptersRead}">0</div>
+                                    <div class="stat-label">Прочитано глав</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-comment"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-value" th:text="${readingStats.commentsPosted}">0</div>
+                                    <div class="stat-label">Залишено коментарів</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-value" th:text="${readingStats.likesReceived}">0</div>
+                                    <div class="stat-label">Отримано лайків</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Прогрес за тиждень</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="weeklyChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Прогрес за місяць</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="monthlyChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Активність</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th>Тип активності</th>
+                                                <th>Кількість</th>
+                                                <th>Прогрес</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <td>Прочитано коміксів</td>
+                                                <td th:text="${readingStats.totalComicsRead}">0</td>
+                                                <td>
+                                                    <div class="progress">
+                                                        <div class="progress-bar bg-success" role="progressbar"
+                                                             th:style="'width: ' + (${readingStats.totalComicsRead * 5 > 100 ? 100 : readingStats.totalComicsRead * 5}) + '%'"
+                                                             th:aria-valuenow="${readingStats.totalComicsRead * 5 > 100 ? 100 : readingStats.totalComicsRead * 5}"
+                                                             aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Прочитано глав</td>
+                                                <td th:text="${readingStats.totalChaptersRead}">0</td>
+                                                <td>
+                                                    <div class="progress">
+                                                        <div class="progress-bar bg-info" role="progressbar"
+                                                             th:style="'width: ' + (${readingStats.totalChaptersRead > 100 ? 100 : readingStats.totalChaptersRead}) + '%'"
+                                                             th:aria-valuenow="${readingStats.totalChaptersRead > 100 ? 100 : readingStats.totalChaptersRead}"
+                                                             aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Залишено коментарів</td>
+                                                <td th:text="${readingStats.commentsPosted}">0</td>
+                                                <td>
+                                                    <div class="progress">
+                                                        <div class="progress-bar bg-warning" role="progressbar"
+                                                             th:style="'width: ' + (${readingStats.commentsPosted * 2 > 100 ? 100 : readingStats.commentsPosted * 2}) + '%'"
+                                                             th:aria-valuenow="${readingStats.commentsPosted * 2 > 100 ? 100 : readingStats.commentsPosted * 2}"
+                                                             aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Днів активності підряд</td>
+                                                <td th:text="${readingStats.daysStreak}">0</td>
+                                                <td>
+                                                    <div class="progress">
+                                                        <div class="progress-bar bg-danger" role="progressbar"
+                                                             th:style="'width: ' + (${readingStats.daysStreak * 10 > 100 ? 100 : readingStats.daysStreak * 10}) + '%'"
+                                                             th:aria-valuenow="${readingStats.daysStreak * 10 > 100 ? 100 : readingStats.daysStreak * 10}"
+                                                             aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Вкладка Досягнення -->
+                <div class="tab-pane fade" id="achievements" role="tabpanel" aria-labelledby="achievements-tab">
+                    <ul class="nav nav-tabs" id="achievementTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="earned-tab" data-bs-toggle="tab"
+                                    data-bs-target="#earned" type="button" role="tab"
+                                    aria-controls="earned" aria-selected="true">
+                                Здобуті <span class="badge bg-success" th:text="${userAchievements.size()}">0</span>
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="available-tab" data-bs-toggle="tab"
+                                    data-bs-target="#available" type="button" role="tab"
+                                    aria-controls="available" aria-selected="false">
+                                Доступні <span class="badge bg-secondary"
+                                               th:text="${allAchievements.size() - userAchievements.size()}">0</span>
+                            </button>
+                        </li>
+                    </ul>
+                    <div class="tab-content p-3" id="achievementTabsContent">
+                        <!-- Здобуті досягнення -->
+                        <div class="tab-pane fade show active" id="earned" role="tabpanel" aria-labelledby="earned-tab">
+                            <div th:if="${userAchievements.isEmpty()}" class="text-center py-5">
+                                <i class="fas fa-trophy fa-3x text-muted mb-3"></i>
+                                <p>У вас поки немає здобутих досягнень. Продовжуйте читати комікси!</p>
+                            </div>
+                            <div class="row" th:unless="${userAchievements.isEmpty()}">
+                                <div class="col-md-6 mb-3" th:each="userAchievement : ${userAchievements}">
+                                    <div class="achievement-card earned">
+                                        <div class="achievement-icon">
+                                            <i class="fas fa-trophy"></i>
+                                        </div>
+                                        <div class="achievement-info">
+                                            <h5 th:text="${userAchievement.achievement.title}">Назва досягнення</h5>
+                                            <p th:text="${userAchievement.achievement.description}">Опис досягнення</p>
+                                            <div class="achievement-meta">
+                                                <span class="achievement-date"
+                                                      th:text="${#temporals.format(userAchievement.achievedAt, 'dd.MM.yyyy')}">
+                                                    01.01.2023
+                                                </span>
+                                                <span class="achievement-xp">+<span th:text="${userAchievement.achievement.experienceReward}">50</span> XP</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Доступні досягнення -->
+                        <div class="tab-pane fade" id="available" role="tabpanel" aria-labelledby="available-tab">
+                            <div class="row">
+                                <div class="col-md-6 mb-3" th:each="achievement : ${allAchievements}"
+                                     th:if="${!userAchievementIds.contains(achievement.id)}">
+                                    <div class="achievement-card locked">
+                                        <div class="achievement-icon">
+                                            <i class="fas fa-lock"></i>
+                                        </div>
+                                        <div class="achievement-info">
+                                            <h5 th:text="${achievement.title}">Назва досягнення</h5>
+                                            <p th:text="${achievement.description}">Опис досягнення</p>
+                                            <div class="progress">
+                                                <div class="progress-bar" role="progressbar"
+                                                     th:with="progress=${(userProgress.get(achievement.type) * 100 / achievement.threshold) > 100 ? 100 : (userProgress.get(achievement.type) * 100 / achievement.threshold)}"
+                                                     th:style="'width: ' + progress + '%'"
+                                                     th:attr="aria-valuenow=${progress}"
+                                                     aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <div class="achievement-progress">
+                                                <span th:text="${userProgress.get(achievement.type)} + ' / ' + achievement.threshold">0/10</span>
+                                                <span class="achievement-xp">+<span th:text="${achievement.experienceReward}">50</span> XP</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- Кінець вкладки Досягнення -->
+            </div>
+        </div>
+    </div>
+</div>
+<th:block layout:fragment="scripts">
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ініціалізація графіка за тижнями
+            const weeklyData = [[${weeklyStats}]];
+            const weeklyLabels = Object.keys(weeklyData);
+            const weeklyValues = Object.values(weeklyData);
+            const monthlyData = [[${monthlyStats}]];
+            const monthlyLabels = Object.keys(monthlyData);
+            const monthlyValues = Object.values(monthlyData);
+            const monthNames = [
+                'Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень',
+                'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'
+            ];
+            console.log(weeklyData, monthlyData);
+            // Add this to your inline JavaScript in the Thymeleaf template
+            console.log("Weekly data:", weeklyData);
+            console.log("Monthly data:", monthlyData);
+            console.log("Weekly chart element:", document.getElementById('weeklyChart'));
+            console.log("Monthly chart element:", document.getElementById('monthlyChart'));
+
+            const weeklyChart = new Chart(document.getElementById('weeklyChart'), {
+                type: 'bar',
+                data: {
+                    labels: weeklyLabels.map(week => {
+                        const [year, weekNum] = week.split('-');
+                        return `Тиждень ${weekNum}`;
+                    }),
+                    datasets: [{
+                        label: 'Прочитані глави',
+                        data: weeklyValues,
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { precision: 0 }
+                        }
+                    }
+                }
+            });
+
+            // Ініціалізація графіка за місяцями
+
+
+            const monthlyChart = new Chart(document.getElementById('monthlyChart'), {
+                type: 'line',
+                data: {
+                    labels: monthlyLabels.map(month => {
+                        const [year, monthNum] = month.split('-');
+                        return `${monthNames[parseInt(monthNum) - 1]}`;
+                    }),
+                    datasets: [{
+                        label: 'Прочитані глави',
+                        data: monthlyValues,
+                        fill: true,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 2,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { precision: 0 }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</th:block>
+</body>
+</html>

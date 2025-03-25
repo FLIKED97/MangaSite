@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,20 +40,15 @@ public class MainController {
 
     private static final Logger logger = LoggerFactory.getLogger(MainController.class); // For SLF4J
 
+    private final GenreBasedRecommendationService recommendationService;
+
+
     @GetMapping()
     @Transactional(readOnly = true)
-    public String mainPage(Model model) {
+    public String mainPage(Model model, Principal principal) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        // Комікси, які можна показати без авторизації
-        List<Comics> popularComics = comicsService.getPopularComicsWithNewChapters(1.0);
-        Map<Integer, Integer> latestChapters = new HashMap<>();
-        for (Comics comic : popularComics) {
-            latestChapters.put(comic.getId(), chapterService.getLatestChapterTitle(comic.getId()));
-        }
 
-        model.addAttribute("popularComicsWithNewChapters", popularComics);
-        model.addAttribute("latestChapters", latestChapters);
 
         // Додаткові атрибути тільки для авторизованих користувачів
         if (authentication != null && authentication.getPrincipal() instanceof PersonDetails personDetails) {
@@ -70,7 +66,28 @@ public class MainController {
         model.addAttribute("bookmarkedComics", chapterService.getNewChaptersInTabs(0));
         model.addAttribute("selectedDays", 1);
 
+        if (authentication != null && authentication.getPrincipal() instanceof PersonDetails personDetails) {
+            // Отримуємо userId, наприклад, через custom UserDetails або інший сервіс
+            int userId = personDetails.getPerson().getId();
+            List<Comics> recommendedComics = recommendationService.getRecommendationsBySimilarGenres(userId);
+            Map<Integer, Integer> latestChapters = new HashMap<>();
+            for (Comics comic : recommendedComics) {
+                latestChapters.put(comic.getId(), chapterService.getLatestChapterTitle(comic.getId()));
+            }
+            model.addAttribute("recommendedComics", recommendedComics);
+            model.addAttribute("latestChapters", latestChapters);
 
+        } else {
+            // Комікси, які можна показати без авторизації
+            List<Comics> popularComics = comicsService.getPopularComicsWithNewChapters(1.0);
+            Map<Integer, Integer> latestChapters = new HashMap<>();
+            for (Comics comic : popularComics) {
+                latestChapters.put(comic.getId(), chapterService.getLatestChapterTitle(comic.getId()));
+            }
+
+            model.addAttribute("popularComicsWithNewChapters", popularComics);
+            model.addAttribute("latestChapters", latestChapters);
+        }
         return "main";
     }
     @GetMapping("/some-page")

@@ -77,5 +77,11 @@ public interface ComicsRepository extends JpaRepository<Comics, Integer>, JpaSpe
 //            @Param("personId") int personId,
 //            Pageable pageable
 //    );
+        // Пошук топ-5 коміксів за популярністю, виключаючи список певних ID
+        List<Comics> findTop5ByIdNotInOrderByPopularityRatingDesc(List<Integer> excludedIds);
+
+            // Пошук топ-5 унікальних коміксів за схожими жанрами (distinct),
+            // виключаючи певні комікси та сортування за показником популярності
+        List<Comics> findDistinctTop5ByGenresInAndIdNotInOrderByPopularityRatingDesc(List<Genre> genres, List<Integer> excludedIds);
 
 }

@@ -112,5 +112,7 @@ public interface ReadingProgressRepository extends JpaRepository<ReadingProgress
                                     @Param("startDate") LocalDateTime startDate);
     List<ReadingProgress> findByPersonId(int personId);
 
+    // Отримання останніх 5 записів про прогрес читання для конкретного користувача
+    List<ReadingProgress> findTop5ByPersonIdOrderByUpdatedAtDesc(int personId);
 
 }

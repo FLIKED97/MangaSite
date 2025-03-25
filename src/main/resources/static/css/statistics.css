@@ -91,7 +91,7 @@
     vertical-align: middle;
 }
 
-.progress {
+.card-body .progress {
     height: 10px;
     border-radius: 5px;
 }

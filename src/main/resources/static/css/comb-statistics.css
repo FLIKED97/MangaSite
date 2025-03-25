@@ -1,0 +1,225 @@
+/* Загальні стилі для сторінки */
+body {
+    background: #0A0A0A;
+    color: #BFBFBF;
+    font-family: -apple-system, BlinkMacSystemFont, Open Sans, Roboto, Helvetica Neue, Helvetica, sans-serif;
+    line-height: 1.4;
+    margin: 0;
+    padding: 0;
+}
+
+/* Головний контейнер сторінки */
+.combined-container {
+    background-color: #1c1c1c;
+    border-radius: 10px;
+    padding: 20px 30px;
+    margin: 20px auto;
+    max-width: 1200px;
+}
+
+.nav-section .custom-btn:hover,
+.nav-section .custom-btn.active {
+    background-color: rgba(116, 116, 128, 0.1);
+    border-radius: 6px;
+}
+
+/* Карти та блоки */
+.card {
+    background-color: #1c1c1c;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.card-header {
+    background-color: #242424;
+    padding: 12px 16px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #BFBFBF;
+    border-bottom: 1px solid rgba(84,84,88,0.65);
+}
+
+.card-body {
+    padding: 16px;
+}
+
+/* Вкладки (Tabs) */
+.nav-tabs {
+    border-bottom: none;
+    display: flex;
+    gap: 10px;
+}
+
+.nav-tabs .nav-link {
+    background: transparent;
+    border: none;
+    font-size: 14px;
+    color: #BFBFBF;
+    padding: 10px 15px;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.2s ease;
+}
+
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-link:hover {
+    border-color: #ffc107;
+    color: #ffc107;
+}
+
+/* Стилізація статистичних карток */
+.stat-card {
+    background-color: #242424;
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.stat-card .stat-icon {
+    font-size: 24px;
+    color: #ffc107;
+}
+
+.stat-card .stat-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-card .stat-value {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.stat-card .stat-label {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+/* Прогрес-бар */
+.table-responsive .progress {
+    background-color: #2C2C30;
+    border-radius: 6px;
+    height: 10px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+/* Таблиця активності */
+.table {
+    width: 100%;
+    color: #BFBFBF;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid rgba(84,84,88,0.65);
+}
+
+.table th {
+    font-size: 14px;
+    background-color: #242424;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(116, 116, 128, 0.1);
+}
+
+/* Стилі для секції досягнень */
+.achievement-card {
+    background-color: #242424;
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.achievement-card.earned {
+    border-left: 4px solid #28a745;
+}
+
+.achievement-card.locked {
+    border-left: 4px solid #6c757d;
+}
+
+.achievement-card .achievement-icon {
+    font-size: 24px;
+    color: #ffc107;
+}
+
+.achievement-card .achievement-info h5 {
+    margin: 0 0 5px;
+    font-size: 16px;
+}
+
+.achievement-card .achievement-info p {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.85;
+}
+
+.achievement-meta {
+    display: flex;
+    gap: 10px;
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+/* Адаптивність */
+@media (min-width: 768px) {
+    .row {
+        display: flex;
+        gap: 16px;
+        flex-wrap: nowrap !important;
+    }
+    .col-md-3, .col-md-6, .col-md-9 {
+        flex-grow: 1;
+    }
+    .col-md-3 {
+        max-width: 25%;
+    }
+    .col-md-6 {
+        max-width: 50%;
+    }
+    .col-md-9 {
+        max-width: 75%;
+    }
+}
+
+/* Додаткові стилі для графіків Chart.js */
+canvas {
+    background-color: transparent;
+    border-radius: 10px;
+}
+
+/* Стилізація кнопок для вкладок досягнень */
+#achievementTabs .nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+/* Приховання скролу для таблиць, якщо потрібно */
+.table-responsive {
+    overflow-x: auto;
+}
+
+/* Додаткові корективи для елементів */
+.text-center {
+    text-align: center;
+}

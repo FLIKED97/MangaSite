@@ -1,4 +1,3 @@
-// Основний клас для керування профілем
 class ProfileManager {
     constructor() {
         this.contentElement = document.getElementById('content');
@@ -17,6 +16,13 @@ class ProfileManager {
     initEventListeners() {
         document.querySelectorAll('.custom-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
+                // Видаляємо активний клас у всіх кнопок
+                document.querySelectorAll('.custom-btn').forEach(button => {
+                    button.classList.remove('active');
+                });
+                // Додаємо активний клас натиснутій кнопці
+                e.target.classList.add('active');
+
                 const section = e.target.getAttribute('data-section');
                 this.loadSection(section);
             });
@@ -32,34 +38,20 @@ class ProfileManager {
     async loadSection(section) {
         try {
             this.showLoader();
+            this.currentSection = section;
 
             const endpoints = {
                 bookmarks: `/tabs/person/${this.personId}`,
                 comments: '/comment/show',
-                friends: `/friends/${this.personId}`
+                friends: `/friends/${this.personId}`,
+                statistics: '/profile/combined-statistics'
             };
 
             const response = await fetch(endpoints[section]);
-            if (!response.ok) throw new Error('Network response was not ok');
+            if (!response.ok) throw new Error(`Network response was not ok: ${response.status}`);
 
             const html = await response.text();
-
-            let currentFilters = null;
-            if (section === 'comments') {
-                const filtersSection = document.querySelector('.col-md-3');
-                if (filtersSection) {
-                    currentFilters = filtersSection.cloneNode(true);
-                }
-            }
-
             this.contentElement.innerHTML = html;
-
-            if (currentFilters && section === 'comments') {
-                const newFiltersSection = document.querySelector('.col-md-3');
-                if (newFiltersSection) {
-                    newFiltersSection.replaceWith(currentFilters);
-                }
-            }
 
             if (section === 'bookmarks') {
                 this.initBookmarksHandlers();
@@ -67,9 +59,154 @@ class ProfileManager {
                 new CommentManager();
             } else if (section === 'friends') {
                 this.initFriendsHandlers();
+            } else if (section === 'statistics') {
+                // Wait for the DOM to fully render
+                setTimeout(() => this.initStatisticsHandlers(), 100);
             }
         } catch (error) {
-            this.showError(`Failed to load ${section}`);
+            console.error(`Error loading ${section}:`, error);
+            this.showError(`Failed to load ${section}: ${error.message}`);
+        }
+    }
+
+    async initStatisticsHandlers() {
+        console.log("Initializing statistics charts");
+
+        const weeklyChartElement = document.getElementById('weeklyChart');
+        const monthlyChartElement = document.getElementById('monthlyChart');
+
+        if (!weeklyChartElement || !monthlyChartElement) {
+            console.warn("Chart elements not found");
+            return;
+        }
+
+        if (typeof Chart === 'undefined') {
+            console.error("Chart.js is not loaded");
+            return;
+        }
+
+        try {
+            // Fetch statistics data
+            const response = await fetch(`/profile/combined-statistics/data`);
+            if (!response.ok) throw new Error(`Failed to load statistics data: ${response.status}`);
+
+            const data = await response.json();
+            console.log("Stats data loaded:", data);
+
+            // Initialize weekly chart
+            const weeklyLabels = Object.keys(data.weeklyStats);
+            const weeklyValues = Object.values(data.weeklyStats);
+
+            new Chart(weeklyChartElement, {
+                type: 'bar',
+                data: {
+                    labels: weeklyLabels.map(week => {
+                        const [year, weekNum] = week.split('-');
+                        return `Тиждень ${weekNum}`;
+                    }),
+                    datasets: [{
+                        label: 'Прочитані глави',
+                        data: weeklyValues,
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { precision: 0 }
+                        }
+                    }
+                }
+            });
+
+            // Initialize monthly chart
+            const monthlyLabels = Object.keys(data.monthlyStats);
+            const monthlyValues = Object.values(data.monthlyStats);
+            const monthNames = [
+                'Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень',
+                'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'
+            ];
+
+            new Chart(monthlyChartElement, {
+                type: 'line',
+                data: {
+                    labels: monthlyLabels.map(month => {
+                        const [year, monthNum] = month.split('-');
+                        return `${monthNames[parseInt(monthNum) - 1]}`;
+                    }),
+                    datasets: [{
+                        label: 'Прочитані глави',
+                        data: monthlyValues,
+                        fill: true,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 2,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { precision: 0 }
+                        }
+                    }
+                }
+            });
+
+            console.log("Charts initialized successfully");
+        } catch (error) {
+            console.error("Error initializing charts:", error);
+        }
+    }
+
+    initChart(element, type, datasetConfig) {
+        try {
+            // Отримуємо дані з data-атрибутів або через inline JavaScript
+            let labels = [];
+            let data = [];
+
+            // Перевіряємо наявність Chart
+            if (typeof Chart === 'undefined') {
+                console.error("Chart.js is not loaded");
+                return null;
+            }
+
+            // Створюємо базову конфігурацію графіка
+            const config = {
+                type: type,
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: datasetConfig.label,
+                        data: data,
+                        backgroundColor: datasetConfig.backgroundColor,
+                        borderColor: datasetConfig.borderColor,
+                        borderWidth: 1,
+                        ...datasetConfig
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { precision: 0 }
+                        }
+                    }
+                }
+            };
+
+            // Створюємо новий графік
+            return new Chart(element, config);
+        } catch (error) {
+            console.error("Error initializing chart:", error);
+            return null;
         }
     }
 
@@ -185,9 +322,8 @@ class ProfileManager {
         });
 
         // Очищаємо контейнер і додаємо відсортовані елементи
-        const fragment = document.createDocumentFragment();
-        items.forEach(item => fragment.appendChild(item));
-        container.appendChild(fragment);
+        container.innerHTML = '';
+        items.forEach(item => container.appendChild(item));
     }
 
     handleSearch(query) {
@@ -237,11 +373,16 @@ class ProfileManager {
     }
 
     showLoader() {
-        this.contentElement.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"></div></div>';
+        this.contentElement.innerHTML = '<div class="text-center p-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Завантаження...</span></div></div>';
     }
 
     showError(message) {
-        this.contentElement.innerHTML = `<div class="alert alert-danger">${message}</div>`;
+        this.contentElement.innerHTML = `
+            <div class="alert alert-danger my-3">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                ${message}
+                <button class="btn btn-sm btn-outline-danger ms-3" onclick="location.reload()">Спробувати знову</button>
+            </div>`;
     }
 }
 

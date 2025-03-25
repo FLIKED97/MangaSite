@@ -25,10 +25,11 @@
 <main class="container-fluid main-content">
 <!--<main class="container main-content">-->
     <!-- Popular New Chapters Section -->
-    <section class="popular-chapters my-4">
+    <!-- Якщо користувач залогінений та є рекомендації -->
+    <section class="popular-chapters my-4" th:if="${recommendedComics != null}">
+        <h2>Рекомендовані для вас</h2>
         <div class="d-flex overflow-auto">
-            <div th:each="comic : ${popularComicsWithNewChapters}"
-                 class="comic-card mx-2 text-left position-relative">
+            <div th:each="comic : ${recommendedComics}" class="comic-card mx-2 text-left position-relative">
                 <a th:href="@{/comics/{id}(id=${comic.id})}" class="position-relative d-block">
                     <img th:src="@{/comics/image/{id}(id=${comic.id})}"
                          th:alt="${comic.title}"
@@ -41,12 +42,34 @@
                     </div>
                 </a>
                 <div class="card-body p-0">
-                    <!-- Назва коміксу обмежена 2 рядками -->
                     <a th:href="@{/comics/{id}(id=${comic.id})}" class="card-title comic-title" th:text="${comic.title}"></a>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- Якщо користувач не залогінений – стандартна секція -->
+    <section class="popular-chapters my-4" th:if="${recommendedComics == null}">
+        <div class="d-flex overflow-auto">
+            <div th:each="comic : ${popularComicsWithNewChapters}" class="comic-card mx-2 text-left position-relative">
+                <a th:href="@{/comics/{id}(id=${comic.id})}" class="position-relative d-block">
+                    <img th:src="@{/comics/image/{id}(id=${comic.id})}"
+                         th:alt="${comic.title}"
+                         class="card-img-top comic-cover object-fit-cover"
+                         style="width:135px; height:189px;"
+                         loading="lazy">
+                    <!-- Глава знизу справа в межах фото -->
+                    <div class="chapter-label position-absolute">
+                        <span th:text="'Глава ' + ${latestChapters[comic.id]}"></span>
+                    </div>
+                </a>
+                <div class="card-body p-0">
+                    <a th:href="@{/comics/{id}(id=${comic.id})}" class="card-title comic-title" th:text="${comic.title}"></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
 
     <!-- Continue Reading Section -->
     <section class="continue-reading my-4">
