@@ -290,4 +290,8 @@ public class ComicsService {
 
         return comicsRepository.findAll(spec, pageable);
     }
+
+    public Optional<Comics> findById(int id) {
+        return comicsRepository.findById(id);
+    }
 }

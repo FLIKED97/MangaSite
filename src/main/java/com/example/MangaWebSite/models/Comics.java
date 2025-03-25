@@ -97,6 +97,14 @@ public class Comics {
     @Enumerated(EnumType.STRING)
     private ComicsType comicsType;
 
+    @Column(name = "publication_type")
+    @Enumerated(EnumType.STRING)
+    private PublicationType publicationType = PublicationType.COMIC; // за замовчуванням - комікс
+
+    // Для збереження файлу книги (якщо застосовується)
+    @Column(name = "book_file_path")
+    private String bookFilePath;
+
     public ComicsType getComicsType() {
         return comicsType;
     }

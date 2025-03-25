@@ -47,16 +47,56 @@ body{
     line-height: 1.2;
     font-weight: 600;
     color: #FFFFFF;
-    margin-bottom: 8px; /* Reduced margin */
+    margin-bottom: 8px;
+    max-width: 600px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+}
+
+/* If title is very long, reduce font size and allow wrapping */
+@media screen and (max-width: 1200px) {
+    .tt_cm {
+        font-size: 20px;
+        line-height: 1.3;
+        word-break: break-word;
+    }
+}
+
+/* Ensure multiple lines if title is too long */
+.tt_cm {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 .ot_cm {
     font-size: 20px;
     line-height: 1.2;
     font-weight: 400;
-    color: #FFFFFF;
+    color: #BFBFBF;
     margin-bottom: 24px;
+    max-width: 600px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+}
+/* If title is very long, reduce font size and allow wrapping */
+@media screen and (max-width: 1200px) {
+    .ot_cm {
+        font-size: 20px;
+        line-height: 1.3;
+        word-break: break-word;
+    }
 }
 
+/* Ensure multiple lines if title is too long */
+.ot_cm {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
 /* Контейнер зображення */
 .fr_cm {
     width: 100%;

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Додати комікс</title>
+    <title>Додати публікацію</title>
     <style>
         .dropdown {
             position: relative;
@@ -27,12 +27,28 @@
             padding: 10px;
         }
     </style>
+    <script>
+        // Функція для показу/приховування полів залежно від вибраного типу публікації
+        function togglePublicationFields() {
+            var publicationType = document.getElementById("publicationType").value;
+            var bookFileDiv = document.getElementById("bookFileDiv");
+            var comicsTypeDiv = document.getElementById("comicsTypeDiv");
+
+            if(publicationType === "BOOK") {
+                bookFileDiv.style.display = "block";
+                comicsTypeDiv.style.display = "none";
+            } else {
+                bookFileDiv.style.display = "none";
+                comicsTypeDiv.style.display = "block";
+            }
+        }
+    </script>
 </head>
-<body>
-<h1>Додати новий комікс</h1>
+<body onload="togglePublicationFields()">
+<h1>Додати нову публікацію</h1>
 
 <form th:action="@{/comics/create}" method="post" enctype="multipart/form-data">
-    <label for="title">Назва коміксу:</label>
+    <label for="title">Назва:</label>
     <input type="text" id="title" name="title" required><br><br>
 
     <label for="originalTitle">Оригінальна назва:</label>
@@ -51,12 +67,22 @@
         <option value="Призупинено">Призупинено</option>
     </select><br><br>
 
-    <label for="comicsType">Тип коміксу:</label>
-    <select id="comicsType" name="comicsType" required>
-        <option th:each="type : ${T(com.example.MangaWebSite.models.ComicsType).values()}"
-                th:value="${type}"
-                th:text="${type.displayName}">
-        </option>
+    <!-- Контейнер для поля вибору типу коміксу; показується тільки для COMIC -->
+    <div id="comicsTypeDiv">
+        <label for="comicsType">Тип коміксу:</label>
+        <select id="comicsType" name="comicsType" required>
+            <option th:each="type : ${T(com.example.MangaWebSite.models.ComicsType).values()}"
+                    th:value="${type}"
+                    th:text="${type.displayName}">
+            </option>
+        </select><br><br>
+    </div>
+
+    <!-- Поле вибору типу публікації -->
+    <label for="publicationType">Тип публікації:</label>
+    <select id="publicationType" name="publicationType" onchange="togglePublicationFields()" required>
+        <option value="COMIC" selected>Комікс</option>
+        <option value="BOOK">Книга</option>
     </select><br><br>
 
     <label for="publishedAt">Дата публікації:</label>
@@ -76,12 +102,19 @@
     </div>
     <br><br>
 
+    <!-- Поле для завантаження обкладинки (для обох типів) -->
     <div>
         <label for="imageByte">Обкладинка:</label>
         <input type="file" id="imageByte" name="imageByte" required /><br><br>
     </div>
 
-    <button type="submit">Додати комікс</button>
+    <!-- Поле для завантаження файлу книги; показується лише якщо обрано BOOK -->
+    <div id="bookFileDiv" style="display:none;">
+        <label for="bookFile">Файл книги:</label>
+        <input type="file" id="bookFile" name="bookFile" /><br><br>
+    </div>
+
+    <button type="submit">Додати публікацію</button>
 </form>
 </body>
 </html>
