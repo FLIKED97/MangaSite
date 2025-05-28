@@ -1,5 +1,6 @@
 package com.example.MangaWebSite.controller;
 
+import ai.djl.translate.TranslateException;
 import com.example.MangaWebSite.models.*;
 import com.example.MangaWebSite.repository.ComicsRepository;
 import com.example.MangaWebSite.security.PersonDetails;
@@ -131,7 +132,7 @@ public class ComicsController {
                                @RequestParam(value="imageByte", required=false) MultipartFile imageFile,
                                @RequestParam(value="bookFile", required=false) MultipartFile bookFile,
                                @RequestParam("genreIds") List<Integer> genreIds,
-                               @RequestParam(value = "publishedAt", required = false) LocalDate publishedAt) {
+                               @RequestParam(value = "publishedAt", required = false) LocalDate publishedAt) throws TranslateException, IOException {
 
             // Встановлюємо дату публікації, якщо вказано
             if (publishedAt != null) {

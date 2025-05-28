@@ -27,8 +27,8 @@
     <!-- Popular New Chapters Section -->
     <!-- Якщо користувач залогінений та є рекомендації -->
     <section class="popular-chapters my-4" th:if="${recommendedComics != null}">
-        <h2>Рекомендовані для вас</h2>
-        <div class="d-flex overflow-auto">
+        <h3>Рекомендовані для вас</h3>
+        <div class="d-flex overflow-auto padi">
             <div th:each="comic : ${recommendedComics}" class="comic-card mx-2 text-left position-relative">
                 <a th:href="@{/comics/{id}(id=${comic.id})}" class="position-relative d-block">
                     <img th:src="@{/comics/image/{id}(id=${comic.id})}"

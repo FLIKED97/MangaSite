@@ -1,0 +1,96 @@
+/* Стилі для секції чату */
+.chat-section {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem;
+    background-color: #1c1c1c;
+    border-radius: 5px;
+}
+body {
+    margin: 0;
+    background-color: #0A0A0A !important;
+    color: #BFBFBF;
+    line-height: 1.4 !important;
+    font-family: -apple-system, BlinkMacSystemFont, Open Sans, Roboto, Helvetica Neue, Helvetica, sans-serif !important;
+}
+/* Стилі для чат-боксу */
+#chat-box {
+    background-color: #2C2C2E;
+    border: 1px solid #3A3A3C !important;
+    border-radius: 10px !important;
+    height: 300px;
+    overflow-y: hidden !important;
+    padding: 1rem;
+}
+
+/* Стилі для повідомлень */
+#chat-box > div > p {
+    background-color: #3A3A3C;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    margin: 0.5rem 0;
+    display: inline-block;
+    max-width: 80%;
+    word-wrap: break-word;
+}
+
+#chat-box > div > p strong {
+    color: #FFD700; /* Колір імені відправника */
+}
+
+#chat-box > div > p span {
+    color: #BFBFBF; /* Колір тексту повідомлення */
+}
+
+/* Стилі для форми */
+.form-control {
+    background-color: #2C2C2E;
+    border: 1px solid #3A3A3C;
+    color: #000000;
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    font-size: 14px;
+}
+
+.form-control::placeholder {
+    color: #7A7A7A; /* Колір тексту заповнювача */
+}
+
+.btn-primary {
+    background-color: #007BFF; /* Колір кнопки */
+    border-color: #007BFF;
+    color: #FFFFFF;
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    font-size: 14px;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+}
+
+/* Стилі для заголовка */
+h2 {
+    color: #BFBFBF;
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+/* Адаптивність для мобільних пристроїв */
+@media (max-width: 768px) {
+    .chat-section {
+        max-width: 100%;
+        padding: 0.5rem;
+    }
+
+    #chat-box {
+        height: 200px; /* Зменшення висоти на мобільних */
+    }
+
+    .form-control, .btn-primary {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}

@@ -4,7 +4,8 @@ public enum ComicsType {
     MANHWA("Манхва"),
     MANGA("Манґа"),
     COMICS("Комікс"),
-    MANHUA("Маньхва");
+    MANHUA("Маньхва"),
+    BOOKS("Книга");
 
     private final String displayName;
 
