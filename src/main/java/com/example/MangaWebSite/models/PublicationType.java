@@ -1,15 +1,12 @@
 package com.example.MangaWebSite.models;
 
-public enum ComicsType {
-    MANHWA("Манхва"),
-    MANGA("Манґа"),
-    COMICS("Комікс"),
-    MANHUA("Маньхва"),
-    BOOKS("Книга");
+public enum PublicationType {
+    COMIC("Комікс"),
+    BOOK("Книга");
 
     private final String displayName;
 
-    ComicsType(String displayName) {
+    PublicationType(String displayName) {
         this.displayName = displayName;
     }
 

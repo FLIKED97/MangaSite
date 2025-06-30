@@ -236,7 +236,7 @@
                     <button class="nav-link active custom-btn navs-it" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" aria-controls="info" aria-selected="true">Інформація</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link custom-btn navs-it" id="chapters-tab" data-bs-toggle="tab" data-bs-target="#chapters" type="button" role="tab" aria-controls="chapters" aria-selected="false">Глави</button>
+                    <button class="nav-link custom-btn navs-it" id="chapters-tab" data-bs-toggle="tab" data-bs-target="#chapters" type="button" role="tab" aria-controls="chapters" aria-selected="false">Розділи</button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link custom-btn navs-it" id="comments-tab" data-bs-toggle="tab" data-bs-target="#comments" type="button" role="tab" aria-controls="comments" aria-selected="false">Коментарі</button>
@@ -307,78 +307,99 @@
 
                 <!-- Глави -->
                 <div class="tab-pane fade" id="chapters" role="tabpanel" aria-labelledby="chapters-tab">
-                    <!-- Верхній блок з кнопкою додавання та пагінацією -->
-                    <div class="position-relative mb-3">
-                        <!-- Кнопка "Додати главу" (тільки для Role_Publisher) -->
-                        <div th:if="${#authorization.expression('hasRole(''ROLE_PUBLISHER'')')}" class="position-absolute start-0">
-                            <a th:href="@{/chapters/add(comicId=${comic.id})}" class="btn btn-outline-primary">Додати нову главу</a>
+                    <!-- Якщо публікація – книга, показуємо віджет для читання та завантаження -->
+                    <div th:if="${comic.publicationType.name() eq 'BOOK'}">
+                        <h3>Читати книгу</h3>
+                        <div class="book-reader" style="margin-bottom: 15px;">
+                            <!-- Приклад: вбудований переглядач книги через iframe -->
+                            <!-- Припускаємо, що існує ендпоінт /books/read/{id} який повертає файл для перегляду -->
+                            <iframe th:src="@{'/books/read/' + ${comic.id}}"
+                                    width="100%" height="600px" frameborder="0">
+                            </iframe>
                         </div>
-<!--                         Пагінація (центрується відносно tab-pane) -->
-                        <div class="pagination-container d-flex justify-content-center">
-                            <a th:href="@{'/comics/' + ${comic.id} + '?page=' + ${currentPage != null and currentPage > 0 ? currentPage - 1 : 0}}"
-                               th:class="${currentPage == null or currentPage == 0} ? 'btn-page disabled' : 'btn-page'"
-                               th:disabled="${currentPage == null or currentPage == 0}">
-                                <span>←</span>
-                            </a>
-                            <div class="page-numbers d-flex gap-1">
-                                <a th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
-                                   th:href="@{'/comics/' + ${comic.id} + '?page=' + ${pageNum}}"
-                                   th:class="${pageNum == (currentPage != null ? currentPage : 0)} ? 'page-number active' : 'page-number'"
-                                   th:text="${pageNum + 1}">
-                                </a>
-                            </div>
-                            <a th:href="@{'/comics/' + ${comic.id} + '?page=' + ${currentPage != null and currentPage < totalPages - 1 ? currentPage + 1 : totalPages - 1}}"
-                               th:class="${currentPage == null or currentPage == totalPages - 1} ? 'btn-page disabled' : 'btn-page'"
-                               th:disabled="${currentPage == null or currentPage == totalPages - 1}">
-                                <span>→</span>
+                        <div class="download-book">
+                            <!-- Кнопка для завантаження файлу книги -->
+                            <a th:href="@{'/books/download/' + ${comic.id}}"
+                               class="btn btn-success">
+                                Скачати книгу
                             </a>
                         </div>
                     </div>
 
-                    <!-- Список глав -->
-                    <ul class="list-group chap">
-                        <div class="mt-2">
-                            <li th:each="chapter : ${chapters}" class="chapter-item">
-                                <a th:href="@{/chapters/{id}(id=${chapter.id})}" class="chapter-link">
-                                    <div class="chapter-content">
-                                        <div class="chapter-main">
-                                            <span class="cl__item-num" th:text="'Глава ' + ${chapter.chapterNumber}"></span>
-                                            <span class="chapter-title" th:text="${chapter.volume} + ' - ' + ${chapter.title}"></span>
-                                        </div>
-                                        <span class="chapter-date" th:text="${#temporals.format(chapter.releaseDate, 'yyyy-MM-dd')}"></span>
+                    <!-- Якщо публікація – комікс, показуємо список глав -->
+                    <div th:unless="${comic.publicationType.name() eq 'BOOK'}">
+                            <!-- Верхній блок з кнопкою додавання та пагінацією -->
+                            <div class="position-relative mb-3">
+                                <!-- Кнопка "Додати главу" (тільки для Role_Publisher) -->
+                                <div th:if="${#authorization.expression('hasRole(''ROLE_PUBLISHER'')')}" class="position-absolute start-0">
+                                    <a th:href="@{/chapters/add(comicId=${comic.id})}" class="btn btn-outline-primary">Додати нову главу</a>
+                                </div>
+                                <!-- Пагінація -->
+                                <div class="pagination-container d-flex justify-content-center">
+                                    <a th:href="@{'/comics/' + ${comic.id} + '?page=' + ${currentPage != null and currentPage > 0 ? currentPage - 1 : 0}}"
+                                       th:class="${currentPage == null or currentPage == 0} ? 'btn-page disabled' : 'btn-page'"
+                                       th:disabled="${currentPage == null or currentPage == 0}">
+                                        <span>←</span>
+                                    </a>
+                                    <div class="page-numbers d-flex gap-1">
+                                        <a th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
+                                           th:href="@{'/comics/' + ${comic.id} + '?page=' + ${pageNum}}"
+                                           th:class="${pageNum == (currentPage != null ? currentPage : 0)} ? 'page-number active' : 'page-number'"
+                                           th:text="${pageNum + 1}">
+                                        </a>
                                     </div>
-                                </a>
-                            </li>
-                        </div>
-                    </ul>
-
-                    <!-- Нижній блок з кнопкою додавання та пагінацією -->
-                    <div class="position-relative mt-3">
-                        <!-- Те саме, що й зверху -->
-                        <div th:if="${#authorization.expression('hasRole(''ROLE_PUBLISHER'')')}" class="position-absolute start-0">
-                            <a th:href="@{/chapters/add(comicId=${comic.id})}" class="btn btn-outline-primary">Додати нову главу</a>
-                        </div>
-                        <div class="pagination-container d-flex justify-content-center">
-                            <a th:href="@{'/comics/' + ${comic.id} + '?page=' + ${currentPage != null and currentPage > 0 ? currentPage - 1 : 0}}"
-                               th:class="${currentPage == null or currentPage == 0} ? 'btn-page disabled' : 'btn-page'"
-                               th:disabled="${currentPage == null or currentPage == 0}">
-                                <span>←</span>
-                            </a>
-                            <div class="page-numbers d-flex gap-1">
-                                <a th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
-                                   th:href="@{'/comics/' + ${comic.id} + '?page=' + ${pageNum}}"
-                                   th:class="${pageNum == (currentPage != null ? currentPage : 0)} ? 'page-number active' : 'page-number'"
-                                   th:text="${pageNum + 1}">
-                                </a>
+                                    <a th:href="@{'/comics/' + ${comic.id} + '?page=' + ${currentPage != null and currentPage < totalPages - 1 ? currentPage + 1 : totalPages - 1}}"
+                                       th:class="${currentPage == null or currentPage == totalPages - 1} ? 'btn-page disabled' : 'btn-page'"
+                                       th:disabled="${currentPage == null or currentPage == totalPages - 1}">
+                                        <span>→</span>
+                                    </a>
+                                </div>
                             </div>
-                            <a th:href="@{'/comics/' + ${comic.id} + '?page=' + ${currentPage != null and currentPage < totalPages - 1 ? currentPage + 1 : totalPages - 1}}"
-                               th:class="${currentPage == null or currentPage == totalPages - 1} ? 'btn-page disabled' : 'btn-page'"
-                               th:disabled="${currentPage == null or currentPage == totalPages - 1}">
-                                <span>→</span>
-                            </a>
+
+                            <!-- Список глав -->
+                            <ul class="list-group chap">
+                                <div class="mt-2">
+                                    <li th:each="chapter : ${chapters}" class="chapter-item">
+                                        <a th:href="@{/chapters/{id}(id=${chapter.id})}" class="chapter-link">
+                                            <div class="chapter-content">
+                                                <div class="chapter-main">
+                                                    <span class="cl__item-num" th:text="'Глава ' + ${chapter.chapterNumber}"></span>
+                                                    <span class="chapter-title" th:text="${chapter.volume} + ' - ' + ${chapter.title}"></span>
+                                                </div>
+                                                <span class="chapter-date" th:text="${#temporals.format(chapter.releaseDate, 'yyyy-MM-dd')}"></span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                </div>
+                            </ul>
+
+                            <!-- Нижній блок з кнопкою додавання та пагінацією (аналогічно верхньому) -->
+                            <div class="position-relative mt-3">
+                                <div th:if="${#authorization.expression('hasRole(''ROLE_PUBLISHER'')')}" class="position-absolute start-0">
+                                    <a th:href="@{/chapters/add(comicId=${comic.id})}" class="btn btn-outline-primary">Додати нову главу</a>
+                                </div>
+                                <div class="pagination-container d-flex justify-content-center">
+                                    <a th:href="@{'/comics/' + ${comic.id} + '?page=' + ${currentPage != null and currentPage > 0 ? currentPage - 1 : 0}}"
+                                       th:class="${currentPage == null or currentPage == 0} ? 'btn-page disabled' : 'btn-page'"
+                                       th:disabled="${currentPage == null or currentPage == 0}">
+                                        <span>←</span>
+                                    </a>
+                                    <div class="page-numbers d-flex gap-1">
+                                        <a th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
+                                           th:href="@{'/comics/' + ${comic.id} + '?page=' + ${pageNum}}"
+                                           th:class="${pageNum == (currentPage != null ? currentPage : 0)} ? 'page-number active' : 'page-number'"
+                                           th:text="${pageNum + 1}">
+                                        </a>
+                                    </div>
+                                    <a th:href="@{'/comics/' + ${comic.id} + '?page=' + ${currentPage != null and currentPage < totalPages - 1 ? currentPage + 1 : totalPages - 1}}"
+                                       th:class="${currentPage == null or currentPage == totalPages - 1} ? 'btn-page disabled' : 'btn-page'"
+                                       th:disabled="${currentPage == null or currentPage == totalPages - 1}">
+                                        <span>→</span>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
                 <!-- Коментарі -->
                 <div class="lt_cm_tab tab-pane fade" id="comments" role="tabpanel" aria-labelledby="comments-tab">

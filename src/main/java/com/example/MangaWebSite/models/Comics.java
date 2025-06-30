@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Formula;
 
+import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Base64;
@@ -97,6 +98,18 @@ public class Comics {
     @Enumerated(EnumType.STRING)
     private ComicsType comicsType;
 
+    @Column(name = "publication_type")
+    @Enumerated(EnumType.STRING)
+    private PublicationType publicationType = PublicationType.COMIC; // за замовчуванням - комікс
+
+    // Для збереження файлу книги (якщо застосовується)
+    @Column(name = "book_file_path")
+    private String bookFilePath;
+
+    @Lob
+    @Column(name = "description_embedding")
+    private byte[] descriptionEmbedding;
+
     public ComicsType getComicsType() {
         return comicsType;
     }
@@ -139,4 +152,37 @@ public class Comics {
     public byte[] getSafeCoverImage() {
         return (coverImage != null && coverImage.length > 0) ? coverImage : null;
     }
+
+    public static byte[] serializeFloatArray(float[] array) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        DataOutputStream dos = new DataOutputStream(baos);
+        for (float f : array) {
+            dos.writeFloat(f);
+        }
+        return baos.toByteArray();
+    }
+
+    public static float[] deserializeFloatArray(byte[] bytes) throws IOException {
+        ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+        DataInputStream dis = new DataInputStream(bais);
+        int floatCount = bytes.length / 4;
+        float[] array = new float[floatCount];
+        for (int i = 0; i < floatCount; i++) {
+            array[i] = dis.readFloat();
+        }
+        return array;
+    }
+    public static double computeCosineSimilarity(float[] vec1, float[] vec2) {
+        double dotProduct = 0.0;
+        double norm1 = 0.0;
+        double norm2 = 0.0;
+        for (int i = 0; i < vec1.length; i++) {
+            dotProduct += vec1[i] * vec2[i];
+            norm1 += vec1[i] * vec1[i];
+            norm2 += vec2[i] * vec2[i];
+        }
+        return dotProduct / (Math.sqrt(norm1) * Math.sqrt(norm2));
+    }
+
+
 }

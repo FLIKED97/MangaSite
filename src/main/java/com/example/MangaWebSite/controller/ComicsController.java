@@ -1,5 +1,6 @@
 package com.example.MangaWebSite.controller;
 
+import ai.djl.translate.TranslateException;
 import com.example.MangaWebSite.models.*;
 import com.example.MangaWebSite.repository.ComicsRepository;
 import com.example.MangaWebSite.security.PersonDetails;
@@ -50,6 +51,8 @@ public class ComicsController {
 
     private final CommentService commentService;
     private final FriendshipService friendshipService;
+    // Припустимо, що цей сервіс реалізовано для збереження файлів книг
+    private final FileStorageService fileStorageService;
 
     private static final Logger logger = LoggerFactory.getLogger(ComicsController.class);
 
@@ -124,33 +127,58 @@ public class ComicsController {
         }
     }
 
-    @PostMapping("/create")
-    public String addComic(@ModelAttribute("comic") Comics comic,
-                           @RequestParam("imageByte") MultipartFile file,
-                           @RequestParam("genreIds") List<Integer> genreIds,
-                           @RequestParam(value = "publishedAt", required = false) LocalDate publishedAt) {
+        @PostMapping("/create")
+        public String addComic(@ModelAttribute("comic") Comics comic,
+                               @RequestParam(value="imageByte", required=false) MultipartFile imageFile,
+                               @RequestParam(value="bookFile", required=false) MultipartFile bookFile,
+                               @RequestParam("genreIds") List<Integer> genreIds,
+                               @RequestParam(value = "publishedAt", required = false) LocalDate publishedAt) throws TranslateException, IOException {
 
-        // Existing image processing logic
-        if (file != null && !file.isEmpty()) {
-            try {
-                comic.setCoverImage(file.getBytes());
-                comic.setImageType(file.getContentType());
-            } catch (IOException e) {
-                // Error handling
+            // Встановлюємо дату публікації, якщо вказано
+            if (publishedAt != null) {
+                comic.setPublishedAt(publishedAt);
             }
+
+            // Перевіряємо тип публікації
+            if (comic.getPublicationType() == PublicationType.BOOK) {
+                // Обробка файлу книги
+                if (bookFile != null && !bookFile.isEmpty()) {
+                    try {
+                        // fileStorageService зберігає файл і повертає шлях до нього
+                        String filePath = fileStorageService.saveFile(bookFile);
+                        comic.setBookFilePath(filePath);
+                    } catch (IOException e) {
+                        logger.error("Помилка збереження файлу книги", e);
+                    }
+                }
+                // Також можна обробити обкладинку, якщо вона передається
+                if (imageFile != null && !imageFile.isEmpty()) {
+                    try {
+                        comic.setCoverImage(imageFile.getBytes());
+                        comic.setImageType(imageFile.getContentType());
+                    } catch (IOException e) {
+                        logger.error("Помилка обробки обкладинки", e);
+                    }
+                }
+            } else {
+                // Для коміксів обробка здійснюється як раніше
+                if (imageFile != null && !imageFile.isEmpty()) {
+                    try {
+                        comic.setCoverImage(imageFile.getBytes());
+                        comic.setImageType(imageFile.getContentType());
+                    } catch (IOException e) {
+                        logger.error("Помилка обробки обкладинки", e);
+                    }
+                }
+            }
+
+            // Збереження публікації та додавання жанрів
+            Comics savedComic = comicsService.saveComic(comic);
+            comicsService.addGenresToComic(savedComic, genreIds);
+
+            return "redirect:/comics/" + savedComic.getId();
         }
 
-        // Set published date if provided
-        if (publishedAt != null) {
-            comic.setPublishedAt(publishedAt);
-        }
-
-        // Save comic and add genres
-        Comics savedComic = comicsService.saveComic(comic);
-        comicsService.addGenresToComic(savedComic, genreIds);
-
-        return "redirect:/comics/" + comic.getId();
-    }
 
     @PostMapping("/addComicToTab")
     @Transactional

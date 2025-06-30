@@ -3,6 +3,7 @@ package com.example.MangaWebSite.controller;
 import com.example.MangaWebSite.models.Comics;
 import com.example.MangaWebSite.models.ComicsType;
 import com.example.MangaWebSite.models.Genre;
+import com.example.MangaWebSite.models.PublicationType;
 import com.example.MangaWebSite.service.ComicsService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -54,7 +55,8 @@ public class AjaxController {
                     map.put("viewCount", comics.getViewCount());
                     map.put("description", comics.getDescription());
 
-                    // Додаємо кількість глав
+                    // Додаємо тип публікації
+                    map.put("comicsType", comics.getComicsType());
                     map.put("chaptersCount", comics.getChapters().size());
 
                     // Додаємо список жанрів для показу

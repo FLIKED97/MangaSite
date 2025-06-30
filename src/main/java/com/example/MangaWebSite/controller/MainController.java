@@ -64,7 +64,7 @@ public class MainController {
         model.addAttribute("newComics", chapterService.getAllNewChapters(0));
         //Оновлені комікси з закадок.
         model.addAttribute("bookmarkedComics", chapterService.getNewChaptersInTabs(0));
-        model.addAttribute("selectedDays", 1);
+        model.addAttribute("selectedDays", 365);
 
         if (authentication != null && authentication.getPrincipal() instanceof PersonDetails personDetails) {
             // Отримуємо userId, наприклад, через custom UserDetails або інший сервіс

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Чат-помічник</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+  <th:block th:replace="~{fragments/header :: head-styles}"></th:block>
+  <link rel="stylesheet" th:href="@{/css/custom-btn.css}">
+  <link rel="stylesheet" th:href="@{/css/chat-recom.css}">
+</head>
+<body>
+<header>
+  <!-- Include top navbar fragment -->
+  <th:block th:replace="~{fragments/header :: top-navbar}"></th:block>
+
+  <!-- Include search modal fragment -->
+  <th:block th:replace="~{fragments/header :: search-modal}"></th:block>
+</header>
+<th:block th:replace="~{fragments/header :: bottom-navbar}"></th:block>
+<div class="container mt-5">
+  <h2>Чат-помічник</h2>
+  <div id="chat-box" class="border rounded p-3 mb-3" style="height: 300px; overflow-y: scroll;">
+    <div th:each="msg : ${messages}">
+      <p><strong th:text="${msg.sender}"></strong>: <span th:utext="${msg.text}"></span></p>
+    </div>
+  </div>
+  <form th:action="@{/api/chat/send}" method="post">
+    <div class="form-group">
+      <input type="text" class="form-control" name="userMessage" placeholder="Введіть ваше повідомлення..." required>
+    </div>
+    <button type="submit" class="btn btn-primary">Відправити</button>
+  </form>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

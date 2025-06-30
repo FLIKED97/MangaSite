@@ -1,5 +1,6 @@
 package com.example.MangaWebSite.service;
 
+import ai.djl.translate.TranslateException;
 import com.example.MangaWebSite.models.*;
 import com.example.MangaWebSite.repository.ComicsRepository;
 import com.example.MangaWebSite.repository.GenreRepository;
@@ -16,9 +17,14 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.example.MangaWebSite.models.Comics.serializeFloatArray;
 
 
 @Service
@@ -31,6 +37,16 @@ public class ComicsService {
     private final GenreRepository genreRepository;
 
     private final ReadingProgressRepository readingProgressRepository;
+    private final EmbeddingService embeddingService;
+
+    public static byte[] serializeFloatArray(float[] array) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        DataOutputStream dos = new DataOutputStream(baos);
+        for (float f : array) {
+            dos.writeFloat(f);
+        }
+        return baos.toByteArray();
+    }
 
 
     public List<Comics> showAll() {
@@ -41,7 +57,14 @@ public class ComicsService {
         comicsRepository.save(comic);
     }
 
-    public Comics saveComic(Comics comic) {
+    public Comics saveComic(Comics comic) throws IOException, TranslateException {
+        // Якщо опис присутній, генеруємо ембеддінг
+        if (comic.getDescription() != null && !comic.getDescription().isEmpty()) {
+            float[] embedding = embeddingService.getEmbedding(comic.getDescription());
+            // Використовуйте утилітний метод для серіалізації float[] в byte[]
+            byte[] embeddingBytes = ComicsUtil.serializeFloatArray(embedding);
+            comic.setDescriptionEmbedding(embeddingBytes);
+        }
         comic.setCreatedAt(LocalDateTime.now());
         return comicsRepository.save(comic);  // Зберігаємо комікс і повертаємо його зі збереженим ID //TODO Переробити щоб створювати комікси могли тільки ROLE_PUBLISHER
     }
@@ -289,5 +312,18 @@ public class ComicsService {
         }
 
         return comicsRepository.findAll(spec, pageable);
+    }
+
+    public Optional<Comics> findById(int id) {
+        return comicsRepository.findById(id);
+    }
+
+    public Comics saveComics(Comics comic) throws Exception {
+        if (comic.getDescription() != null && !comic.getDescription().isEmpty()) {
+            float[] embedding = embeddingService.getEmbedding(comic.getDescription());
+            byte[] embeddingBytes = serializeFloatArray(embedding);
+            comic.setDescriptionEmbedding(embeddingBytes);
+        }
+        return comicsRepository.save(comic);
     }
 }

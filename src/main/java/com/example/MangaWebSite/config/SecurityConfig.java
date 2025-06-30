@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.FilterInvocation;
@@ -47,6 +48,11 @@ public class SecurityConfig {
                     corsConfiguration.setAllowCredentials(true);
                     return corsConfiguration;
                 }))
+                // Оновлений спосіб налаштування frame options
+                .headers(headers -> headers
+                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin
+                        )
+                )
                 // Налаштування доступу до кінцевих точок
                 .authorizeHttpRequests(request -> request
                         // Можна вказати конкретний шлях, * - 1 рівень вкладеності, ** - будь-яка кількість рівнів вкладеності
@@ -61,7 +67,8 @@ public class SecurityConfig {
                         .requestMatchers("/publisher/**")
                         .hasRole("PUBLISHER") // Publisher-specific routes
                         .requestMatchers("/user/**", "/reservation/**", "/main/**", "/ratings/**",
-                                "/currently-reading/**", "/search/**", "/comment/**", "/friends/**", "/chat/**", "/person/**")
+                                "/currently-reading/**", "/search/**", "/comment/**", "/friends/**", "/chat/**", "/person/**",
+                                "/books/**", "/api/**")
                         .hasAnyRole("USER", "PUBLISHER") // User routes for all
                         .requestMatchers("/endpoint", "/admin/**")
                         .hasRole("ADMIN")
