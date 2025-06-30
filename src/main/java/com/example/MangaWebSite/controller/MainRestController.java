@@ -7,6 +7,7 @@ import com.example.MangaWebSite.service.ComicsService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,7 +25,7 @@ public class MainRestController {
     private final ComicsService comicsService;
 
     @GetMapping("/data")
-    public ResponseEntity<Map<String, List<ComicsDTO>>> getComicsData(@RequestParam(value = "days", defaultValue = "31") int days) {
+    public ResponseEntity<Map<String, List<ComicsDTO>>> getComicsData(@RequestParam(value = "days", defaultValue = "365") int days) {
         Map<String, List<ComicsDTO>> data = new HashMap<>();
 
         // Convert entities to DTOs that don't include the problematic LOB data
@@ -36,6 +37,13 @@ public class MainRestController {
                 .map(this::convertToDTO).collect(Collectors.toList()));
 
         return ResponseEntity.ok(data);
+    }
+    @GetMapping("/comics/sections")
+    public String showSections(Model model,
+                               @RequestParam(value="section", required=false) String section) {
+        model.addAttribute("selectedDays", 365);
+        // інша логіка, наприклад — хендл дані для newCreatedComics тощо
+        return "comics/sections";
     }
 
     private ComicsDTO convertToDTO(Comics comics) {

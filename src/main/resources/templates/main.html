@@ -37,8 +37,15 @@
                          style="width:135px; height:189px;"
                          loading="lazy">
                     <!-- Глава знизу справа в межах фото -->
-                    <div class="chapter-label position-absolute">
-                        <span th:text="'Глава ' + ${latestChapters[comic.id]}"></span>
+                    <div th:if="${comic.publicationType?.name() eq 'BOOK'}">
+                        <div class="chapter-label position-absolute">
+                            <span></span>
+                        </div>
+                    </div>
+                    <div th:unless="${comic.publicationType?.name() eq 'BOOK'}">
+                        <div class="chapter-label position-absolute">
+                            <span th:text="'Глава ' + ${latestChapters[comic.id]}"></span>
+                        </div>
                     </div>
                 </a>
                 <div class="card-body p-0">
@@ -241,7 +248,7 @@
 <!-- Footer Section -->
 <footer class="bg-dark text-light py-4">
     <div class="container text-center">
-        <p>&copy; 2024 Мангаклуб. Усі права захищено.</p>
+        <p>&copy; 2025 ЛітератураКлуб. Усі права захищено.</p>
     </div>
 </footer>
 <!-- JavaScript Dependencies -->
@@ -249,5 +256,12 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const select = document.getElementById('daysSelect');
+        select.value = '365';
+        changeDays(select.value);
+    });
+</script>
 <script src="/js/main-script.js"></script>
 </html>

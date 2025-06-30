@@ -511,28 +511,31 @@
 
       // Рендеримо комікси
       const newComics = data.content.map(comic => {
-        // якщо тип — BOOKS, то не показуємо блок з главами
-        const chaptersBlock = comic.comicsType === 'BOOKS'
+        // Перевіряємо чи є publicationType у відповіді
+        const isBook = comic.comicsType === 'BOOKS';
+
+        // Для книг не показуємо глави, для коміксів показуємо
+        const chaptersBlock = isBook
                 ? ''
                 : `<div class="cm_chapters">${comic.chaptersCount || 0} глав</div>`;
 
         return `
-    <div class="comic-col">
-      <a href="/comics/${comic.id}" style="text-decoration: none; color: inherit;">
-        <div class="comics-card">
-          <div class="comic-image-container">
-            <img src="/comics/image/${comic.id}" class="card-imges-top" alt="Comic Cover">
-            <div class="comics-rating">${comic.averageRating || 'N/A'}</div>
-          </div>
-          <div class="comics-info">
-            <h6 class="card-title-comics">${comic.title}</h6>
-            <div class="cm_tp">${comic.comicsTypeDisplay || 'Unknown'}</div>
-            ${chaptersBlock}
-          </div>
-        </div>
-      </a>
+<div class="comic-col">
+  <a href="/comics/${comic.id}" style="text-decoration: none; color: inherit;">
+    <div class="comics-card">
+      <div class="comic-image-container">
+        <img src="/comics/image/${comic.id}" class="card-imges-top" alt="Comic Cover">
+        <div class="comics-rating">${comic.averageRating || 'N/A'}</div>
+      </div>
+      <div class="comics-info">
+        <h6 class="card-title-comics">${comic.title}</h6>
+        <div class="cm_tp">${comic.comicsTypeDisplay || 'Unknown'}</div>
+        ${chaptersBlock}
+      </div>
     </div>
-  `;
+  </a>
+</div>
+`;
       }).join('');
 
 
